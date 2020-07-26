@@ -75,6 +75,7 @@ public class StandManager extends JavaPlugin implements Listener {
 	@Override
 	public void onLoad() {
 		saveResource("config.yml", false);
+		new StandUtils(this);
 
 	}
 
@@ -171,14 +172,14 @@ public class StandManager extends JavaPlugin implements Listener {
 
 		unlockedslot = new ItemStack(Material.GRAY_STAINED_GLASS_PANE);
 		ItemMeta h = unlockedslot.getItemMeta();
-		h.setDisplayName(StandManager.configconfig.getString("unlocked-slot-panel-title").replace("&", "§"));
+		h.setDisplayName(ChatColor.translateAlternateColorCodes('&',StandManager.configconfig.getString("unlocked-slot-panel-title")));
 
 		ArrayList<String> ene = (ArrayList<String>) StandManager.configconfig.getList("unlocked-slot-lore");
 
 		ArrayList<String> ino = new ArrayList<>();
 
 		for (String s : ene) {
-			ino.add(s.replace("&", "§"));
+			ino.add(ChatColor.translateAlternateColorCodes('&',s));
 
 		}
 
@@ -404,31 +405,31 @@ public class StandManager extends JavaPlugin implements Listener {
 
 								}
 
-								e.getWhoClicked().sendMessage(StandManager.configconfig.getString("bought-message")
-										.replace("&", "§").replace("<price>", SignUtilities.formatVault(c.getPrice()))
+								e.getWhoClicked().sendMessage(ChatColor.translateAlternateColorCodes('&',StandManager.configconfig.getString("bought-message")
+										.replace("<price>", SignUtilities.formatVault(c.getPrice()))
 										.replace("<type>",
 												c.getI().getType().toString().toLowerCase().replace("_", " "))
 										.replace("<amount>", c.getI().getAmount() + "")
-										.replace("<name>", stand.getPlayerName()));
+										.replace("<name>", stand.getPlayerName())));
 
 								if (Bukkit.getPlayer(stand.getP()) != null) {
 
-									Bukkit.getPlayer(stand.getP()).sendMessage(StandManager.configconfig
-											.getString("seller-message").replace("&", "§")
+									Bukkit.getPlayer(stand.getP()).sendMessage(ChatColor.translateAlternateColorCodes('&',StandManager.configconfig
+											.getString("seller-message")
 											.replace("<price>", SignUtilities.formatVault(c.getPrice()))
 											.replace("<type>",
 													c.getI().getType().toString().toLowerCase().replace("_", " "))
 											.replace("<amount>", c.getI().getAmount() + "")
-											.replace("<name>", stand.getPlayerName()));
+											.replace("<name>", stand.getPlayerName())));
 
 								} else {
-									stand.getOffMessages().add(StandManager.configconfig.getString("seller-message")
-											.replace("&", "§")
+									stand.getOffMessages().add(ChatColor.translateAlternateColorCodes('&',StandManager.configconfig.getString("seller-message")
+										
 											.replace("<price>", SignUtilities.formatVault(c.getPrice()))
 											.replace("<type>",
 													c.getI().getType().toString().toLowerCase().replace("_", " "))
 											.replace("<amount>", c.getI().getAmount() + "")
-											.replace("<name>", stand.getPlayerName()));
+											.replace("<name>", stand.getPlayerName())));
 
 								}
 								new BukkitRunnable() {

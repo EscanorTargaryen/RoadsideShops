@@ -12,8 +12,10 @@ public class StandUtils {
 	}
 
 	public static int getSlotsOfPlayer(Player p) {
-
-		return plugin.getStand(p).getNormalSlots();
+		if (plugin.getStand(p) == null)
+			return -1;
+		else
+			return plugin.getStand(p).getNormalSlots();
 	}
 
 }

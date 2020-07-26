@@ -117,8 +117,8 @@ public class ItemSettingsIH implements InventoryHolder, Listener {
 
 			ItemStack prezzo = new ItemStack(Material.NAME_TAG);
 			mw = prezzo.getItemMeta();
-			mw.setDisplayName(StandManager.configconfig.getString("price-message").replace("&", "§").replace("<value>",
-					SignUtilities.formatVault(price)));
+			mw.setDisplayName(ChatColor.translateAlternateColorCodes('&', StandManager.configconfig.getString("price-message").replace("<value>",
+					SignUtilities.formatVault(price))));
 
 			mw.setLore(Arrays.asList("", ChatColor.GOLD + "Click to change the price"));
 			prezzo.setItemMeta(mw);
@@ -276,14 +276,14 @@ public class ItemSettingsIH implements InventoryHolder, Listener {
 				Bukkit.dispatchCommand(p, "stand");
 				exit = true;
 
-				p.sendMessage(StandManager.configconfig.getString("put-item").replace("&", "§")
+				p.sendMessage(StandManager.configconfig.getString("put-item")
 						.replace("<price>", SignUtilities.formatVault(k.getPrice()))
 						.replace("<type>", k.getI().getType().toString().toLowerCase().replace("_", " "))
 						.replace("<amount>", k.getI().getAmount() + ""));
 
 				if (sponsor) {
 
-					e.getWhoClicked().sendMessage(StandManager.configconfig.getString("sponsor-set").replace("&", "§"));
+					e.getWhoClicked().sendMessage(ChatColor.translateAlternateColorCodes('&',StandManager.configconfig.getString("sponsor-set")));
 					if (s.getSponsor() != null) {
 
 						ii = s.getSponsor().getWithprice().clone();

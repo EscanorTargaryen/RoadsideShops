@@ -52,8 +52,8 @@ public class SellingItem implements Cloneable, ConfigurationSerializable {
 		ItemMeta m = i.getItemMeta();
 		ArrayList<String> p = new ArrayList<>();
 		p.add("");
-		p.add(StandManager.configconfig.getString("price-message").replace("&", "§").replace("<value>",
-				SignUtilities.formatVault(price)));
+		p.add(ChatColor.translateAlternateColorCodes('&',StandManager.configconfig.getString("price-message").replace("<value>",
+				SignUtilities.formatVault(price))));
 		if (m.getLore() != null)
 			p.addAll(m.getLore());
 		m.setLore(p);

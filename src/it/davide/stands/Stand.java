@@ -153,7 +153,7 @@ public class Stand implements Cloneable, ConfigurationSerializable, InventoryHol
 		ene = (ArrayList<String>) StandManager.configconfig.getList("locked-slot-lore");
 
 		for (String s : ene) {
-			ino.add(s.replace("&", "§"));
+			ino.add(ChatColor.translateAlternateColorCodes('&',s));
 
 		}
 

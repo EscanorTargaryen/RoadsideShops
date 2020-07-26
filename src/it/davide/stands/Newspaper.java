@@ -70,7 +70,7 @@ public class Newspaper implements Listener, InventoryHolder {
 		}
 
 		if (list.size() == 0) {
-			p.sendMessage(StandManager.configconfig.getString("no-adv").replace("&", "§"));
+			p.sendMessage(ChatColor.translateAlternateColorCodes('&',StandManager.configconfig.getString("no-adv")));
 
 		} else {
 
