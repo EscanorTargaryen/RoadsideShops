@@ -1,0 +1,14 @@
+main: it.davide.stands.StandManager
+name: StandsCore
+version: 1.7
+author: [EscanorTargaryen]
+
+api-version: 1.15
+softdepend: [Vault, CmcSkyBlock]
+
+commands:
+  stand:
+    description: Command
+  newspaper:
+    description: Command
+
