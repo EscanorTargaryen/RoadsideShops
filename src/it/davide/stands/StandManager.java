@@ -8,8 +8,11 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
+import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -43,10 +46,11 @@ import saving.SavingUtil;
 
 public class StandManager extends JavaPlugin implements Listener {
 
-	private HashMap <String,Stand> stands = new HashMap<>();
+	private HashMap<String, Stand> stands = new HashMap<>();
 	private File config = new File(getDataFolder() + "/config.yml");
 
 	private SavingUtil<Stand> savesStand;
+	private Set<UUID> slotGiaDati = new HashSet<>();
 
 	static public YamlConfiguration configconfig = new YamlConfiguration();
 
@@ -110,18 +114,23 @@ public class StandManager extends JavaPlugin implements Listener {
 			}
 
 		}
-		for (Entry<String, Integer> s : advancementPerms.entrySet()) {
+		if (!slotGiaDati.contains(p.getUniqueId()))
+			for (Entry<String, Integer> s : advancementPerms.entrySet()) {
 
-			if (p.hasPermission(s.getKey())) {
-				Stand ps = getStand(e.getPlayer());
-				if (ps != null)
-					ps.setNormalSlots(ps.getNormalSlots() + s.getValue());
+				if (p.hasPermission(s.getKey())) {
 
-				p.updateInventory();
+					if (d != null) {
+
+						d.setNormalSlots(d.getNormalSlots() + s.getValue());
+						d.updateInventory();
+
+						slotGiaDati.add(p.getUniqueId());
+
+					}
+
+				}
 
 			}
-
-		}
 
 	}
 
@@ -172,14 +181,15 @@ public class StandManager extends JavaPlugin implements Listener {
 
 		unlockedslot = new ItemStack(Material.GRAY_STAINED_GLASS_PANE);
 		ItemMeta h = unlockedslot.getItemMeta();
-		h.setDisplayName(ChatColor.translateAlternateColorCodes('&',StandManager.configconfig.getString("unlocked-slot-panel-title")));
+		h.setDisplayName(ChatColor.translateAlternateColorCodes('&',
+				StandManager.configconfig.getString("unlocked-slot-panel-title")));
 
 		ArrayList<String> ene = (ArrayList<String>) StandManager.configconfig.getList("unlocked-slot-lore");
 
 		ArrayList<String> ino = new ArrayList<>();
 
 		for (String s : ene) {
-			ino.add(ChatColor.translateAlternateColorCodes('&',s));
+			ino.add(ChatColor.translateAlternateColorCodes('&', s));
 
 		}
 
@@ -215,18 +225,18 @@ public class StandManager extends JavaPlugin implements Listener {
 		ItemMeta w = not.getItemMeta();
 		w.setDisplayName(ChatColor.translateAlternateColorCodes('&',
 				StandManager.configconfig.getString("locked-slot-panel-title")));
-		
+
 		ene = (ArrayList<String>) StandManager.configconfig.getList("locked-slot-lore");
 
-		 ino = new ArrayList<>();
+		ino = new ArrayList<>();
 
 		for (String s : ene) {
-			ino.add(ChatColor.translateAlternateColorCodes('&',s));
+			ino.add(ChatColor.translateAlternateColorCodes('&', s));
 
 		}
 
 		h.setLore(ino);
-		
+
 		w.setLore(ino);
 		not.setItemMeta(w);
 
@@ -234,6 +244,16 @@ public class StandManager extends JavaPlugin implements Listener {
 		ItemMeta ws = log.getItemMeta();
 		ws.setDisplayName(ChatColor.WHITE + "");
 		log.setItemMeta(ws);
+
+		String s = "\n§a           _____  _                     _§6   _____                         \n"
+				+ "§a	  / ____|| |                   | | §6/ ____|                        §fby §cEscanorTargaryen §fof   \n"
+				+ "§a	 | (___  | |_  __ _  _ __    __| |§6| |      ___   _ __  ___             §6Command§7Craft \n"
+				+ "§a	  \\___ \\ | __|/ _` || '_ \\  / _` |§6| |     / _ \\ | '__|/ _ \\     \n"
+				+ "§a	  ____) || |_| (_| || | | || (_| |§6| |____| (_) || |  |  __/      §2Enabled version: "
+				+ this.getDescription().getVersion() + "\n"
+				+ "§a	 |_____/  \\__|\\__,_||_| |_| \\__,_| §6\\_____|\\___/ |_|   \\___|    ";
+
+		Bukkit.getConsoleSender().sendMessage(s);
 
 	}
 
@@ -403,31 +423,36 @@ public class StandManager extends JavaPlugin implements Listener {
 
 								}
 
-								e.getWhoClicked().sendMessage(ChatColor.translateAlternateColorCodes('&',StandManager.configconfig.getString("bought-message")
-										.replace("<price>", SignUtilities.formatVault(c.getPrice()))
-										.replace("<type>",
-												c.getI().getType().toString().toLowerCase().replace("_", " "))
-										.replace("<amount>", c.getI().getAmount() + "")
-										.replace("<name>", stand.getPlayerName())));
+								e.getWhoClicked().sendMessage(ChatColor.translateAlternateColorCodes('&',
+										StandManager.configconfig.getString("bought-message")
+												.replace("<price>", SignUtilities.formatVault(c.getPrice()))
+												.replace("<type>",
+														c.getI().getType().toString().toLowerCase().replace("_", " "))
+												.replace("<amount>", c.getI().getAmount() + "")
+												.replace("<name>", stand.getPlayerName())));
 
 								if (Bukkit.getPlayer(stand.getP()) != null) {
 
-									Bukkit.getPlayer(stand.getP()).sendMessage(ChatColor.translateAlternateColorCodes('&',StandManager.configconfig
-											.getString("seller-message")
-											.replace("<price>", SignUtilities.formatVault(c.getPrice()))
-											.replace("<type>",
-													c.getI().getType().toString().toLowerCase().replace("_", " "))
-											.replace("<amount>", c.getI().getAmount() + "")
-											.replace("<name>", stand.getPlayerName())));
+									Bukkit.getPlayer(stand.getP()).sendMessage(ChatColor.translateAlternateColorCodes(
+											'&',
+											StandManager.configconfig.getString("seller-message")
+													.replace("<price>", SignUtilities.formatVault(c.getPrice()))
+													.replace("<type>",
+															c.getI().getType().toString().toLowerCase().replace("_",
+																	" "))
+													.replace("<amount>", c.getI().getAmount() + "")
+													.replace("<name>", stand.getPlayerName())));
 
 								} else {
-									stand.getOffMessages().add(ChatColor.translateAlternateColorCodes('&',StandManager.configconfig.getString("seller-message")
-										
-											.replace("<price>", SignUtilities.formatVault(c.getPrice()))
-											.replace("<type>",
-													c.getI().getType().toString().toLowerCase().replace("_", " "))
-											.replace("<amount>", c.getI().getAmount() + "")
-											.replace("<name>", stand.getPlayerName())));
+									stand.getOffMessages().add(ChatColor.translateAlternateColorCodes('&',
+											StandManager.configconfig.getString("seller-message")
+
+													.replace("<price>", SignUtilities.formatVault(c.getPrice()))
+													.replace("<type>",
+															c.getI().getType().toString().toLowerCase().replace("_",
+																	" "))
+													.replace("<amount>", c.getI().getAmount() + "")
+													.replace("<name>", stand.getPlayerName())));
 
 								}
 								new BukkitRunnable() {

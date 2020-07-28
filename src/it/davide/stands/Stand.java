@@ -141,13 +141,10 @@ public class Stand implements Cloneable, ConfigurationSerializable, InventoryHol
 
 	@Override
 	public Inventory getInventory() {
-		normalSlots = 5;
 
 		invSeller = Bukkit.createInventory(this, 18, ChatColor.DARK_BLUE + playerName + "'s stand");
 
 		ItemStack here = StandManager.unlockedslot;
-
-
 
 		for (Entry<String, Integer> s : StandManager.getAdvancementSlot().entrySet()) {
 
