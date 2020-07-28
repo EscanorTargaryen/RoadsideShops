@@ -1,6 +1,7 @@
 package it.davide.stands;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.concurrent.ThreadLocalRandom;
 
 import org.bukkit.Bukkit;
@@ -33,7 +34,7 @@ public class Newspaper implements Listener, InventoryHolder {
 	boolean animation = false;
 	private ItemStack glass;
 
-	public Newspaper(ArrayList<Stand> stands, Player p) {
+	public Newspaper(Collection<Stand> collection, Player p) {
 		Bukkit.getPluginManager().registerEvents(this, StandManager.getInstance());
 
 		glass = new ItemStack(Material.GRAY_STAINED_GLASS_PANE);
@@ -43,7 +44,7 @@ public class Newspaper implements Listener, InventoryHolder {
 
 		ArrayList<SellingItem> sel = new ArrayList<>();
 
-		for (Stand s : stands) {
+		for (Stand s : collection) {
 
 			if (s.getSponsor() != null) {
 				if (!s.getP().equals(p.getUniqueId()))

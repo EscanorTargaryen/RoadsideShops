@@ -139,7 +139,6 @@ public class Stand implements Cloneable, ConfigurationSerializable, InventoryHol
 
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public Inventory getInventory() {
 		normalSlots = 5;
@@ -147,15 +146,8 @@ public class Stand implements Cloneable, ConfigurationSerializable, InventoryHol
 		invSeller = Bukkit.createInventory(this, 18, ChatColor.DARK_BLUE + playerName + "'s stand");
 
 		ItemStack here = StandManager.unlockedslot;
-		ArrayList<String> ene = new ArrayList<>();
-		ArrayList<String> ino = new ArrayList<>();
 
-		ene = (ArrayList<String>) StandManager.configconfig.getList("locked-slot-lore");
 
-		for (String s : ene) {
-			ino.add(ChatColor.translateAlternateColorCodes('&',s));
-
-		}
 
 		for (Entry<String, Integer> s : StandManager.getAdvancementSlot().entrySet()) {
 

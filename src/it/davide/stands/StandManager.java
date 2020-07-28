@@ -43,7 +43,7 @@ import saving.SavingUtil;
 
 public class StandManager extends JavaPlugin implements Listener {
 
-	private ArrayList<Stand> stands = new ArrayList<>();
+	private HashMap <String,Stand> stands = new HashMap<>();
 	private File config = new File(getDataFolder() + "/config.yml");
 
 	private SavingUtil<Stand> savesStand;
@@ -133,7 +133,7 @@ public class StandManager extends JavaPlugin implements Listener {
 
 	public void saveAllStand() {
 
-		for (Stand j : stands)
+		for (Stand j : stands.values())
 
 			savesStand.save(j);
 
@@ -146,7 +146,7 @@ public class StandManager extends JavaPlugin implements Listener {
 
 	private void registerStand(Stand k, boolean save) {
 
-		stands.add(k);
+		stands.put(k.getP().toString(), k);
 		if (save)
 			savesStand.save(k);
 
@@ -215,6 +215,18 @@ public class StandManager extends JavaPlugin implements Listener {
 		ItemMeta w = not.getItemMeta();
 		w.setDisplayName(ChatColor.translateAlternateColorCodes('&',
 				StandManager.configconfig.getString("locked-slot-panel-title")));
+		
+		ene = (ArrayList<String>) StandManager.configconfig.getList("locked-slot-lore");
+
+		 ino = new ArrayList<>();
+
+		for (String s : ene) {
+			ino.add(ChatColor.translateAlternateColorCodes('&',s));
+
+		}
+
+		h.setLore(ino);
+		
 		w.setLore(ino);
 		not.setItemMeta(w);
 
@@ -250,19 +262,12 @@ public class StandManager extends JavaPlugin implements Listener {
 
 	public boolean containsPlayer(Player p) {
 
-		for (Stand s : stands) {
-
-			if (s.getP().equals(p.getUniqueId()))
-				return true;
-
-		}
-		return false;
-
+		return stands.containsKey(p.getUniqueId().toString());
 	}
 
 	public boolean containsPlayer(String name) {
 
-		for (Stand s : stands) {
+		for (Stand s : stands.values()) {
 
 			if (s.getPlayerName().equals(name))
 
@@ -273,11 +278,11 @@ public class StandManager extends JavaPlugin implements Listener {
 
 	}
 
-	public Stand getStand(String f) {
+	public Stand getStand(String playerName) {
 
-		for (Stand s : stands) {
+		for (Stand s : stands.values()) {
 
-			if (s.getPlayerName().equals(f))
+			if (s.getPlayerName().equals(playerName))
 				return s;
 
 		}
@@ -287,7 +292,7 @@ public class StandManager extends JavaPlugin implements Listener {
 
 	public Stand getStand(InventoryHolder f) {
 
-		for (Stand s : stands) {
+		for (Stand s : stands.values()) {
 
 			if (s.getHolder().equals(f))
 				return s;
@@ -299,14 +304,7 @@ public class StandManager extends JavaPlugin implements Listener {
 
 	public Stand getStand(Player p) {
 
-		for (Stand s : stands) {
-
-			if (s.getP().equals(p.getUniqueId()))
-				return s;
-
-		}
-		return null;
-
+		return stands.get(p.getUniqueId().toString());
 	}
 
 	@EventHandler
@@ -541,7 +539,7 @@ public class StandManager extends JavaPlugin implements Listener {
 			}
 			Player p = (Player) sender;
 
-			new Newspaper(stands, p);
+			new Newspaper(stands.values(), p);
 			return true;
 
 		}
