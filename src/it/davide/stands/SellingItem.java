@@ -20,13 +20,16 @@ import saving.ItemStackSerializer;
 public class SellingItem implements Cloneable, ConfigurationSerializable {
 	@Getter
 	private ItemStack i;
-	@Getter
-	private ItemStack withprice;
+
+	private ItemStack withpriceSeller;
+
+	private ItemStack withpriceBuyer;
 	@Getter
 	private ItemStack forNewspaper;
 
-	@Getter
-	private ItemStack withpriceESpondor;
+	private ItemStack withpriceESpondorSeller;
+
+	private ItemStack withpriceESpondorBuyer;
 
 	@Getter
 
@@ -35,6 +38,22 @@ public class SellingItem implements Cloneable, ConfigurationSerializable {
 	private double price;
 	@Getter
 	private UUID p;
+
+	public ItemStack getWithpriceBuyer() {
+		return withpriceBuyer.clone();
+	}
+
+	public ItemStack getWithpriceESpondorBuyer() {
+		return withpriceESpondorBuyer.clone();
+	}
+
+	public ItemStack getWithpriceESpondorSeller() {
+		return withpriceESpondorSeller.clone();
+	}
+
+	public ItemStack getWithpriceSeller() {
+		return withpriceSeller.clone();
+	}
 
 	public static SellingItem deserialize(Map<String, Object> args) {
 		Validate.notNull(args, "Invalid args");
@@ -55,30 +74,57 @@ public class SellingItem implements Cloneable, ConfigurationSerializable {
 		p.add("");
 		p.add(ChatColor.translateAlternateColorCodes('&', StandManager.configconfig.getString("price-message")
 				.replace("<value>", SignUtilities.formatVault(price))));
+		p.add("");
+		p.add(ChatColor.GOLD + "Click to edit item");
 		if (m.getLore() != null)
 			p.addAll(m.getLore());
 		m.setLore(p);
 		ItemStack h = i.clone();
 		h.setItemMeta(m);
-		withprice = h;
+		withpriceSeller = h;
 
-		ItemMeta ms = withprice.getItemMeta();
+		p.clear();
+		p.add("");
+		p.add(ChatColor.translateAlternateColorCodes('&', StandManager.configconfig.getString("price-message")
+				.replace("<value>", SignUtilities.formatVault(price))));
+		p.add("");
+		p.add(ChatColor.GOLD + "Click to buy item");
+
+		ItemStack o = withpriceSeller.clone();
+		ItemMeta s1 = withpriceSeller.getItemMeta().clone();
+		s1.setLore(p);
+		o.setItemMeta(s1);
+		withpriceBuyer = o;
+
+		ItemMeta ms = withpriceSeller.getItemMeta();
 		ArrayList<String> p1 = new ArrayList<>();
 		if (ms.getLore() != null)
 			p1.addAll(ms.getLore());
+		p1.remove(p1.size() - 1);
+		p1.remove(p1.size() - 1);
 
 		p1.add(ChatColor.AQUA + "Sponsored Item");
+		p1.add("");
+		p1.add(ChatColor.GOLD + "Click to edit item");
 
 		ms.setLore(p1);
-		ItemStack s = withprice.clone();
+		ItemStack s = withpriceSeller.clone();
 		s.setItemMeta(ms);
-		withpriceESpondor = s;
+		withpriceESpondorSeller = s;
+		p1.remove(p1.size() - 1);
+		p1.add(ChatColor.GOLD + "Click to buy item");
+		withpriceESpondorBuyer = withpriceESpondorSeller.clone();
+		ItemMeta k = withpriceESpondorBuyer.getItemMeta();
+		k.setLore(p1);
+		withpriceESpondorBuyer.setItemMeta(k);
 
 		String nome = Bukkit.getOfflinePlayer(this.p).getName();
-		forNewspaper = withprice.clone();
+		forNewspaper = withpriceSeller.clone();
 		ms = forNewspaper.getItemMeta();
 		ArrayList<String> ar = new ArrayList<>();
 		ar.addAll(ms.getLore());
+		ar.remove(ar.size() - 1);
+		ar.remove(ar.size() - 1);
 		ar.add(ChatColor.YELLOW + "Owner: " + ChatColor.GRAY + nome);
 		ar.add("");
 		ar.add(ChatColor.GOLD + "Click to checkout " + nome + "'s stand");
@@ -103,14 +149,17 @@ public class SellingItem implements Cloneable, ConfigurationSerializable {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
+		result = prime * result + ((forNewspaper == null) ? 0 : forNewspaper.hashCode());
 		result = prime * result + ((i == null) ? 0 : i.hashCode());
 		result = prime * result + ((p == null) ? 0 : p.hashCode());
 		long temp;
 		temp = Double.doubleToLongBits(price);
 		result = prime * result + (int) (temp ^ (temp >>> 32));
 		result = prime * result + slot;
-		result = prime * result + ((withprice == null) ? 0 : withprice.hashCode());
-		result = prime * result + ((withpriceESpondor == null) ? 0 : withpriceESpondor.hashCode());
+		result = prime * result + ((withpriceBuyer == null) ? 0 : withpriceBuyer.hashCode());
+		result = prime * result + ((withpriceESpondorBuyer == null) ? 0 : withpriceESpondorBuyer.hashCode());
+		result = prime * result + ((withpriceESpondorSeller == null) ? 0 : withpriceESpondorSeller.hashCode());
+		result = prime * result + ((withpriceSeller == null) ? 0 : withpriceSeller.hashCode());
 		return result;
 	}
 
@@ -123,6 +172,13 @@ public class SellingItem implements Cloneable, ConfigurationSerializable {
 			return false;
 		}
 		SellingItem other = (SellingItem) obj;
+		if (forNewspaper == null) {
+			if (other.forNewspaper != null) {
+				return false;
+			}
+		} else if (!forNewspaper.equals(other.forNewspaper)) {
+			return false;
+		}
 		if (i == null) {
 			if (other.i != null) {
 				return false;
@@ -143,18 +199,32 @@ public class SellingItem implements Cloneable, ConfigurationSerializable {
 		if (slot != other.slot) {
 			return false;
 		}
-		if (withprice == null) {
-			if (other.withprice != null) {
+		if (withpriceBuyer == null) {
+			if (other.withpriceBuyer != null) {
 				return false;
 			}
-		} else if (!withprice.equals(other.withprice)) {
+		} else if (!withpriceBuyer.equals(other.withpriceBuyer)) {
 			return false;
 		}
-		if (withpriceESpondor == null) {
-			if (other.withpriceESpondor != null) {
+		if (withpriceESpondorBuyer == null) {
+			if (other.withpriceESpondorBuyer != null) {
 				return false;
 			}
-		} else if (!withpriceESpondor.equals(other.withpriceESpondor)) {
+		} else if (!withpriceESpondorBuyer.equals(other.withpriceESpondorBuyer)) {
+			return false;
+		}
+		if (withpriceESpondorSeller == null) {
+			if (other.withpriceESpondorSeller != null) {
+				return false;
+			}
+		} else if (!withpriceESpondorSeller.equals(other.withpriceESpondorSeller)) {
+			return false;
+		}
+		if (withpriceSeller == null) {
+			if (other.withpriceSeller != null) {
+				return false;
+			}
+		} else if (!withpriceSeller.equals(other.withpriceSeller)) {
 			return false;
 		}
 		return true;

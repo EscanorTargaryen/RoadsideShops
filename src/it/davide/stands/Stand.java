@@ -14,7 +14,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import it.davide.advancementAddOn.AdvancementAddOnUtils;
@@ -71,6 +70,11 @@ public class Stand implements Cloneable, ConfigurationSerializable, InventoryHol
 	}
 
 	public boolean Checktime(long time) {
+		Player pl = Bukkit.getPlayer(p);
+		if (pl != null && pl.hasPermission("stand.bypass.sponsortime")) {
+
+			return true;
+		}
 
 		if ((time - lastsponsor) > timesponsor) {
 
@@ -204,31 +208,11 @@ public class Stand implements Cloneable, ConfigurationSerializable, InventoryHol
 
 				if (sponsor != null && s.equals(sponsor)) {
 
-					ItemStack item = s.getWithpriceESpondor().clone();
-					ItemMeta material = item.getItemMeta();
-
-					ArrayList<String> arra = new ArrayList<>();
-					arra.addAll(material.getLore());
-					arra.add("");
-					arra.add(ChatColor.GOLD + "Click to edit item");
-					material.setLore(arra);
-					item.setItemMeta(material);
-
-					invSeller.setItem(s.getSlot(), item);
+					invSeller.setItem(s.getSlot(), s.getWithpriceESpondorSeller());
 
 				} else {
 
-					ItemStack ite = s.getWithprice().clone();
-					ItemMeta me = ite.getItemMeta();
-
-					ArrayList<String> a = new ArrayList<>();
-					a.addAll(me.getLore());
-					a.add("");
-					a.add(ChatColor.GOLD + "Click to edit item");
-					me.setLore(a);
-					ite.setItemMeta(me);
-
-					invSeller.setItem(s.getSlot(), ite);
+					invSeller.setItem(s.getSlot(), s.getWithpriceSeller());
 
 				}
 
@@ -248,29 +232,11 @@ public class Stand implements Cloneable, ConfigurationSerializable, InventoryHol
 
 				{
 
-					ItemStack i = s.getWithpriceESpondor().clone();
-					ItemMeta m = i.getItemMeta();
-
-					ArrayList<String> arr = new ArrayList<>();
-					arr.addAll(m.getLore());
-					arr.add("");
-					arr.add(ChatColor.GOLD + "Click to buy item");
-					m.setLore(arr);
-					i.setItemMeta(m);
-					invBuyer.setItem(s.getSlot(), i);
+					invBuyer.setItem(s.getSlot(), s.getWithpriceESpondorBuyer());
 
 				} else {
-					ItemStack i = s.getWithprice().clone();
-					ItemMeta m = i.getItemMeta();
 
-					ArrayList<String> arr = new ArrayList<>();
-					arr.addAll(m.getLore());
-					arr.add("");
-					arr.add(ChatColor.GOLD + "Click to buy item");
-					m.setLore(arr);
-					i.setItemMeta(m);
-
-					invBuyer.setItem(s.getSlot(), i);
+					invBuyer.setItem(s.getSlot(), s.getWithpriceBuyer());
 
 				}
 

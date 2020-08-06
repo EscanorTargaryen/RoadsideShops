@@ -25,6 +25,7 @@ public class ItemSettingsIH implements InventoryHolder, Listener {
 	ItemStack i;
 	int slot;
 	boolean priceSet = false, sponsor = false, chiudi = false, exit = false;
+	private ItemStack sponsorItem;
 
 	public ItemSettingsIH(Stand s, ItemStack i, Player p, int slot) {
 		Bukkit.getPluginManager().registerEvents(this, StandManager.getInstance());
@@ -34,8 +35,6 @@ public class ItemSettingsIH implements InventoryHolder, Listener {
 		this.i = i.clone();
 		p.openInventory(getInventory());
 	}
-
-	private ItemStack sponsorItem;
 
 	@Override
 	public Inventory getInventory() {
@@ -65,6 +64,15 @@ public class ItemSettingsIH implements InventoryHolder, Listener {
 				ene.add(ChatColor.GRAY + "Sponsoring an item shows it on the newspaper.");
 				ene.add(ChatColor.GRAY + "You can sponsor an item every " + (Stand.timesponsor / 60000) + " minutes.");
 				ene.add("");
+
+				if (s.getSponsor() != null) {
+
+					ene.add(ChatColor.DARK_RED + "N.B.: " + ChatColor.RED
+							+ "You already have a sponsored item. Sponsoring");
+					ene.add(ChatColor.RED + "this item is going to unsponsor the other one.");
+					ene.add("");
+
+				}
 				ene.add(ChatColor.GOLD + "Click to unsponsor");
 				m.setLore(ene);
 				sponsor.setItemMeta(m);
@@ -82,6 +90,14 @@ public class ItemSettingsIH implements InventoryHolder, Listener {
 				ene.add(ChatColor.GRAY + "Sponsoring an item shows it on the newspaper.");
 				ene.add(ChatColor.GRAY + "You can sponsor an item every " + (Stand.timesponsor / 60000) + " minutes.");
 				ene.add("");
+				if (s.getSponsor() != null) {
+
+					ene.add(ChatColor.DARK_RED + "N.B.: " + ChatColor.RED
+							+ "You already have a sponsored item. Sponsoring");
+					ene.add(ChatColor.RED + "this item is going to unsponsor the other one.");
+					ene.add("");
+
+				}
 				ene.add(ChatColor.GOLD + "Click to sponsor");
 				m.setLore(ene);
 				sponsorItem.setItemMeta(m);
@@ -117,8 +133,8 @@ public class ItemSettingsIH implements InventoryHolder, Listener {
 
 			ItemStack prezzo = new ItemStack(Material.NAME_TAG);
 			mw = prezzo.getItemMeta();
-			mw.setDisplayName(ChatColor.translateAlternateColorCodes('&', StandManager.configconfig.getString("price-message").replace("<value>",
-					SignUtilities.formatVault(price))));
+			mw.setDisplayName(ChatColor.translateAlternateColorCodes('&', StandManager.configconfig
+					.getString("price-message").replace("<value>", SignUtilities.formatVault(price))));
 
 			mw.setLore(Arrays.asList("", ChatColor.GOLD + "Click to change the price"));
 			prezzo.setItemMeta(mw);
@@ -207,6 +223,14 @@ public class ItemSettingsIH implements InventoryHolder, Listener {
 					ene.add(ChatColor.GRAY + "You can sponsor an item every " + (Stand.timesponsor / 60000)
 							+ " minutes.");
 					ene.add("");
+					if (s.getSponsor() != null) {
+
+						ene.add(ChatColor.DARK_RED + "N.B.: " + ChatColor.RED
+								+ "You already have a sponsored item. Sponsoring");
+						ene.add(ChatColor.RED + "this item is going to unsponsor the other one.");
+						ene.add("");
+
+					}
 					ene.add(ChatColor.GOLD + "Click to unsponsor");
 					m.setLore(ene);
 					sponsor.setItemMeta(m);
@@ -227,6 +251,14 @@ public class ItemSettingsIH implements InventoryHolder, Listener {
 					ene.add(ChatColor.GRAY + "You can sponsor an item every " + (Stand.timesponsor / 60000)
 							+ " minutes.");
 					ene.add("");
+					if (s.getSponsor() != null) {
+
+						ene.add(ChatColor.DARK_RED + "N.B.: " + ChatColor.RED
+								+ "You already have a sponsored item. Sponsoring");
+						ene.add(ChatColor.RED + "this item is going to unsponsor the other one.");
+						ene.add("");
+
+					}
 					ene.add(ChatColor.GOLD + "Click to sponsor");
 					m.setLore(ene);
 					sponsorItem.setItemMeta(m);
@@ -248,94 +280,35 @@ public class ItemSettingsIH implements InventoryHolder, Listener {
 				SellingItem k = new SellingItem(i, slot, price, s.getP());
 				s.getItems().add(k);
 
-				ItemStack ii = k.getWithprice().clone();
-				ItemMeta mm = ii.getItemMeta();
-
-				ArrayList<String> ar = new ArrayList<>();
-				ar.addAll(mm.getLore());
-				ar.add("");
-				ar.add(ChatColor.GOLD + "Click to buy item");
-				mm.setLore(ar);
-				ii.setItemMeta(mm);
-
-				ItemStack ite = k.getWithprice().clone();
-				ItemMeta me = ite.getItemMeta();
-
-				ArrayList<String> a = new ArrayList<>();
-				a.addAll(me.getLore());
-				a.add("");
-				a.add(ChatColor.GOLD + "Click to edit item");
-				me.setLore(a);
-				ite.setItemMeta(me);
-
-				s.getInvBuyer().setItem(k.getSlot(), ii);
-				s.getInvSeller().setItem(k.getSlot(), ite);
+				s.getInvBuyer().setItem(k.getSlot(), k.getWithpriceBuyer());
+				s.getInvSeller().setItem(k.getSlot(), k.getWithpriceSeller());
 
 				Player p = ((Player) e.getWhoClicked());
 				p.closeInventory();
 				Bukkit.dispatchCommand(p, "stand");
 				exit = true;
 
-				p.sendMessage(StandManager.configconfig.getString("put-item")
-						.replace("<price>", SignUtilities.formatVault(k.getPrice()))
-						.replace("<type>", k.getI().getType().toString().toLowerCase().replace("_", " "))
-						.replace("<amount>", k.getI().getAmount() + ""));
+				p.sendMessage(ChatColor.translateAlternateColorCodes('&',
+						StandManager.configconfig.getString("put-item")
+								.replace("<price>", SignUtilities.formatVault(k.getPrice()))
+								.replace("<type>", k.getI().getType().toString().toLowerCase().replace("_", " "))
+								.replace("<amount>", k.getI().getAmount() + "")));
 
 				if (sponsor) {
 
-					e.getWhoClicked().sendMessage(ChatColor.translateAlternateColorCodes('&',StandManager.configconfig.getString("sponsor-set")));
+					e.getWhoClicked().sendMessage(ChatColor.translateAlternateColorCodes('&',
+							StandManager.configconfig.getString("sponsor-set")));
 					if (s.getSponsor() != null) {
 
-						ii = s.getSponsor().getWithprice().clone();
-						mm = ii.getItemMeta();
-
-						ar = new ArrayList<>();
-						ar.addAll(mm.getLore());
-						ar.add("");
-						ar.add(ChatColor.GOLD + "Click to buy item");
-						mm.setLore(ar);
-						ii.setItemMeta(mm);
-
-						ite = s.getSponsor().getWithprice().clone();
-						me = ite.getItemMeta();
-
-						a = new ArrayList<>();
-						a.addAll(me.getLore());
-						a.add("");
-						a.add(ChatColor.GOLD + "Click to edit item");
-						me.setLore(a);
-						ite.setItemMeta(me);
-
-						s.getInvBuyer().setItem(s.getSponsor().getSlot(), ii);
-						s.getInvSeller().setItem(s.getSponsor().getSlot(), ite);
+						s.getInvBuyer().setItem(s.getSponsor().getSlot(), s.getSponsor().getWithpriceESpondorBuyer());
+						s.getInvSeller().setItem(s.getSponsor().getSlot(), s.getSponsor().getWithpriceESpondorSeller());
 
 					}
-
 					s.setTimeSponsor(System.currentTimeMillis());
 					s.setSponsor(k);
 
-					ItemStack i = k.getWithpriceESpondor().clone();
-					ItemMeta m = i.getItemMeta();
-
-					ArrayList<String> arr = new ArrayList<>();
-					arr.addAll(m.getLore());
-					arr.add("");
-					arr.add(ChatColor.GOLD + "Click to buy item");
-					m.setLore(arr);
-					i.setItemMeta(m);
-
-					ItemStack item = k.getWithpriceESpondor().clone();
-					ItemMeta material = item.getItemMeta();
-
-					ArrayList<String> arra = new ArrayList<>();
-					arra.addAll(material.getLore());
-					arra.add("");
-					arra.add(ChatColor.GOLD + "Click to edit item");
-					material.setLore(arra);
-					item.setItemMeta(material);
-
-					s.getInvBuyer().setItem(k.getSlot(), i);
-					s.getInvSeller().setItem(k.getSlot(), item);
+					s.getInvBuyer().setItem(k.getSlot(), k.getWithpriceESpondorBuyer());
+					s.getInvSeller().setItem(k.getSlot(), k.getWithpriceESpondorSeller());
 
 				}
 

@@ -13,3 +13,7 @@ commands:
   newspaper:
     description: Command
 
+permissions:
+  stand.bypass.sponsortime:
+    description: if have this permission dont wait before select a new item to sponsor
+    default: op

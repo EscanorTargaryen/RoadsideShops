@@ -314,12 +314,15 @@ public class StandManager extends JavaPlugin implements Listener {
 	@EventHandler
 	private void onClick(InventoryClickEvent e) {
 
-		if (getStand(e.getView().getTopInventory().getHolder()) == null)
+		if (e.getView().getTopInventory() != null)
+			if (getStand(e.getView().getTopInventory().getHolder()) == null)
 
-			return;
+				return;
 
-		if (e.getAction() == InventoryAction.HOTBAR_SWAP)
+		if (e.getAction() == InventoryAction.HOTBAR_SWAP) {
+			e.setCancelled(true);
 			return;
+		}
 
 		if (e.getClickedInventory() == null || e.getCurrentItem() == null
 				|| e.getCurrentItem().getType() == Material.AIR)
@@ -399,9 +402,9 @@ public class StandManager extends JavaPlugin implements Listener {
 
 								if (c.equals(stand.getSponsor())) {
 									stand.getInvBuyer().setItem(stand.getSponsor().getSlot(),
-											stand.getSponsor().getWithprice());
+											stand.getSponsor().getWithpriceBuyer());
 									stand.getInvSeller().setItem(stand.getSponsor().getSlot(),
-											stand.getSponsor().getWithprice());
+											stand.getSponsor().getWithpriceSeller());
 
 									stand.setSponsor(null);
 
@@ -480,13 +483,8 @@ public class StandManager extends JavaPlugin implements Listener {
 
 		Player p = e.getPlayer();
 		Stand stand = getStand(p);
-		new BukkitRunnable() {
 
-			@Override
-			public void run() {
-				stand.calculateSlots(p);
-			}
-		}.runTaskLater(this, 2);
+		stand.calculateSlots(p);
 
 	}
 
