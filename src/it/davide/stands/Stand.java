@@ -42,8 +42,9 @@ public class Stand implements Cloneable, ConfigurationSerializable, InventoryHol
 
 //	private final int autoSlotsMax = 2;
 	// private int autoSlots = 0;
+
+	final private int defaultSlot = 3;
 	@Getter
-	@Setter
 	private int normalSlots = 3;
 	@Getter
 	private ArrayList<SellingItem> items = new ArrayList<>();
@@ -97,7 +98,7 @@ public class Stand implements Cloneable, ConfigurationSerializable, InventoryHol
 
 		if (mode.equals("seller"))
 			if (invSeller == null) {
-
+				calculateSlots(p);
 				invSeller = getInventory();
 
 				p.openInventory(invSeller);
@@ -128,6 +129,34 @@ public class Stand implements Cloneable, ConfigurationSerializable, InventoryHol
 
 	}
 
+	public void calculateSlots(Player p) {
+
+		int slot = defaultSlot;
+
+		for (Entry<String, Integer> s : StandManager.getAdvancementSlot().entrySet()) {
+
+			if (AdvancementAddOnUtils.isAchievementGranted(p, s.getKey())) {
+
+				slot += s.getValue();
+
+			}
+
+		}
+
+		for (Entry<String, Integer> s : StandManager.getAdvancementPerms().entrySet()) {
+
+			if (p.hasPermission(s.getKey())) {
+
+				slot += s.getValue();
+
+			}
+
+		}
+
+		normalSlots = slot;
+
+	}
+
 	public SellingItem getItemAt(int slot) {
 
 		for (SellingItem s : items) {
@@ -145,16 +174,6 @@ public class Stand implements Cloneable, ConfigurationSerializable, InventoryHol
 		invSeller = Bukkit.createInventory(this, 18, ChatColor.DARK_BLUE + playerName + "'s stand");
 
 		ItemStack here = StandManager.unlockedslot;
-
-		for (Entry<String, Integer> s : StandManager.getAdvancementSlot().entrySet()) {
-
-			if (AdvancementAddOnUtils.isAchievementGranted(p, s.getKey())) {
-
-				setNormalSlots(normalSlots + s.getValue());
-
-			}
-
-		}
 
 		for (int i = 0; i < 18; i++) {
 

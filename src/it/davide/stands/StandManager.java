@@ -53,17 +53,14 @@ public class StandManager extends JavaPlugin implements Listener {
 	private Set<UUID> slotGiaDati = new HashSet<>();
 
 	static public YamlConfiguration configconfig = new YamlConfiguration();
-
+	@Getter
 	static private HashMap<String, Integer> advancementSlot = new HashMap<>();
+	@Getter
 	static private HashMap<String, Integer> advancementPerms = new HashMap<>();
 
 	public static ItemStack unlockedslot = new ItemStack(Material.GRAY_STAINED_GLASS_PANE);
 	public static ItemStack not;
 	public static ItemStack log;
-
-	public static HashMap<String, Integer> getAdvancementSlot() {
-		return advancementSlot;
-	}
 
 	@Getter
 	private static StandManager instance;
@@ -114,23 +111,14 @@ public class StandManager extends JavaPlugin implements Listener {
 			}
 
 		}
-		if (!slotGiaDati.contains(p.getUniqueId()))
-			for (Entry<String, Integer> s : advancementPerms.entrySet()) {
 
-				if (p.hasPermission(s.getKey())) {
+		new BukkitRunnable() {
 
-					if (d != null) {
-
-						d.setNormalSlots(d.getNormalSlots() + s.getValue());
-						d.updateInventory();
-
-						slotGiaDati.add(p.getUniqueId());
-
-					}
-
-				}
-
+			@Override
+			public void run() {
+				d.calculateSlots(p);
 			}
+		}.runTaskLater(this, 2);
 
 	}
 
@@ -494,17 +482,15 @@ public class StandManager extends JavaPlugin implements Listener {
 	@EventHandler
 	public void onadvancement(AdvancementGrantEvent e) {
 
-		for (Entry<String, Integer> s : StandManager.getAdvancementSlot().entrySet()) {
+		Player p = e.getPlayer();
+		Stand stand = getStand(p);
+		new BukkitRunnable() {
 
-			if (e.getAdvancement().getName().toString().equals(s.getKey())) {
-				Stand p = getStand(e.getPlayer());
-				p.setNormalSlots(p.getNormalSlots() + s.getValue());
-
-				p.updateInventory();
-
+			@Override
+			public void run() {
+				stand.calculateSlots(p);
 			}
-
-		}
+		}.runTaskLater(this, 2);
 
 	}
 
