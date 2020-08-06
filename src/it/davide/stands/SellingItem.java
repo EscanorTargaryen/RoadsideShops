@@ -15,6 +15,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import com.fren_gor.cmcSkyBlock.shop.SignUtilities;
 
 import lombok.Getter;
+import saving.ItemStackSerializer;
 
 public class SellingItem implements Cloneable, ConfigurationSerializable {
 	@Getter
@@ -38,8 +39,8 @@ public class SellingItem implements Cloneable, ConfigurationSerializable {
 	public static SellingItem deserialize(Map<String, Object> args) {
 		Validate.notNull(args, "Invalid args");
 
-		return new SellingItem((ItemStack) args.get("item"), (int) args.get("slot"), (double) args.get("price"),
-				UUID.fromString((String) args.get("player")));
+		return new SellingItem(ItemStackSerializer.deserializeItemStack((String) args.get("item")),
+				(int) args.get("slot"), (double) args.get("price"), UUID.fromString((String) args.get("player")));
 	}
 
 	SellingItem(ItemStack i, int slot, double price, UUID pl) {
@@ -52,8 +53,8 @@ public class SellingItem implements Cloneable, ConfigurationSerializable {
 		ItemMeta m = i.getItemMeta();
 		ArrayList<String> p = new ArrayList<>();
 		p.add("");
-		p.add(ChatColor.translateAlternateColorCodes('&',StandManager.configconfig.getString("price-message").replace("<value>",
-				SignUtilities.formatVault(price))));
+		p.add(ChatColor.translateAlternateColorCodes('&', StandManager.configconfig.getString("price-message")
+				.replace("<value>", SignUtilities.formatVault(price))));
 		if (m.getLore() != null)
 			p.addAll(m.getLore());
 		m.setLore(p);
@@ -90,7 +91,7 @@ public class SellingItem implements Cloneable, ConfigurationSerializable {
 	public Map<String, Object> serialize() {
 
 		Map<String, Object> map = new HashMap<>();
-		map.put("item", i);
+		map.put("item", ItemStackSerializer.serializeItemStack(i));
 		map.put("slot", slot);
 		map.put("price", price);
 		map.put("player", p.toString());
