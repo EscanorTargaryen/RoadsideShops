@@ -154,6 +154,7 @@ public class Stand implements Cloneable, ConfigurationSerializable, InventoryHol
 		}
 
 		normalSlots = slot;
+		updateInventory();
 
 	}
 

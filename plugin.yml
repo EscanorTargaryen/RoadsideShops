@@ -1,10 +1,11 @@
 main: it.davide.stands.StandManager
 name: StandsCore
-version: 1.8.1
+version: 1.8.2
 author: [EscanorTargaryen]
 
 api-version: 1.15
-softdepend: [Vault, CmcSkyBlock]
+depend: [CmcSkyBlock]
+softdepend: [Vault]
 
 commands:
   stand:

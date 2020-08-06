@@ -8,11 +8,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
-import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -50,7 +47,6 @@ public class StandManager extends JavaPlugin implements Listener {
 	private File config = new File(getDataFolder() + "/config.yml");
 
 	private SavingUtil<Stand> savesStand;
-	private Set<UUID> slotGiaDati = new HashSet<>();
 
 	static public YamlConfiguration configconfig = new YamlConfiguration();
 	@Getter
@@ -239,7 +235,7 @@ public class StandManager extends JavaPlugin implements Listener {
 				+ "§a	  \\___ \\ | __|/ _` || '_ \\  / _` |§6| |     / _ \\ | '__|/ _ \\     \n"
 				+ "§a	  ____) || |_| (_| || | | || (_| |§6| |____| (_) || |  |  __/      §2Enabled version: "
 				+ this.getDescription().getVersion() + "\n"
-				+ "§a	 |_____/  \\__|\\__,_||_| |_| \\__,_| §6\\_____|\\___/ |_|   \\___|    ";
+				+ "§a	 |_____/  \\__|\\__,_||_| |_| \\__,_| §6\\_____|\\___/ |_|   \\___|    \n";
 
 		Bukkit.getConsoleSender().sendMessage(s);
 
