@@ -37,7 +37,7 @@ public class Stand implements Cloneable, ConfigurationSerializable, InventoryHol
 	@Setter
 	private SellingItem sponsor = null;
 
-	public final int normalSlotsMax = 16;
+	public final int normalSlotsMax = 14;
 
 //	private final int autoSlotsMax = 2;
 	// private int autoSlots = 0;
@@ -157,7 +157,14 @@ public class Stand implements Cloneable, ConfigurationSerializable, InventoryHol
 
 		}
 
-		normalSlots = slot;
+		if (slot >= normalSlotsMax) {
+
+			normalSlots = normalSlotsMax;
+		} else
+
+			normalSlots = slot;
+		
+		
 		updateInventory();
 
 	}
@@ -185,7 +192,7 @@ public class Stand implements Cloneable, ConfigurationSerializable, InventoryHol
 			invSeller.setItem(i, StandManager.not);
 		}
 
-		for (int i = 1; i < normalSlots + 1; i++) {
+		for (int i = 1; i < normalSlots+1; i++) {
 
 			if (i > 7) {
 

@@ -112,7 +112,8 @@ public class StandManager extends JavaPlugin implements Listener {
 
 			@Override
 			public void run() {
-				d.calculateSlots(p);
+				if (d != null)
+					d.calculateSlots(p);
 			}
 		}.runTaskLater(this, 2);
 
@@ -140,6 +141,7 @@ public class StandManager extends JavaPlugin implements Listener {
 	private void registerStand(Stand k, boolean save) {
 
 		stands.put(k.getP().toString(), k);
+
 		if (save)
 			savesStand.save(k);
 
@@ -201,7 +203,7 @@ public class StandManager extends JavaPlugin implements Listener {
 
 		for (Entry<String, Object> c : b.entrySet()) {
 
-			advancementPerms.put(c.getKey(), (Integer) c.getValue());
+			advancementPerms.put(c.getKey().replace('_', '.'), (Integer) c.getValue());
 
 		}
 
@@ -483,8 +485,8 @@ public class StandManager extends JavaPlugin implements Listener {
 
 		Player p = e.getPlayer();
 		Stand stand = getStand(p);
-
-		stand.calculateSlots(p);
+		if (stand != null && p != null)
+			stand.calculateSlots(p);
 
 	}
 
