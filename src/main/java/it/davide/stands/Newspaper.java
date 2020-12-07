@@ -299,7 +299,7 @@ public class Newspaper implements Listener, InventoryHolder {
 
 				pagina--;
 				Inventory p = getInventory();
-
+				animation = true;
 				task = new BukkitRunnable() {
 					int y = 0;
 

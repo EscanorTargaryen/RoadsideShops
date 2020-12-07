@@ -231,13 +231,13 @@ public class StandManager extends JavaPlugin implements Listener {
 		ws.setDisplayName(ChatColor.WHITE + "");
 		log.setItemMeta(ws);
 
-		String s = "\n§a           _____  _                     _§6   _____                         \n"
-				+ "§a	  / ____|| |                   | | §6/ ____|                        §fby §cEscanorTargaryen §fof   \n"
-				+ "§a	 | (___  | |_  __ _  _ __    __| |§6| |      ___   _ __  ___             §6Command§7Craft \n"
-				+ "§a	  \\___ \\ | __|/ _` || '_ \\  / _` |§6| |     / _ \\ | '__|/ _ \\     \n"
-				+ "§a	  ____) || |_| (_| || | | || (_| |§6| |____| (_) || |  |  __/      §2Enabled version: "
+		String s = "\nÂ§a           _____  _                     _Â§6   _____                         \n"
+				+ "Â§a	  / ____|| |                   | | Â§6/ ____|                        Â§fby Â§cEscanorTargaryen Â§fof   \n"
+				+ "Â§a	 | (___  | |_  __ _  _ __    __| |Â§6| |      ___   _ __  ___             Â§6CommandÂ§7Craft \n"
+				+ "Â§a	  \\___ \\ | __|/ _` || '_ \\  / _` |Â§6| |     / _ \\ | '__|/ _ \\     \n"
+				+ "Â§a	  ____) || |_| (_| || | | || (_| |Â§6| |____| (_) || |  |  __/      Â§2Enabled version: "
 				+ this.getDescription().getVersion() + "\n"
-				+ "§a	 |_____/  \\__|\\__,_||_| |_| \\__,_| §6\\_____|\\___/ |_|   \\___|    \n";
+				+ "Â§a	 |_____/  \\__|\\__,_||_| |_| \\__,_| Â§6\\_____|\\___/ |_|   \\___|    \n";
 
 		Bukkit.getConsoleSender().sendMessage(s);
 

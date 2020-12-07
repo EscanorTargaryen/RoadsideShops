@@ -300,8 +300,8 @@ public class ItemSettingsIH implements InventoryHolder, Listener {
 							StandManager.configconfig.getString("sponsor-set")));
 					if (s.getSponsor() != null) {
 
-						s.getInvBuyer().setItem(s.getSponsor().getSlot(), s.getSponsor().getWithpriceESpondorBuyer());
-						s.getInvSeller().setItem(s.getSponsor().getSlot(), s.getSponsor().getWithpriceESpondorSeller());
+						s.getInvBuyer().setItem(s.getSponsor().getSlot(), s.getSponsor().getWithpriceBuyer());
+						s.getInvSeller().setItem(s.getSponsor().getSlot(), s.getSponsor().getWithpriceSeller());
 
 					}
 					s.setTimeSponsor(System.currentTimeMillis());

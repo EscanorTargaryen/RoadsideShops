@@ -1,6 +1,6 @@
 main: it.davide.stands.StandManager
-name: StandsCore
-version: 1.8.2
+name: ${project.name}
+version: ${project.version}
 author: [EscanorTargaryen]
 
 api-version: 1.15

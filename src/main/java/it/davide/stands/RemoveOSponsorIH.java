@@ -175,7 +175,7 @@ public class RemoveOSponsorIH implements InventoryHolder, Listener {
 			}
 
 			e.getWhoClicked()
-					.sendMessage(StandManager.configconfig.getString("remove-item").replace("&", "ง")
+					.sendMessage(StandManager.configconfig.getString("remove-item").replace("&", "ยง")
 							.replace("<price>", SignUtilities.formatVault(i.getPrice()))
 
 							.replace("<type>", i.getI().getType().toString().toLowerCase().replace("_", " "))
@@ -268,7 +268,7 @@ public class RemoveOSponsorIH implements InventoryHolder, Listener {
 			if (sponsor) {
 
 				e.getPlayer()
-						.sendMessage(StandManager.configconfig.getString("sponsor-item-set").replace("&", "ง")
+						.sendMessage(StandManager.configconfig.getString("sponsor-item-set").replace("&", "ยง")
 								.replace("<price>", SignUtilities.formatVault(i.getPrice()))
 								.replace("<type>", i.getI().getType().toString().toLowerCase().replace("_", " "))
 								.replace("<amount>", i.getI().getAmount() + ""));
