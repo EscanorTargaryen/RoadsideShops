@@ -400,7 +400,18 @@ public class StandManager extends JavaPlugin implements Listener {
 								getEconomy().depositPlayer(Bukkit.getOfflinePlayer(stand.getP()), c.getPrice());
 								venduto = c;
 								e.setCancelled(true);
-								e.getWhoClicked().getInventory().addItem(c.getI());
+
+								Player p= (Player) e.getWhoClicked();
+								HashMap<Integer, ItemStack> cc=p.getInventory().addItem(c.getI());
+
+								for (Map.Entry<Integer, ItemStack> ff : cc.entrySet()) {
+
+
+									p.getWorld().dropItem(p.getLocation(), ff.getValue());
+
+
+								}
+
 
 								if (c.equals(stand.getSponsor())) {
 									stand.getInvBuyer().setItem(stand.getSponsor().getSlot(),
