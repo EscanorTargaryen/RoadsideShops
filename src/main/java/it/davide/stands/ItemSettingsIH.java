@@ -18,6 +18,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import com.fren_gor.cmcSkyBlock.shop.SignUtilities;
+import org.jetbrains.annotations.NotNull;
 
 public class ItemSettingsIH implements InventoryHolder, Listener {
 
@@ -36,6 +37,7 @@ public class ItemSettingsIH implements InventoryHolder, Listener {
 		p.openInventory(getInventory());
 	}
 
+	@NotNull
 	@Override
 	public Inventory getInventory() {
 

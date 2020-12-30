@@ -7,17 +7,18 @@ import org.bukkit.event.HandlerList;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.jetbrains.annotations.NotNull;
 
 public class PlayerBuyStandEvent extends Event implements Cancellable {
 
 	@Getter
-	private Stand stand;
+	private final Stand stand;
 
 	@Getter
-	private SellingItem item;
+	private final SellingItem item;
 
 	@Getter
-	private Player buyer;
+	private final Player buyer;
 
 	public PlayerBuyStandEvent(Stand stand2, SellingItem c, Player whoClicked) {
 
@@ -27,6 +28,7 @@ public class PlayerBuyStandEvent extends Event implements Cancellable {
 	
 	}
 
+	@NotNull
 	@Override
 	public HandlerList getHandlers() {
 		return handlers;

@@ -17,27 +17,28 @@ import com.fren_gor.cmcSkyBlock.shop.SignUtilities;
 import lombok.Getter;
 import saving.ItemStackSerializer;
 
+@SuppressWarnings("RedundantIfStatement")
 public class SellingItem implements Cloneable, ConfigurationSerializable {
 	@Getter
-	private ItemStack i;
+	private final ItemStack i;
 
-	private ItemStack withpriceSeller;
+	private final ItemStack withpriceSeller;
 
-	private ItemStack withpriceBuyer;
+	private final ItemStack withpriceBuyer;
 	@Getter
-	private ItemStack forNewspaper;
+	private final ItemStack forNewspaper;
 
-	private ItemStack withpriceESpondorSeller;
+	private final ItemStack withpriceESpondorSeller;
 
-	private ItemStack withpriceESpondorBuyer;
+	private final ItemStack withpriceESpondorBuyer;
 
 	@Getter
 
-	private int slot;
+	private final int slot;
 	@Getter
-	private double price;
+	private final double price;
 	@Getter
-	private UUID p;
+	private final UUID p;
 
 	public ItemStack getWithpriceBuyer() {
 		return withpriceBuyer.clone();
@@ -121,8 +122,7 @@ public class SellingItem implements Cloneable, ConfigurationSerializable {
 		String nome = Bukkit.getOfflinePlayer(this.p).getName();
 		forNewspaper = withpriceSeller.clone();
 		ms = forNewspaper.getItemMeta();
-		ArrayList<String> ar = new ArrayList<>();
-		ar.addAll(ms.getLore());
+		ArrayList<String> ar = new ArrayList<>(ms.getLore());
 		ar.remove(ar.size() - 1);
 		ar.remove(ar.size() - 1);
 		ar.add(ChatColor.YELLOW + "Owner: " + ChatColor.GRAY + nome);

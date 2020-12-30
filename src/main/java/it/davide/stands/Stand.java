@@ -19,11 +19,12 @@ import org.bukkit.scheduler.BukkitRunnable;
 import it.davide.advancementAddOn.AdvancementAddOnUtils;
 import lombok.Getter;
 import lombok.Setter;
+import org.jetbrains.annotations.NotNull;
 
 public class Stand implements Cloneable, ConfigurationSerializable, InventoryHolder {
     @Getter
 
-    private UUID p;
+    private final UUID p;
     @Getter
     private Inventory invSeller = null;
 
@@ -31,7 +32,7 @@ public class Stand implements Cloneable, ConfigurationSerializable, InventoryHol
     private Inventory invBuyer = null;
 
     @Getter
-    private String playerName;
+    private final String playerName;
 
     @Getter
     @Setter
@@ -49,11 +50,11 @@ public class Stand implements Cloneable, ConfigurationSerializable, InventoryHol
     private ArrayList<SellingItem> items = new ArrayList<>();
 
     @Getter
-    private ArrayList<String> offMessages = new ArrayList<>();
+    private final ArrayList<String> offMessages = new ArrayList<>();
 
     @Getter
 
-    private InventoryHolder holder = this;
+    private final InventoryHolder holder = this;
     static public long timesponsor;
     private long lastsponsor = 0L;
 
@@ -76,13 +77,7 @@ public class Stand implements Cloneable, ConfigurationSerializable, InventoryHol
             return true;
         }
 
-        if ((time - lastsponsor) > timesponsor) {
-
-            return true;
-
-        }
-
-        return false;
+        return (time - lastsponsor) > timesponsor;
 
     }
 
@@ -123,10 +118,9 @@ public class Stand implements Cloneable, ConfigurationSerializable, InventoryHol
             if (invBuyer == null) {
 
                 invSeller = getInventory();
-                p.openInventory(invBuyer);
 
-            } else
-                p.openInventory(invBuyer);
+            }
+            p.openInventory(invBuyer);
 
         }
 
@@ -162,12 +156,7 @@ public class Stand implements Cloneable, ConfigurationSerializable, InventoryHol
 
         }
 
-        if (slot >= normalSlotsMax) {
-
-            normalSlots = normalSlotsMax;
-        } else
-
-            normalSlots = slot;
+        normalSlots = Math.min(slot, normalSlotsMax);
 
 
         updateInventory();
@@ -186,7 +175,7 @@ public class Stand implements Cloneable, ConfigurationSerializable, InventoryHol
     }
 
     @Override
-    public Inventory getInventory() {
+    public @NotNull Inventory getInventory() {
 
         invSeller = Bukkit.createInventory(this, 18, ChatColor.DARK_BLUE + playerName + "'s stand");
 
@@ -218,7 +207,7 @@ public class Stand implements Cloneable, ConfigurationSerializable, InventoryHol
         if (items != null)
             for (SellingItem s : items) {
 
-                if (sponsor != null && s.equals(sponsor)) {
+                if (s.equals(sponsor)) {
 
                     invSeller.setItem(s.getSlot(), s.getWithpriceESpondorSeller());
 
@@ -240,7 +229,7 @@ public class Stand implements Cloneable, ConfigurationSerializable, InventoryHol
         if (items != null)
             for (SellingItem s : items) {
 
-                if (sponsor != null && s.equals(sponsor)) {
+                if (s.equals(sponsor)) {
 
                     invBuyer.setItem(s.getSlot(), s.getWithpriceESpondorBuyer());
 
@@ -259,15 +248,13 @@ public class Stand implements Cloneable, ConfigurationSerializable, InventoryHol
 
         if (slot > 0 && slot < 8) {
 
-            if (slot <= normalSlots)
-                return true;
+            return slot <= normalSlots;
 
         } else if (slot > 9 && slot < 17) {
 
             int temp = slot - 2;
 
-            if (temp <= normalSlots)
-                return true;
+            return temp <= normalSlots;
         }
 
         return false;
@@ -296,7 +283,7 @@ public class Stand implements Cloneable, ConfigurationSerializable, InventoryHol
     }
 
     @Override
-    public Map<String, Object> serialize() {
+    public @NotNull Map<String, Object> serialize() {
 
         Map<String, Object> map = new HashMap<>();
         map.put("playerUUID", p.toString());
@@ -341,13 +328,8 @@ public class Stand implements Cloneable, ConfigurationSerializable, InventoryHol
             return false;
         }
         if (playerName == null) {
-            if (other.playerName != null) {
-                return false;
-            }
-        } else if (!playerName.equals(other.playerName)) {
-            return false;
-        }
-        return true;
+            return other.playerName == null;
+        } else return playerName.equals(other.playerName);
     }
 
 }

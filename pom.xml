@@ -29,6 +29,19 @@
     </repositories>
 
     <dependencies>
+        <!-- JetBrains Annotations -->
+        <dependency>
+            <groupId>org.jetbrains</groupId>
+            <artifactId>annotations</artifactId>
+            <version>19.0.0</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>net.commandcraft</groupId>
+            <artifactId>inventorymanagementplugin</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <scope>provided</scope>
+        </dependency>
         <dependency>
             <groupId>spigots</groupId>
             <artifactId>V_1_15_R2_sk</artifactId>

@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import net.commandcraft.invManagementPlugin.api.SafeInventoryActions;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -39,590 +40,592 @@ import com.fren_gor.cmcSkyBlock.shop.SignUtilities;
 import eu.endercentral.crazy_advancements.events.AdvancementGrantEvent;
 import lombok.Getter;
 import net.milkbowl.vault.economy.Economy;
+import org.jetbrains.annotations.NotNull;
 import saving.SavingUtil;
 
 public class StandManager extends JavaPlugin implements Listener {
 
-	private HashMap<String, Stand> stands = new HashMap<>();
-	private File config = new File(getDataFolder() + "/config.yml");
+    private final HashMap<String, Stand> stands = new HashMap<>();
+    private final File config = new File(getDataFolder() + "/config.yml");
 
-	private SavingUtil<Stand> savesStand;
+    private SavingUtil<Stand> savesStand;
 
-	static public YamlConfiguration configconfig = new YamlConfiguration();
-	@Getter
-	static private HashMap<String, Integer> advancementSlot = new HashMap<>();
-	@Getter
-	static private HashMap<String, Integer> advancementPerms = new HashMap<>();
+    static public YamlConfiguration configconfig = new YamlConfiguration();
+    @Getter
+    static private final HashMap<String, Integer> advancementSlot = new HashMap<>();
+    @Getter
+    static private final HashMap<String, Integer> advancementPerms = new HashMap<>();
 
-	public static ItemStack unlockedslot = new ItemStack(Material.GRAY_STAINED_GLASS_PANE);
-	public static ItemStack not;
-	public static ItemStack log;
+    public static ItemStack unlockedslot = new ItemStack(Material.GRAY_STAINED_GLASS_PANE);
+    public static ItemStack not;
+    public static ItemStack log;
 
-	@Getter
-	private static StandManager instance;
+    @Getter
+    private static StandManager instance;
 
-	private static Economy econ = null;
+    private static Economy econ = null;
 
-	// private ArrayList<Player> richieste = new ArrayList<>();
+    // private ArrayList<Player> richieste = new ArrayList<>();
 
-	public static Economy getEconomy() {
-		return econ;
-	}
+    public static Economy getEconomy() {
+        return econ;
+    }
 
-	@Override
-	public void onLoad() {
-		saveResource("config.yml", false);
-		new StandUtils(this);
+    @Override
+    public void onLoad() {
+        saveResource("config.yml", false);
+        new StandUtils(this);
 
-	}
+    }
 
-	private boolean setupEconomy() {
-		if (getServer().getPluginManager().getPlugin("Vault") == null) {
-			return false;
-		}
-		RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager().getRegistration(Economy.class);
-		if (rsp == null) {
-			return false;
-		}
-		econ = (Economy) rsp.getProvider();
-		return econ != null;
-	}
+    private boolean setupEconomy() {
+        if (getServer().getPluginManager().getPlugin("Vault") == null) {
+            return false;
+        }
+        RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager().getRegistration(Economy.class);
+        if (rsp == null) {
+            return false;
+        }
+        econ = rsp.getProvider();
+        return true;
+    }
 
-	@EventHandler
-	public void onJoin(PlayerJoinEvent e) {
-		Player p = e.getPlayer();
-		Stand d = getStand(p);
+    @EventHandler
+    public void onJoin(PlayerJoinEvent e) {
+        Player p = e.getPlayer();
+        Stand d = getStand(p);
 
-		if (d != null) {
+        if (d != null) {
 
-			if (d.getOffMessages().size() > 0) {
-				p.sendMessage(ChatColor.AQUA + "While you was offline...");
-				for (String s : d.getOffMessages()) {
+            if (d.getOffMessages().size() > 0) {
+                p.sendMessage(ChatColor.AQUA + "While you was offline...");
+                for (String s : d.getOffMessages()) {
 
-					p.sendMessage(s);
-				}
+                    p.sendMessage(s);
+                }
 
-				d.getOffMessages().clear();
+                d.getOffMessages().clear();
 
-			}
+            }
 
-		}
+        }
 
-		new BukkitRunnable() {
+        new BukkitRunnable() {
 
-			@Override
-			public void run() {
-				if (d != null)
-					d.calculateSlots(p);
-			}
-		}.runTaskLater(this, 2);
+            @Override
+            public void run() {
+                if (d != null)
+                    d.calculateSlots(p);
+            }
+        }.runTaskLater(this, 2);
 
-	}
+    }
 
-	public void saveStand(Stand k) {
+    public void saveStand(Stand k) {
 
-		savesStand.save(k);
+        savesStand.save(k);
 
-	}
+    }
 
-	public void saveAllStand() {
+    public void saveAllStand() {
 
-		for (Stand j : stands.values())
+        for (Stand j : stands.values())
 
-			savesStand.save(j);
+            savesStand.save(j);
 
-	}
+    }
 
-	private void registerAllStand() {
-		savesStand.loadAll().forEach(k -> registerStand(k, false));
+    private void registerAllStand() {
+        savesStand.loadAll().forEach(k -> registerStand(k, false));
 
-	}
+    }
 
-	private void registerStand(Stand k, boolean save) {
+    private void registerStand(Stand k, boolean save) {
 
-		stands.put(k.getP().toString(), k);
+        stands.put(k.getP().toString(), k);
 
-		if (save)
-			savesStand.save(k);
+        if (save)
+            savesStand.save(k);
 
-	}
+    }
 
-	public void registerStand(Stand k) {
+    public void registerStand(Stand k) {
 
-		registerStand(k, true);
+        registerStand(k, true);
 
-	}
+    }
 
-	@SuppressWarnings("unchecked")
-	@Override
-	public void onEnable() {
+    @SuppressWarnings("unchecked")
+    @Override
+    public void onEnable() {
 
-		Bukkit.getPluginManager().registerEvents(this, this);
-		instance = this;
+        Bukkit.getPluginManager().registerEvents(this, this);
+        instance = this;
 
-		ConfigurationSerialization.registerClass(Stand.class, "Stand");
-		ConfigurationSerialization.registerClass(SellingItem.class, "SellingItem");
+        ConfigurationSerialization.registerClass(Stand.class, "Stand");
+        ConfigurationSerialization.registerClass(SellingItem.class, "SellingItem");
 
-		configconfig = YamlConfiguration.loadConfiguration(config);
+        configconfig = YamlConfiguration.loadConfiguration(config);
 
-		unlockedslot = new ItemStack(Material.GRAY_STAINED_GLASS_PANE);
-		ItemMeta h = unlockedslot.getItemMeta();
-		h.setDisplayName(ChatColor.translateAlternateColorCodes('&',
-				StandManager.configconfig.getString("unlocked-slot-panel-title")));
+        unlockedslot = new ItemStack(Material.GRAY_STAINED_GLASS_PANE);
+        ItemMeta h = unlockedslot.getItemMeta();
+        h.setDisplayName(ChatColor.translateAlternateColorCodes('&',
+                StandManager.configconfig.getString("unlocked-slot-panel-title")));
 
-		ArrayList<String> ene = (ArrayList<String>) StandManager.configconfig.getList("unlocked-slot-lore");
+        ArrayList<String> ene = (ArrayList<String>) StandManager.configconfig.getList("unlocked-slot-lore");
 
-		ArrayList<String> ino = new ArrayList<>();
+        ArrayList<String> ino = new ArrayList<>();
 
-		for (String s : ene) {
-			ino.add(ChatColor.translateAlternateColorCodes('&', s));
+        for (String s : ene) {
+            ino.add(ChatColor.translateAlternateColorCodes('&', s));
 
-		}
+        }
 
-		h.setLore(ino);
-		unlockedslot.setItemMeta(h);
+        h.setLore(ino);
+        unlockedslot.setItemMeta(h);
 
-		if (!setupEconomy()) {
-			getServer().getLogger().info("Disabled due to no Vault economy found!");
-			getServer().getPluginManager().disablePlugin(this);
-			return;
-		}
+        if (!setupEconomy()) {
+            getServer().getLogger().info("Disabled due to no Vault economy found!");
+            getServer().getPluginManager().disablePlugin(this);
+            return;
+        }
 
-		savesStand = new SavingUtil<Stand>(this, s -> s.getP().toString(), ".stand");
-		registerAllStand();
+        savesStand = new SavingUtil<>(this, s -> s.getP().toString(), ".stand");
+        registerAllStand();
 
-		Map<String, Object> d = configconfig.getConfigurationSection("advancementSlot").getValues(false);
+        Map<String, Object> d = configconfig.getConfigurationSection("advancementSlot").getValues(false);
 
-		for (Entry<String, Object> c : d.entrySet()) {
+        for (Entry<String, Object> c : d.entrySet()) {
 
-			advancementSlot.put(c.getKey().replace('!', ':'), (Integer) c.getValue());
+            advancementSlot.put(c.getKey().replace('!', ':'), (Integer) c.getValue());
 
-		}
+        }
 
-		Map<String, Object> b = configconfig.getConfigurationSection("permissionslot").getValues(false);
+        Map<String, Object> b = configconfig.getConfigurationSection("permissionslot").getValues(false);
 
-		for (Entry<String, Object> c : b.entrySet()) {
+        for (Entry<String, Object> c : b.entrySet()) {
 
-			advancementPerms.put(c.getKey().replace('_', '.'), (Integer) c.getValue());
+            advancementPerms.put(c.getKey().replace('_', '.'), (Integer) c.getValue());
 
-		}
+        }
 
-		not = new ItemStack(Material.BLACK_STAINED_GLASS_PANE);
-		ItemMeta w = not.getItemMeta();
-		w.setDisplayName(ChatColor.translateAlternateColorCodes('&',
-				StandManager.configconfig.getString("locked-slot-panel-title")));
+        not = new ItemStack(Material.BLACK_STAINED_GLASS_PANE);
+        ItemMeta w = not.getItemMeta();
+        w.setDisplayName(ChatColor.translateAlternateColorCodes('&',
+                StandManager.configconfig.getString("locked-slot-panel-title")));
 
-		ene = (ArrayList<String>) StandManager.configconfig.getList("locked-slot-lore");
+        ene = (ArrayList<String>) StandManager.configconfig.getList("locked-slot-lore");
 
-		ino = new ArrayList<>();
+        ino = new ArrayList<>();
 
-		for (String s : ene) {
-			ino.add(ChatColor.translateAlternateColorCodes('&', s));
+        for (String s : ene) {
+            ino.add(ChatColor.translateAlternateColorCodes('&', s));
 
-		}
+        }
 
-		h.setLore(ino);
+        h.setLore(ino);
 
-		w.setLore(ino);
-		not.setItemMeta(w);
+        w.setLore(ino);
+        not.setItemMeta(w);
 
-		log = new ItemStack(Material.OAK_LOG);
-		ItemMeta ws = log.getItemMeta();
-		ws.setDisplayName(ChatColor.WHITE + "");
-		log.setItemMeta(ws);
+        log = new ItemStack(Material.OAK_LOG);
+        ItemMeta ws = log.getItemMeta();
+        ws.setDisplayName(ChatColor.WHITE + "");
+        log.setItemMeta(ws);
 
-		String s = "\n§a           _____  _                     _§6   _____                         \n"
-				+ "§a	  / ____|| |                   | | §6/ ____|                        §fby §cEscanorTargaryen §fof   \n"
-				+ "§a	 | (___  | |_  __ _  _ __    __| |§6| |      ___   _ __  ___             §6Command§7Craft \n"
-				+ "§a	  \\___ \\ | __|/ _` || '_ \\  / _` |§6| |     / _ \\ | '__|/ _ \\     \n"
-				+ "§a	  ____) || |_| (_| || | | || (_| |§6| |____| (_) || |  |  __/      §2Enabled version: "
-				+ this.getDescription().getVersion() + "\n"
-				+ "§a	 |_____/  \\__|\\__,_||_| |_| \\__,_| §6\\_____|\\___/ |_|   \\___|    \n";
+        String s = "\n§a           _____  _                     _§6   _____                         \n"
+                + "§a	  / ____|| |                   | | §6/ ____|                        §fby §cEscanorTargaryen §fof   \n"
+                + "§a	 | (___  | |_  __ _  _ __    __| |§6| |      ___   _ __  ___             §6Command§7Craft \n"
+                + "§a	  \\___ \\ | __|/ _` || '_ \\  / _` |§6| |     / _ \\ | '__|/ _ \\     \n"
+                + "§a	  ____) || |_| (_| || | | || (_| |§6| |____| (_) || |  |  __/      §2Enabled version: "
+                + this.getDescription().getVersion() + "\n"
+                + "§a	 |_____/  \\__|\\__,_||_| |_| \\__,_| §6\\_____|\\___/ |_|   \\___|    \n";
 
-		Bukkit.getConsoleSender().sendMessage(s);
+        Bukkit.getConsoleSender().sendMessage(s);
 
-	}
+    }
 
-	public void copyFileUsingStream(File source, File dest) throws IOException {
-		try (InputStream is = new FileInputStream(source); OutputStream os = new FileOutputStream(dest)) {
-			byte[] buffer = new byte[1024];
-			int length;
-			while ((length = is.read(buffer)) > 0) {
-				os.write(buffer, 0, length);
-			}
-		}
-	}
+    public void copyFileUsingStream(File source, File dest) throws IOException {
+        try (InputStream is = new FileInputStream(source); OutputStream os = new FileOutputStream(dest)) {
+            byte[] buffer = new byte[1024];
+            int length;
+            while ((length = is.read(buffer)) > 0) {
+                os.write(buffer, 0, length);
+            }
+        }
+    }
 
-	public void saveCustomYml(FileConfiguration ymlConfig, File ymlFile) {
-		try {
-			ymlConfig.save(ymlFile);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
+    public void saveCustomYml(FileConfiguration ymlConfig, File ymlFile) {
+        try {
+            ymlConfig.save(ymlFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
-	@Override
-	public void onDisable() {
-		saveAllStand();
-	}
+    @Override
+    public void onDisable() {
+        saveAllStand();
+    }
 
-	public boolean containsPlayer(Player p) {
+    public boolean containsPlayer(Player p) {
 
-		return stands.containsKey(p.getUniqueId().toString());
-	}
+        return stands.containsKey(p.getUniqueId().toString());
+    }
 
-	public boolean containsPlayer(String name) {
+    public boolean containsPlayer(String name) {
 
-		for (Stand s : stands.values()) {
+        for (Stand s : stands.values()) {
 
-			if (s.getPlayerName().equals(name))
+            if (s.getPlayerName().equals(name))
 
-				return true;
+                return true;
 
-		}
-		return false;
+        }
+        return false;
 
-	}
+    }
 
-	public Stand getStand(String playerName) {
+    public Stand getStand(String playerName) {
 
-		for (Stand s : stands.values()) {
+        for (Stand s : stands.values()) {
 
-			if (s.getPlayerName().equals(playerName))
-				return s;
+            if (s.getPlayerName().equals(playerName))
+                return s;
 
-		}
-		return null;
+        }
+        return null;
 
-	}
+    }
 
-	public Stand getStand(InventoryHolder f) {
+    public Stand getStand(InventoryHolder f) {
 
-		for (Stand s : stands.values()) {
+        for (Stand s : stands.values()) {
 
-			if (s.getHolder().equals(f))
-				return s;
+            if (s.getHolder().equals(f))
+                return s;
 
-		}
-		return null;
+        }
+        return null;
 
-	}
+    }
 
-	public Stand getStand(Player p) {
+    public Stand getStand(Player p) {
 
-		return stands.get(p.getUniqueId().toString());
-	}
+        return stands.get(p.getUniqueId().toString());
+    }
 
-	@EventHandler
-	private void onClick(InventoryClickEvent e) {
+    @EventHandler
+    private void onClick(InventoryClickEvent e) {
 
-		if (e.getView().getTopInventory() != null)
-			if (getStand(e.getView().getTopInventory().getHolder()) == null)
+        e.getView().getTopInventory();
+        if (getStand(e.getView().getTopInventory().getHolder()) == null)
 
-				return;
+            return;
 
-		if (e.getAction() == InventoryAction.HOTBAR_SWAP) {
-			e.setCancelled(true);
-			return;
-		}
+        if (e.getAction() == InventoryAction.HOTBAR_SWAP) {
+            e.setCancelled(true);
+            return;
+        }
 
-		if (e.getClickedInventory() == null || e.getCurrentItem() == null
-				|| e.getCurrentItem().getType() == Material.AIR)
-			return;
+        if (e.getClickedInventory() == null || e.getCurrentItem() == null
+                || e.getCurrentItem().getType() == Material.AIR)
+            return;
 
-		Stand stand = getStand(e.getView().getTopInventory().getHolder());
+        Stand stand = getStand(e.getView().getTopInventory().getHolder());
 
-		if (e.getWhoClicked().getUniqueId().equals(stand.getP())) {
+        if (e.getWhoClicked().getUniqueId().equals(stand.getP())) {
 
-			if (!e.getClickedInventory().getHolder().equals(stand.getHolder())) {
+            if (e.getClickedInventory().getHolder() != (stand.getHolder())) {
 
-				if (e.getClick() == ClickType.DOUBLE_CLICK || e.getClick() == ClickType.SHIFT_LEFT
-						|| e.getClick() == ClickType.SHIFT_RIGHT) {
+                if (e.getClick() == ClickType.DOUBLE_CLICK || e.getClick() == ClickType.SHIFT_LEFT
+                        || e.getClick() == ClickType.SHIFT_RIGHT) {
 
-					e.setCancelled(true);
+                    e.setCancelled(true);
 
-				}
+                }
 
-				return;
-			}
+                return;
+            }
 
-			if (stand.getItemAt(e.getSlot()) == null) {
-				e.setCancelled(true);
+            if (stand.getItemAt(e.getSlot()) == null) {
+                e.setCancelled(true);
 
-				if (!stand.canSell(e.getSlot()))
-					return;
+                if (!stand.canSell(e.getSlot()))
+                    return;
 
-				if (e.getCursor() == null || e.getCursor().getType() == Material.AIR) {
+                if (e.getCursor() == null || e.getCursor().getType() == Material.AIR) {
 
-					return;
+                    return;
 
-				}
+                }
 
-				new BukkitRunnable() {
+                new BukkitRunnable() {
 
-					@Override
-					public void run() {
-						ItemStack i = e.getCursor().clone();
-						e.getView().setCursor(new ItemStack(Material.AIR));
+                    @Override
+                    public void run() {
+                        ItemStack i = e.getCursor().clone();
+                        e.getView().setCursor(new ItemStack(Material.AIR));
 
-						new ItemSettingsIH(stand, i, (Player) e.getWhoClicked(), e.getSlot());
+                        new ItemSettingsIH(stand, i, (Player) e.getWhoClicked(), e.getSlot());
 
-					}
-				}.runTaskLater(this, 2);
+                    }
+                }.runTaskLater(this, 2);
 
-			} else {
+            } else {
 
-				e.setCancelled(true);
-				new RemoveOSponsorIH(stand, stand.getItemAt(e.getSlot()), (Player) e.getWhoClicked());
+                e.setCancelled(true);
+                new RemoveOSponsorIH(stand, stand.getItemAt(e.getSlot()), (Player) e.getWhoClicked());
 
-			}
+            }
 
-		} else {
-			e.setCancelled(true);
+        } else {
+            e.setCancelled(true);
 
-			SellingItem venduto = null;
+            SellingItem venduto = null;
 
-			if (e.getCursor() == null || e.getCursor().getType() == Material.AIR) {
+            if (e.getCursor() == null || e.getCursor().getType() == Material.AIR) {
 
-				for (SellingItem c : stand.getItems()) {
+                for (SellingItem c : stand.getItems()) {
 
-					if (c.getSlot() == e.getSlot()) {
+                    if (c.getSlot() == e.getSlot()) {
 
-						if (getEconomy().has((OfflinePlayer) e.getWhoClicked(), c.getPrice())) {
+                        if (getEconomy().has((OfflinePlayer) e.getWhoClicked(), c.getPrice())) {
 
-							PlayerBuyStandEvent ev = new PlayerBuyStandEvent(stand, c, (Player) e.getWhoClicked());
+                            PlayerBuyStandEvent ev = new PlayerBuyStandEvent(stand, c, (Player) e.getWhoClicked());
 
-							Bukkit.getPluginManager().callEvent(ev);
+                            Bukkit.getPluginManager().callEvent(ev);
 
-							if (!ev.isCancelled()) {
+                            if (!ev.isCancelled()) {
+                                Player p = (Player) e.getWhoClicked();
+                                switch (SafeInventoryActions.addItem(p.getInventory(), c.getI())) {
 
-								getEconomy().withdrawPlayer((OfflinePlayer) e.getWhoClicked(), c.getPrice());
-								getEconomy().depositPlayer(Bukkit.getOfflinePlayer(stand.getP()), c.getPrice());
-								venduto = c;
-								e.setCancelled(true);
+                                    case MODIFIED: {
 
-								Player p= (Player) e.getWhoClicked();
-								HashMap<Integer, ItemStack> cc=p.getInventory().addItem(c.getI());
 
-								for (Map.Entry<Integer, ItemStack> ff : cc.entrySet()) {
+                                        getEconomy().withdrawPlayer((OfflinePlayer) e.getWhoClicked(), c.getPrice());
+                                        getEconomy().depositPlayer(Bukkit.getOfflinePlayer(stand.getP()), c.getPrice());
+                                        venduto = c;
+                                        e.setCancelled(true);
 
+                                        if (c.equals(stand.getSponsor())) {
+                                            stand.getInvBuyer().setItem(stand.getSponsor().getSlot(),
+                                                    stand.getSponsor().getWithpriceBuyer());
+                                            stand.getInvSeller().setItem(stand.getSponsor().getSlot(),
+                                                    stand.getSponsor().getWithpriceSeller());
 
-									p.getWorld().dropItem(p.getLocation(), ff.getValue());
+                                            stand.setSponsor(null);
 
+                                        }
 
-								}
+                                        e.getWhoClicked().sendMessage(ChatColor.translateAlternateColorCodes('&',
+                                                StandManager.configconfig.getString("bought-message")
+                                                        .replace("<price>", SignUtilities.formatVault(c.getPrice()))
+                                                        .replace("<type>",
+                                                                c.getI().getType().toString().toLowerCase().replace("_", " "))
+                                                        .replace("<amount>", c.getI().getAmount() + "")
+                                                        .replace("<name>", stand.getPlayerName())));
 
+                                        if (Bukkit.getPlayer(stand.getP()) != null) {
 
-								if (c.equals(stand.getSponsor())) {
-									stand.getInvBuyer().setItem(stand.getSponsor().getSlot(),
-											stand.getSponsor().getWithpriceBuyer());
-									stand.getInvSeller().setItem(stand.getSponsor().getSlot(),
-											stand.getSponsor().getWithpriceSeller());
+                                            Bukkit.getPlayer(stand.getP()).sendMessage(ChatColor.translateAlternateColorCodes(
+                                                    '&',
+                                                    StandManager.configconfig.getString("seller-message")
+                                                            .replace("<price>", SignUtilities.formatVault(c.getPrice()))
+                                                            .replace("<type>",
+                                                                    c.getI().getType().toString().toLowerCase().replace("_",
+                                                                            " "))
+                                                            .replace("<amount>", c.getI().getAmount() + "")
+                                                            .replace("<name>", stand.getPlayerName())));
 
-									stand.setSponsor(null);
+                                        } else {
+                                            stand.getOffMessages().add(ChatColor.translateAlternateColorCodes('&',
+                                                    StandManager.configconfig.getString("seller-message")
 
-								}
+                                                            .replace("<price>", SignUtilities.formatVault(c.getPrice()))
+                                                            .replace("<type>",
+                                                                    c.getI().getType().toString().toLowerCase().replace("_",
+                                                                            " "))
+                                                            .replace("<amount>", c.getI().getAmount() + "")
+                                                            .replace("<name>", stand.getPlayerName())));
 
-								e.getWhoClicked().sendMessage(ChatColor.translateAlternateColorCodes('&',
-										StandManager.configconfig.getString("bought-message")
-												.replace("<price>", SignUtilities.formatVault(c.getPrice()))
-												.replace("<type>",
-														c.getI().getType().toString().toLowerCase().replace("_", " "))
-												.replace("<amount>", c.getI().getAmount() + "")
-												.replace("<name>", stand.getPlayerName())));
+                                        }
+                                        new BukkitRunnable() {
 
-								if (Bukkit.getPlayer(stand.getP()) != null) {
+                                            @Override
+                                            public void run() {
 
-									Bukkit.getPlayer(stand.getP()).sendMessage(ChatColor.translateAlternateColorCodes(
-											'&',
-											StandManager.configconfig.getString("seller-message")
-													.replace("<price>", SignUtilities.formatVault(c.getPrice()))
-													.replace("<type>",
-															c.getI().getType().toString().toLowerCase().replace("_",
-																	" "))
-													.replace("<amount>", c.getI().getAmount() + "")
-													.replace("<name>", stand.getPlayerName())));
+                                                stand.getInvSeller().setItem(c.getSlot(), new ItemStack(unlockedslot));
 
-								} else {
-									stand.getOffMessages().add(ChatColor.translateAlternateColorCodes('&',
-											StandManager.configconfig.getString("seller-message")
+                                                stand.getInvBuyer().setItem(c.getSlot(), new ItemStack(Material.AIR));
 
-													.replace("<price>", SignUtilities.formatVault(c.getPrice()))
-													.replace("<type>",
-															c.getI().getType().toString().toLowerCase().replace("_",
-																	" "))
-													.replace("<amount>", c.getI().getAmount() + "")
-													.replace("<name>", stand.getPlayerName())));
+                                            }
+                                        }.runTaskLater(this, 2);
+                                        break;
+                                    }
 
-								}
-								new BukkitRunnable() {
+                                    case NOT_MODIFIED:
+                                    case NOT_ENOUGH_SPACE: {
 
-									@Override
-									public void run() {
+                                        p.sendMessage(ChatColor.RED + "Inventory full");
 
-										stand.getInvSeller().setItem(c.getSlot(), new ItemStack(unlockedslot));
+                                        break;
+                                    }
 
-										stand.getInvBuyer().setItem(c.getSlot(), new ItemStack(Material.AIR));
+                                }
 
-									}
-								}.runTaskLater(this, 2);
 
-							}
+                            }
 
-						} else {
-							e.setCancelled(true);
-							e.getWhoClicked().sendMessage(ChatColor.RED + "You haven't enought money");
-						}
+                        } else {
+                            e.setCancelled(true);
+                            e.getWhoClicked().sendMessage(ChatColor.RED + "You haven't enought money");
+                        }
 
-					}
-				}
-				if (venduto != null) {
+                    }
+                }
+                if (venduto != null) {
 
-					stand.getItems().remove(venduto);
+                    stand.getItems().remove(venduto);
 
-				}
+                }
 
-			} else {
-				e.setCancelled(true);
+            } else {
+                e.setCancelled(true);
 
-			}
+            }
 
-		}
+        }
 
-	}
+    }
 
-	@EventHandler
-	public void onadvancement(AdvancementGrantEvent e) {
+    @EventHandler
+    public void onadvancement(AdvancementGrantEvent e) {
 
-		Player p = e.getPlayer();
-		Stand stand = getStand(p);
-		if (stand != null && p != null)
-			stand.calculateSlots(p);
+        Player p = e.getPlayer();
+        Stand stand = getStand(p);
+        if (stand != null)
+            stand.calculateSlots(p);
 
-	}
+    }
 
-	@Override
-	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+    @Override
+    public boolean onCommand(@NotNull CommandSender sender, Command command, @NotNull String label, String[] args) {
 
-		if (command.getName().equalsIgnoreCase("stand")) {
+        if (command.getName().equalsIgnoreCase("stand")) {
 
-			if (!(sender instanceof Player)) {
-				sender.sendMessage(ChatColor.RED + "Devi essere un player!");
-				return false;
-			}
-			Player p = (Player) sender;
+            if (!(sender instanceof Player)) {
+                sender.sendMessage(ChatColor.RED + "Devi essere un player!");
+                return false;
+            }
+            Player p = (Player) sender;
 
-			if (args.length == 0) {
+            if (args.length == 0) {
 
-				if (!containsPlayer(p)) {
+                if (!containsPlayer(p)) {
 
-					registerStand(new Stand(p.getUniqueId(), p.getName().toString()));
+                    registerStand(new Stand(p.getUniqueId(), p.getName()));
 
-					getStand(p).openInventory(p, "seller");
+                }
+                getStand(p).openInventory(p, "seller");
 
-				} else {
+            } else if (args.length == 1) {
 
-					getStand(p).openInventory(p, "seller");
+                if (!containsPlayer(args[0])) {
 
-				}
+                    p.sendMessage(ChatColor.RED + "The player doesn' t have a stand");
 
-			} else if (args.length == 1) {
+                } else {
 
-				if (!containsPlayer(args[0])) {
+                    if (p.getName().equals(args[0])) {
 
-					p.sendMessage(ChatColor.RED + "The player doesn' t have a stand");
+                        getStand(args[0]).openInventory(p, "seller");
 
-				} else {
+                    } else
 
-					if (p.getName().equals(args[0])) {
+                        getStand(args[0]).openInventory(p, "buyer");
 
-						getStand(args[0]).openInventory(p, "seller");
+                }
 
-					} else
+            } else
+                p.sendMessage(ChatColor.RED + "Usage: /stand <playername>");
 
-						getStand(args[0]).openInventory(p, "buyer");
+        }
 
-				}
+        if (command.getName().equalsIgnoreCase("newspaper")) {
 
-			} else
-				p.sendMessage(ChatColor.RED + "Usage: /stand <playername>");
+            if (!(sender instanceof Player)) {
+                sender.sendMessage(ChatColor.RED + "Devi essere un player!");
+                return false;
+            }
+            Player p = (Player) sender;
 
-		}
+            new Newspaper(stands.values(), p);
+            return true;
 
-		if (command.getName().equalsIgnoreCase("newspaper")) {
+        }
 
-			if (!(sender instanceof Player)) {
-				sender.sendMessage(ChatColor.RED + "Devi essere un player!");
-				return false;
-			}
-			Player p = (Player) sender;
+        /*
+         * if (command.getName().equalsIgnoreCase("standsetlocation")) {
+         *
+         * if (!(sender instanceof Player)) { sender.sendMessage(ChatColor.RED +
+         * "Devi essere un player!"); return false; } Player p = (Player) sender; if
+         * (!richieste.contains(p)) { richieste.add(p);
+         *
+         * p.sendMessage(ChatColor.GOLD +
+         * "Click a block to set the location of your stand"); }
+         *
+         * }
+         */
 
-			new Newspaper(stands.values(), p);
-			return true;
+        return false;
 
-		}
+    }
 
-		/*
-		 * if (command.getName().equalsIgnoreCase("standsetlocation")) {
-		 * 
-		 * if (!(sender instanceof Player)) { sender.sendMessage(ChatColor.RED +
-		 * "Devi essere un player!"); return false; } Player p = (Player) sender; if
-		 * (!richieste.contains(p)) { richieste.add(p);
-		 * 
-		 * p.sendMessage(ChatColor.GOLD +
-		 * "Click a block to set the location of your stand"); }
-		 * 
-		 * }
-		 */
-
-		return false;
-
-	}
-
-	/*
-	 * @EventHandler per location public void onInteract(PlayerInteractEvent e) {
-	 * 
-	 * if (e.getAction() == Action.RIGHT_CLICK_BLOCK) { Player p = e.getPlayer();
-	 * 
-	 * if (richieste.contains(e.getPlayer())) {
-	 * 
-	 * Stand s = getStand(e.getPlayer());
-	 * 
-	 * if (s != null) { s.setLocation(e.getClickedBlock().getLocation());
-	 * 
-	 * p.sendMessage(ChatColor.GOLD + "You setted the block of your stand"); } else
-	 * p.sendMessage("You haven't a stand");
-	 * 
-	 * richieste.remove(e.getPlayer());
-	 * 
-	 * } else { for (Stand s : stands) {
-	 * 
-	 * if (e.getClickedBlock().getLocation().equals(s.getLocation())) {
-	 * 
-	 * Bukkit.dispatchCommand(p, "stand " + s.getPlayerName());
-	 * 
-	 * }
-	 * 
-	 * } }
-	 * 
-	 * }
-	 * 
-	 * }
-	 * 
-	 * @EventHandler public void onBreak(BlockBreakEvent e) {
-	 * 
-	 * for (Stand s : stands) {
-	 * 
-	 * if (e.getBlock().getLocation().equals(s.getLocation())) {
-	 * 
-	 * e.getPlayer().sendMessage(ChatColor.GOLD + "Location disabled");
-	 * s.setLocation(null);
-	 * 
-	 * }
-	 * 
-	 * }
-	 * 
-	 * }
-	 */
+    /*
+     * @EventHandler per location public void onInteract(PlayerInteractEvent e) {
+     *
+     * if (e.getAction() == Action.RIGHT_CLICK_BLOCK) { Player p = e.getPlayer();
+     *
+     * if (richieste.contains(e.getPlayer())) {
+     *
+     * Stand s = getStand(e.getPlayer());
+     *
+     * if (s != null) { s.setLocation(e.getClickedBlock().getLocation());
+     *
+     * p.sendMessage(ChatColor.GOLD + "You setted the block of your stand"); } else
+     * p.sendMessage("You haven't a stand");
+     *
+     * richieste.remove(e.getPlayer());
+     *
+     * } else { for (Stand s : stands) {
+     *
+     * if (e.getClickedBlock().getLocation().equals(s.getLocation())) {
+     *
+     * Bukkit.dispatchCommand(p, "stand " + s.getPlayerName());
+     *
+     * }
+     *
+     * } }
+     *
+     * }
+     *
+     * }
+     *
+     * @EventHandler public void onBreak(BlockBreakEvent e) {
+     *
+     * for (Stand s : stands) {
+     *
+     * if (e.getBlock().getLocation().equals(s.getLocation())) {
+     *
+     * e.getPlayer().sendMessage(ChatColor.GOLD + "Location disabled");
+     * s.setLocation(null);
+     *
+     * }
+     *
+     * }
+     *
+     * }
+     */
 
 }

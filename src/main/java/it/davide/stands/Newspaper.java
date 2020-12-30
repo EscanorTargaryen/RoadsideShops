@@ -20,6 +20,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
 import head.HeadLib;
+import org.jetbrains.annotations.NotNull;
 
 public class Newspaper implements Listener, InventoryHolder {
 
@@ -32,7 +33,7 @@ public class Newspaper implements Listener, InventoryHolder {
 			ChatColor.GRAY + "Click to view prev. page");
 
 	boolean animation = false;
-	private ItemStack glass;
+	private final ItemStack glass;
 
 	public Newspaper(Collection<Stand> collection, Player p) {
 		Bukkit.getPluginManager().registerEvents(this, StandManager.getInstance());
@@ -81,6 +82,7 @@ public class Newspaper implements Listener, InventoryHolder {
 
 	BukkitTask task;
 
+	@NotNull
 	@Override
 	public Inventory getInventory() {
 		Inventory inv = Bukkit.createInventory(this, 45, ChatColor.DARK_BLUE + "Newspaper");

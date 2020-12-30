@@ -2,10 +2,10 @@ package it.davide.stands;
 
 import java.util.*;
 
+import net.commandcraft.invManagementPlugin.api.SafeInventoryActions;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -20,6 +20,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import com.fren_gor.cmcSkyBlock.shop.SignUtilities;
 
 import head.HeadLib;
+import org.jetbrains.annotations.NotNull;
 
 public class RemoveOSponsorIH implements InventoryHolder, Listener {
 
@@ -35,6 +36,7 @@ public class RemoveOSponsorIH implements InventoryHolder, Listener {
         p.openInventory(getInventory());
     }
 
+    @NotNull
     @Override
     public Inventory getInventory() {
 
@@ -159,43 +161,52 @@ public class RemoveOSponsorIH implements InventoryHolder, Listener {
             ItemStack here = StandManager.unlockedslot;
 
             Player p = (Player) e.getWhoClicked();
-            HashMap<Integer, ItemStack> cc = p.getInventory().addItem(i.getI());
 
-            for (Map.Entry<Integer, ItemStack> ff : cc.entrySet()) {
+            switch (SafeInventoryActions.addItem(p.getInventory(), i.getI())) {
 
-
-                p.getWorld().dropItem(p.getLocation(), ff.getValue());
+                case MODIFIED: {
 
 
-            }
+                    s.getInvSeller().setItem(i.getSlot(), here);
+                    s.getInvBuyer().setItem(i.getSlot(), new ItemStack(Material.AIR));
 
+                    s.getItems().remove(i);
 
-            s.getInvSeller().setItem(i.getSlot(), here);
-            s.getInvBuyer().setItem(i.getSlot(), new ItemStack(Material.AIR));
+                    e.getWhoClicked().closeInventory();
+                    if (s != null && s.getSponsor().equals(i)) {
+                        s.setSponsor(null);
 
-            s.getItems().remove(i);
+                    }
 
-            e.getWhoClicked().closeInventory();
-            if (s != null && s.getSponsor().equals(i)) {
-                s.setSponsor(null);
+                    e.getWhoClicked()
+                            .sendMessage(StandManager.configconfig.getString("remove-item").replace("&", "§")
+                                    .replace("<price>", SignUtilities.formatVault(i.getPrice()))
 
-            }
+                                    .replace("<type>", i.getI().getType().toString().toLowerCase().replace("_", " "))
+                                    .replace("<amount>", i.getI().getAmount() + ""));
 
-            e.getWhoClicked()
-                    .sendMessage(StandManager.configconfig.getString("remove-item").replace("&", "§")
-                            .replace("<price>", SignUtilities.formatVault(i.getPrice()))
+                    new BukkitRunnable() {
 
-                            .replace("<type>", i.getI().getType().toString().toLowerCase().replace("_", " "))
-                            .replace("<amount>", i.getI().getAmount() + ""));
+                        @Override
+                        public void run() {
+                            Bukkit.dispatchCommand(e.getWhoClicked(), "stand");
 
-            new BukkitRunnable() {
-
-                @Override
-                public void run() {
-                    Bukkit.dispatchCommand(e.getWhoClicked(), "stand");
-
+                        }
+                    }.runTask(StandManager.getInstance());
+                    break;
                 }
-            }.runTask(StandManager.getInstance());
+
+                case NOT_ENOUGH_SPACE:
+                case NOT_MODIFIED: {
+
+                    p.sendMessage(ChatColor.RED + "You can't remove item from the stand: inventory full");
+
+                    break;
+                }
+
+
+            }
+
 
         }
 
@@ -268,7 +279,7 @@ public class RemoveOSponsorIH implements InventoryHolder, Listener {
     }
 
     @EventHandler
-    private void onClose(InventoryCloseEvent e) {
+    public void onClose(InventoryCloseEvent e) {
 
         if (e.getInventory().getHolder() == this) {
 
