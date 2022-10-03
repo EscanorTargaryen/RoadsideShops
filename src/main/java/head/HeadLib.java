@@ -13,17 +13,18 @@ package head;
  * along with this software. If not, see <http://creativecommons.org/publicdomain/zero/1.0/>.
  */
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
-import java.util.logging.Level;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.UUID;
+import java.util.logging.Level;
 
 /**
  * @author Daniel Saukel
@@ -479,7 +480,8 @@ public enum HeadLib {
         String internalsName = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3];
         try {
             internals = (InternalsProvider) Class.forName(packageName + "." + internalsName).newInstance();
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | ClassCastException exception) {
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException |
+                 ClassCastException exception) {
             Bukkit.getLogger().log(Level.SEVERE, "HeadLib could not find a valid implementation for " + internalsName + ".");
         }
     }

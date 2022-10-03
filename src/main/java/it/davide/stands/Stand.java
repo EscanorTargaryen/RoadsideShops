@@ -1,11 +1,6 @@
 package it.davide.stands;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.UUID;
-
+import it.davide.advancementAddOn.AdvancementAddOnUtils;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -15,27 +10,24 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
-
-import it.davide.advancementAddOn.AdvancementAddOnUtils;
-import lombok.Getter;
-import lombok.Setter;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.UUID;
+
 public class Stand implements Cloneable, ConfigurationSerializable, InventoryHolder {
-    @Getter
 
     private final UUID p;
-    @Getter
+
     private Inventory invSeller = null;
 
-    @Getter
     private Inventory invBuyer = null;
 
-    @Getter
     private final String playerName;
 
-    @Getter
-    @Setter
     private SellingItem sponsor = null;
 
     public final int normalSlotsMax = 14;
@@ -44,15 +36,12 @@ public class Stand implements Cloneable, ConfigurationSerializable, InventoryHol
     // private int autoSlots = 0;
 
     final private int defaultSlot = 3;
-    @Getter
+
     private int normalSlots = 3;
-    @Getter
+
     private ArrayList<SellingItem> items = new ArrayList<>();
 
-    @Getter
     private final ArrayList<String> offMessages = new ArrayList<>();
-
-    @Getter
 
     private final InventoryHolder holder = this;
     static public long timesponsor;
@@ -157,7 +146,6 @@ public class Stand implements Cloneable, ConfigurationSerializable, InventoryHol
         }
 
         normalSlots = Math.min(slot, normalSlotsMax);
-
 
         updateInventory();
 
@@ -332,4 +320,43 @@ public class Stand implements Cloneable, ConfigurationSerializable, InventoryHol
         } else return playerName.equals(other.playerName);
     }
 
+    public UUID getP() {
+        return p;
+    }
+
+    public Inventory getInvSeller() {
+        return invSeller;
+    }
+
+    public Inventory getInvBuyer() {
+        return invBuyer;
+    }
+
+    public SellingItem getSponsor() {
+        return sponsor;
+    }
+
+    public void setSponsor(SellingItem sponsor) {
+        this.sponsor = sponsor;
+    }
+
+    public String getPlayerName() {
+        return playerName;
+    }
+
+    public int getNormalSlots() {
+        return normalSlots;
+    }
+
+    public ArrayList<SellingItem> getItems() {
+        return items;
+    }
+
+    public ArrayList<String> getOffMessages() {
+        return offMessages;
+    }
+
+    public InventoryHolder getHolder() {
+        return holder;
+    }
 }

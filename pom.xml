@@ -24,8 +24,11 @@
             <id>jitpack.io</id>
             <url>https://jitpack.io</url>
         </repository>
-
-
+        <!-- This adds the Spigot Maven repository to the build -->
+        <repository>
+            <id>spigot-repo</id>
+            <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
+        </repository>
     </repositories>
 
     <dependencies>
@@ -43,20 +46,15 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>spigots</groupId>
-            <artifactId>V_1_15_R2_sk</artifactId>
-            <version>1.0</version>
+            <groupId>org.spigotmc</groupId>
+            <artifactId>spigot-api</artifactId>
+            <version>1.15.2-R0.1-SNAPSHOT</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>it.escanortargaryen</groupId>
             <artifactId>crazyadvancementapi</artifactId>
             <version>local</version>
-        </dependency>
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <version>1.18.12</version>
-            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.github.MilkBowl</groupId>

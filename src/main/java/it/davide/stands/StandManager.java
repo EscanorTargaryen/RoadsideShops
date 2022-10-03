@@ -2,7 +2,6 @@ package it.davide.stands;
 
 import com.fren_gor.cmcSkyBlock.shop.SignUtilities;
 import eu.endercentral.crazy_advancements.events.AdvancementGrantEvent;
-import lombok.Getter;
 import net.commandcraft.invManagementPlugin.api.SafeInventoryActions;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
@@ -43,16 +42,15 @@ public class StandManager extends JavaPlugin implements Listener {
     private SavingUtil<Stand> savesStand;
 
     static public YamlConfiguration configconfig = new YamlConfiguration();
-    @Getter
+
     static private final HashMap<String, Integer> advancementSlot = new HashMap<>();
-    @Getter
+
     static private final HashMap<String, Integer> advancementPerms = new HashMap<>();
 
     public static ItemStack unlockedslot = new ItemStack(Material.GRAY_STAINED_GLASS_PANE);
     public static ItemStack not;
     public static ItemStack log;
 
-    @Getter
     private static StandManager instance;
 
     private static Economy econ = null;
@@ -143,7 +141,6 @@ public class StandManager extends JavaPlugin implements Listener {
 
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public void onEnable() {
 
@@ -537,4 +534,15 @@ public class StandManager extends JavaPlugin implements Listener {
 
     }
 
+    public static StandManager getInstance() {
+        return instance;
+    }
+
+    public static HashMap<String, Integer> getAdvancementPerms() {
+        return advancementPerms;
+    }
+
+    public static HashMap<String, Integer> getAdvancementSlot() {
+        return advancementSlot;
+    }
 }

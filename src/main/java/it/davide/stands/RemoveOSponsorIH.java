@@ -1,7 +1,7 @@
 package it.davide.stands;
 
-import java.util.*;
-
+import com.fren_gor.cmcSkyBlock.shop.SignUtilities;
+import head.HeadLib;
 import net.commandcraft.invManagementPlugin.api.SafeInventoryActions;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -16,11 +16,11 @@ import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
-
-import com.fren_gor.cmcSkyBlock.shop.SignUtilities;
-
-import head.HeadLib;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class RemoveOSponsorIH implements InventoryHolder, Listener {
 
@@ -166,7 +166,6 @@ public class RemoveOSponsorIH implements InventoryHolder, Listener {
 
                 case MODIFIED: {
 
-
                     s.getInvSeller().setItem(i.getSlot(), here);
                     s.getInvBuyer().setItem(i.getSlot(), new ItemStack(Material.AIR));
 
@@ -204,9 +203,7 @@ public class RemoveOSponsorIH implements InventoryHolder, Listener {
                     break;
                 }
 
-
             }
-
 
         }
 
