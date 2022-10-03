@@ -1,24 +1,16 @@
 package it.davide.stands;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Map.Entry;
-
+import com.fren_gor.cmcSkyBlock.shop.SignUtilities;
+import eu.endercentral.crazy_advancements.events.AdvancementGrantEvent;
+import lombok.Getter;
 import net.commandcraft.invManagementPlugin.api.SafeInventoryActions;
+import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.entity.Player;
@@ -34,14 +26,14 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
-
-import com.fren_gor.cmcSkyBlock.shop.SignUtilities;
-
-import eu.endercentral.crazy_advancements.events.AdvancementGrantEvent;
-import lombok.Getter;
-import net.milkbowl.vault.economy.Economy;
 import org.jetbrains.annotations.NotNull;
 import saving.SavingUtil;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 
 public class StandManager extends JavaPlugin implements Listener {
 
@@ -142,11 +134,7 @@ public class StandManager extends JavaPlugin implements Listener {
 
     private void registerStand(Stand k, boolean save) {
 
-        stands.put(k.getP().toString(), k);
-
-        if (save)
-            savesStand.save(k);
-
+        return;
     }
 
     public void registerStand(Stand k) {
@@ -243,24 +231,6 @@ public class StandManager extends JavaPlugin implements Listener {
 
         Bukkit.getConsoleSender().sendMessage(s);
 
-    }
-
-    public void copyFileUsingStream(File source, File dest) throws IOException {
-        try (InputStream is = new FileInputStream(source); OutputStream os = new FileOutputStream(dest)) {
-            byte[] buffer = new byte[1024];
-            int length;
-            while ((length = is.read(buffer)) > 0) {
-                os.write(buffer, 0, length);
-            }
-        }
-    }
-
-    public void saveCustomYml(FileConfiguration ymlConfig, File ymlFile) {
-        try {
-            ymlConfig.save(ymlFile);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     @Override
@@ -402,7 +372,6 @@ public class StandManager extends JavaPlugin implements Listener {
 
                                     case MODIFIED: {
 
-
                                         getEconomy().withdrawPlayer((OfflinePlayer) e.getWhoClicked(), c.getPrice());
                                         getEconomy().depositPlayer(Bukkit.getOfflinePlayer(stand.getP()), c.getPrice());
                                         venduto = c;
@@ -473,7 +442,6 @@ public class StandManager extends JavaPlugin implements Listener {
                                     }
 
                                 }
-
 
                             }
 
@@ -565,67 +533,8 @@ public class StandManager extends JavaPlugin implements Listener {
 
         }
 
-        /*
-         * if (command.getName().equalsIgnoreCase("standsetlocation")) {
-         *
-         * if (!(sender instanceof Player)) { sender.sendMessage(ChatColor.RED +
-         * "Devi essere un player!"); return false; } Player p = (Player) sender; if
-         * (!richieste.contains(p)) { richieste.add(p);
-         *
-         * p.sendMessage(ChatColor.GOLD +
-         * "Click a block to set the location of your stand"); }
-         *
-         * }
-         */
-
         return false;
 
     }
-
-    /*
-     * @EventHandler per location public void onInteract(PlayerInteractEvent e) {
-     *
-     * if (e.getAction() == Action.RIGHT_CLICK_BLOCK) { Player p = e.getPlayer();
-     *
-     * if (richieste.contains(e.getPlayer())) {
-     *
-     * Stand s = getStand(e.getPlayer());
-     *
-     * if (s != null) { s.setLocation(e.getClickedBlock().getLocation());
-     *
-     * p.sendMessage(ChatColor.GOLD + "You setted the block of your stand"); } else
-     * p.sendMessage("You haven't a stand");
-     *
-     * richieste.remove(e.getPlayer());
-     *
-     * } else { for (Stand s : stands) {
-     *
-     * if (e.getClickedBlock().getLocation().equals(s.getLocation())) {
-     *
-     * Bukkit.dispatchCommand(p, "stand " + s.getPlayerName());
-     *
-     * }
-     *
-     * } }
-     *
-     * }
-     *
-     * }
-     *
-     * @EventHandler public void onBreak(BlockBreakEvent e) {
-     *
-     * for (Stand s : stands) {
-     *
-     * if (e.getBlock().getLocation().equals(s.getLocation())) {
-     *
-     * e.getPlayer().sendMessage(ChatColor.GOLD + "Location disabled");
-     * s.setLocation(null);
-     *
-     * }
-     *
-     * }
-     *
-     * }
-     */
 
 }
