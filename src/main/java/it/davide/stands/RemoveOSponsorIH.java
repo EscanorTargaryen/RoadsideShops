@@ -1,8 +1,8 @@
 package it.davide.stands;
 
-import com.fren_gor.cmcSkyBlock.shop.SignUtilities;
-import head.HeadLib;
-import net.commandcraft.invManagementPlugin.api.SafeInventoryActions;
+
+import com.fren_gor.invManagementPlugin.api.SafeInventoryActions;
+import de.erethon.headlib.HeadLib;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -179,7 +179,7 @@ public class RemoveOSponsorIH implements InventoryHolder, Listener {
 
                     e.getWhoClicked()
                             .sendMessage(StandManager.configconfig.getString("remove-item").replace("&", "§")
-                                    .replace("<price>", SignUtilities.formatVault(i.getPrice()))
+                                    .replace("<price>", i.getPrice()+"")
 
                                     .replace("<type>", i.getI().getType().toString().toLowerCase().replace("_", " "))
                                     .replace("<amount>", i.getI().getAmount() + ""));
@@ -284,7 +284,7 @@ public class RemoveOSponsorIH implements InventoryHolder, Listener {
 
                 e.getPlayer()
                         .sendMessage(StandManager.configconfig.getString("sponsor-item-set").replace("&", "§")
-                                .replace("<price>", SignUtilities.formatVault(i.getPrice()))
+                                .replace("<price>", i.getPrice()+"")
                                 .replace("<type>", i.getI().getType().toString().toLowerCase().replace("_", " "))
                                 .replace("<amount>", i.getI().getAmount() + ""));
 

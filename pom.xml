@@ -15,8 +15,8 @@
         <projectEncoding>UTF-8</projectEncoding>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
     </properties>
 
     <repositories>
@@ -29,27 +29,44 @@
             <id>spigot-repo</id>
             <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
         </repository>
+        <!--  HeadLib repo -->
         <repository>
             <id>dre-repo</id>
             <url>https://erethon.de/repo/</url>
+        </repository>
+        <repository>
+            <id>fren_gor</id>
+            <url>https://nexus.frengor.com/repository/public/</url>
+        </repository>
+        <!-- Repo of AnvilGui -->
+        <repository>
+            <id>codemc-snapshots</id>
+            <url>https://repo.codemc.io/repository/maven-snapshots/</url>
         </repository>
     </repositories>
 
     <dependencies>
         <dependency>
+            <groupId>net.wesjd</groupId>
+            <artifactId>anvilgui</artifactId>
+            <version>1.5.3-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
             <groupId>de.erethon</groupId>
             <artifactId>headlib</artifactId>
             <version>3.0.10</version>
+            <scope>compile</scope>
         </dependency>
         <!-- JetBrains Annotations -->
         <dependency>
             <groupId>org.jetbrains</groupId>
             <artifactId>annotations</artifactId>
-            <version>19.0.0</version>
+            <version>23.0.0</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>net.commandcraft</groupId>
+            <groupId>com.frengor</groupId>
             <artifactId>inventorymanagementplugin</artifactId>
             <version>1.0-SNAPSHOT</version>
             <scope>provided</scope>
@@ -64,22 +81,13 @@
             <groupId>it.escanortargaryen</groupId>
             <artifactId>crazyadvancementapi</artifactId>
             <version>local</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.github.MilkBowl</groupId>
             <artifactId>VaultAPI</artifactId>
             <version>1.7</version>
             <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>cmcskyblock</groupId>
-            <artifactId>cmcskyblock</artifactId>
-            <version>1.0</version>
-        </dependency>
-        <dependency>
-            <groupId>it.escanortargaryen</groupId>
-            <artifactId>advancementaddon</artifactId>
-            <version>1.9.1</version>
         </dependency>
     </dependencies>
 
@@ -101,5 +109,29 @@
                 <directory>src/main/resources/</directory>
             </resource>
         </resources>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.3.0</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <relocations>
+                                <relocation>
+                                    <pattern>net.wesjd.anvilgui</pattern>
+                                    <shadedPattern>it.davide.stands.anvilgui</shadedPattern>
+                                </relocation>
+                            </relocations>
+                            <minimizeJar>false</minimizeJar>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
     </build>
 </project>

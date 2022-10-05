@@ -1,6 +1,5 @@
 package it.davide.stands;
 
-import it.davide.advancementAddOn.AdvancementAddOnUtils;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -124,8 +123,8 @@ public class Stand implements Cloneable, ConfigurationSerializable, InventoryHol
     public void calculateSlots(Player p) {
 
         int slot = defaultSlot;
-
-        for (Entry<String, Integer> s : StandManager.getAdvancementSlot().entrySet()) {
+//TODO
+      /*  for (Entry<String, Integer> s : StandManager.getAdvancementSlot().entrySet()) {
 
             if (AdvancementAddOnUtils.isAchievementGranted(p, s.getKey())) {
 
@@ -133,7 +132,7 @@ public class Stand implements Cloneable, ConfigurationSerializable, InventoryHol
 
             }
 
-        }
+        }*/
 
         for (Entry<String, Integer> s : StandManager.getAdvancementPerms().entrySet()) {
 

@@ -1,8 +1,8 @@
 package it.davide.stands;
 
 import com.fren_gor.cmcSkyBlock.shop.SignUtilities;
+import com.fren_gor.invManagementPlugin.api.SafeInventoryActions;
 import eu.endercentral.crazy_advancements.events.AdvancementGrantEvent;
-import net.commandcraft.invManagementPlugin.api.SafeInventoryActions;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;

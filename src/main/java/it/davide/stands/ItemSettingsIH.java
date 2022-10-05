@@ -1,6 +1,6 @@
 package it.davide.stands;
 
-import com.fren_gor.cmcSkyBlock.shop.SignUtilities;
+import net.wesjd.anvilgui.AnvilGUI;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -135,8 +135,8 @@ public class ItemSettingsIH implements InventoryHolder, Listener {
             ItemStack prezzo = new ItemStack(Material.NAME_TAG);
             mw = prezzo.getItemMeta();
             mw.setDisplayName(ChatColor.translateAlternateColorCodes('&', StandManager.configconfig
-                    .getString("price-message").replace("<value>", SignUtilities.formatVault(price))));
-
+                    .getString("price-message").replace("<value>", price + "")));
+//TODO qua era presente un metodo che sistemava il prezzo
             mw.setLore(Arrays.asList("", ChatColor.GOLD + "Click to change the price"));
             prezzo.setItemMeta(mw);
 
@@ -202,6 +202,7 @@ public class ItemSettingsIH implements InventoryHolder, Listener {
 
                     }).preventClose().text("price") // prevents the inventory from being close
                     .item(new ItemStack(Material.GOLD_BLOCK)) // use a custom item for the first slot
+                    //TODO muovi questa deprecanza e altre se ne trovi
                     .title("Enter the price here") // set the title of the GUI (only works in 1.14+)
                     .plugin(StandManager.getInstance()) // set the plugin instance
                     .open((Player) e.getWhoClicked());
@@ -291,7 +292,7 @@ public class ItemSettingsIH implements InventoryHolder, Listener {
 
                 p.sendMessage(ChatColor.translateAlternateColorCodes('&',
                         StandManager.configconfig.getString("put-item")
-                                .replace("<price>", SignUtilities.formatVault(k.getPrice()))
+                                .replace("<price>", k.getPrice() + "")
                                 .replace("<type>", k.getI().getType().toString().toLowerCase().replace("_", " "))
                                 .replace("<amount>", k.getI().getAmount() + "")));
 

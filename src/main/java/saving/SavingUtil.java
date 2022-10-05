@@ -29,7 +29,6 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
 import java.util.LinkedList;
@@ -95,9 +94,9 @@ public class SavingUtil<S extends ConfigurationSerializable> {
             t.delete();
         }
     }
+//TODO rimuovi tutte le annotation inutili pls
 
-    @SuppressWarnings("unchecked")
-    public @Nullable S load(String fileName) {
+    public  S load(String fileName) {
         Validate.notNull(fileName);
 
         File f = new File(directory, Util.sha1(fileName) + ".dat");
