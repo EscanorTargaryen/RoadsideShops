@@ -1,6 +1,5 @@
 package it.davide.stands;
 
-import com.fren_gor.cmcSkyBlock.shop.SignUtilities;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -67,7 +66,7 @@ public class SellingItem implements Cloneable, ConfigurationSerializable {
         ArrayList<String> p = new ArrayList<>();
         p.add("");
         p.add(ChatColor.translateAlternateColorCodes('&', StandManager.configconfig.getString("price-message")
-                .replace("<value>", SignUtilities.formatVault(price))));
+                .replace("<value>", price+"")));
         p.add("");
         p.add(ChatColor.GOLD + "Click to edit item");
         if (m.getLore() != null)
@@ -80,7 +79,7 @@ public class SellingItem implements Cloneable, ConfigurationSerializable {
         p.clear();
         p.add("");
         p.add(ChatColor.translateAlternateColorCodes('&', StandManager.configconfig.getString("price-message")
-                .replace("<value>", SignUtilities.formatVault(price))));
+                .replace("<value>", price+"")));
         p.add("");
         p.add(ChatColor.GOLD + "Click to buy item");
 
