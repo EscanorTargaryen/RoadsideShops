@@ -34,9 +34,7 @@ import java.util.Map.Entry;
 
 public class StandManager extends JavaPlugin implements Listener {
 
-//TODO capire se serve il metodo calculate slots
-//TODO metodo per sistemare i prezzi?
-//TODO ci sono deprecate?
+
     private final HashMap<String, Stand> stands = new HashMap<>();
     private final File config = new File(getDataFolder() + "/config.yml");
 
