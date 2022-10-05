@@ -1,4 +1,4 @@
-package it.davide.stands;
+package it.escanortargaryen.roadsideshop;
 
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
@@ -7,7 +7,7 @@ import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
-import saving.ItemStackSerializer;
+import it.escanortargaryen.roadsideshop.saving.ItemStackSerializer;
 
 import java.util.ArrayList;
 import java.util.HashMap;

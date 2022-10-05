@@ -20,7 +20,7 @@
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 //  SOFTWARE.
 
-package saving;
+package it.escanortargaryen.roadsideshop.saving;
 
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;

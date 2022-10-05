@@ -1,4 +1,4 @@
-package it.davide.stands;
+package it.escanortargaryen.roadsideshop;
 
 //TODO capire se serve il metodo calculate slots
 //TODO metodo per sistemare i prezzi?
@@ -14,5 +14,5 @@ package it.davide.stands;
         rimuovere codice inutile e commenti
         rimuovere import inutili
         no parole in italiano*/
-public class InternalUtil {
+class InternalUtil {
 }

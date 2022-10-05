@@ -1,4 +1,4 @@
-package it.davide.stands;
+package it.escanortargaryen.roadsideshop;
 
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;

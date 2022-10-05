@@ -5,8 +5,8 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>it.escanortargaryen</groupId>
-    <name>StandCore</name>
-    <artifactId>standcore</artifactId>
+    <name>RoadsideShops</name>
+    <artifactId>roadsideshops</artifactId>
     <version>1.8.2</version>
 
 

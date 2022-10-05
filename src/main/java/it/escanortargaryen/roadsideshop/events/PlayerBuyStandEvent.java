@@ -1,5 +1,7 @@
-package it.davide.stands;
+package it.escanortargaryen.roadsideshop.events;
 
+import it.escanortargaryen.roadsideshop.SellingItem;
+import it.escanortargaryen.roadsideshop.Stand;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;

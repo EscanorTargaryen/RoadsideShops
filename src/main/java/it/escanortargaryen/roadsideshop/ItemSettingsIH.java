@@ -1,4 +1,4 @@
-package it.davide.stands;
+package it.escanortargaryen.roadsideshop;
 
 import net.wesjd.anvilgui.AnvilGUI;
 import org.bukkit.Bukkit;

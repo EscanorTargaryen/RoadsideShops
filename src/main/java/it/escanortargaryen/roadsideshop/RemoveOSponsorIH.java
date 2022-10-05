@@ -1,4 +1,4 @@
-package it.davide.stands;
+package it.escanortargaryen.roadsideshop;
 
 
 import com.fren_gor.invManagementPlugin.api.SafeInventoryActions;

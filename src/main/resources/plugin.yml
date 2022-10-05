@@ -1,4 +1,4 @@
-main: it.davide.stands.StandManager
+main: it.escanortargaryen.roadsideshop.StandManager
 name: ${project.name}
 version: ${project.version}
 author: [EscanorTargaryen]
