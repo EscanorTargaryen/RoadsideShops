@@ -4,8 +4,7 @@ version: ${project.version}
 author: [EscanorTargaryen]
 
 api-version: 1.15
-depend: [CmcSkyBlock]
-softdepend: [Vault]
+depend: [Vault]
 
 commands:
   stand:

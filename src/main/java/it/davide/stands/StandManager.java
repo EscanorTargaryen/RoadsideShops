@@ -1,8 +1,7 @@
 package it.davide.stands;
 
-import com.fren_gor.cmcSkyBlock.shop.SignUtilities;
+
 import com.fren_gor.invManagementPlugin.api.SafeInventoryActions;
-import eu.endercentral.crazy_advancements.events.AdvancementGrantEvent;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -386,7 +385,7 @@ public class StandManager extends JavaPlugin implements Listener {
 
                                         e.getWhoClicked().sendMessage(ChatColor.translateAlternateColorCodes('&',
                                                 StandManager.configconfig.getString("bought-message")
-                                                        .replace("<price>", SignUtilities.formatVault(c.getPrice()))
+                                                        .replace("<price>", c.getPrice()+"")
                                                         .replace("<type>",
                                                                 c.getI().getType().toString().toLowerCase().replace("_", " "))
                                                         .replace("<amount>", c.getI().getAmount() + "")
@@ -397,7 +396,7 @@ public class StandManager extends JavaPlugin implements Listener {
                                             Bukkit.getPlayer(stand.getP()).sendMessage(ChatColor.translateAlternateColorCodes(
                                                     '&',
                                                     StandManager.configconfig.getString("seller-message")
-                                                            .replace("<price>", SignUtilities.formatVault(c.getPrice()))
+                                                            .replace("<price>",c.getPrice()+"")
                                                             .replace("<type>",
                                                                     c.getI().getType().toString().toLowerCase().replace("_",
                                                                             " "))
@@ -408,7 +407,7 @@ public class StandManager extends JavaPlugin implements Listener {
                                             stand.getOffMessages().add(ChatColor.translateAlternateColorCodes('&',
                                                     StandManager.configconfig.getString("seller-message")
 
-                                                            .replace("<price>", SignUtilities.formatVault(c.getPrice()))
+                                                            .replace("<price>", c.getPrice()+"")
                                                             .replace("<type>",
                                                                     c.getI().getType().toString().toLowerCase().replace("_",
                                                                             " "))
@@ -464,7 +463,8 @@ public class StandManager extends JavaPlugin implements Listener {
 
     }
 
-    @EventHandler
+    //TODO remove
+   /* @EventHandler
     public void onadvancement(AdvancementGrantEvent e) {
 
         Player p = e.getPlayer();
@@ -472,7 +472,7 @@ public class StandManager extends JavaPlugin implements Listener {
         if (stand != null)
             stand.calculateSlots(p);
 
-    }
+    }*/
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, Command command, @NotNull String label, String[] args) {
