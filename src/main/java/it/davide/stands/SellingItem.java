@@ -6,6 +6,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.jetbrains.annotations.NotNull;
 import saving.ItemStackSerializer;
 
 import java.util.ArrayList;
@@ -126,7 +127,7 @@ public class SellingItem implements Cloneable, ConfigurationSerializable {
     }
 
     @Override
-    public Map<String, Object> serialize() {
+    public @NotNull Map<String, Object> serialize() {
 
         Map<String, Object> map = new HashMap<>();
         map.put("item", ItemStackSerializer.serializeItemStack(i));
@@ -213,13 +214,8 @@ public class SellingItem implements Cloneable, ConfigurationSerializable {
             return false;
         }
         if (withpriceSeller == null) {
-            if (other.withpriceSeller != null) {
-                return false;
-            }
-        } else if (!withpriceSeller.equals(other.withpriceSeller)) {
-            return false;
-        }
-        return true;
+            return other.withpriceSeller == null;
+        } else return withpriceSeller.equals(other.withpriceSeller);
     }
 
     public ItemStack getI() {
@@ -240,5 +236,15 @@ public class SellingItem implements Cloneable, ConfigurationSerializable {
 
     public UUID getP() {
         return p;
+    }
+
+    @Override
+    public SellingItem clone() {
+        try {
+            //copy mutable state here, so the clone can't change the internals of the original
+            return (SellingItem) super.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError();
+        }
     }
 }

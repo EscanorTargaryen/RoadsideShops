@@ -21,18 +21,20 @@ import java.util.Arrays;
 
 public class ItemSettingsIH implements InventoryHolder, Listener {
 
-    Stand s;
-    ItemStack i;
-    int slot;
-    boolean priceSet = false, sponsor = false, chiudi = false, exit = false;
+    private Stand stand;
+    private ItemStack itemToSell;
+    private int slotNumber;
+    private boolean priceSet = false, isSponsoring = false, chiudi = false, exit = false;
     private ItemStack sponsorItem;
 
-    public ItemSettingsIH(Stand s, ItemStack i, Player p, int slot) {
+    private double price = 0.0;
+
+    public ItemSettingsIH(Stand stand, ItemStack itemToSell, Player p, int slotNumber) {
         Bukkit.getPluginManager().registerEvents(this, StandManager.getInstance());
 
-        this.s = s;
-        this.slot = slot;
-        this.i = i.clone();
+        this.stand = stand;
+        this.slotNumber = slotNumber;
+        this.itemToSell = itemToSell.clone();
         p.openInventory(getInventory());
     }
 
@@ -42,7 +44,7 @@ public class ItemSettingsIH implements InventoryHolder, Listener {
 
         Inventory inv = Bukkit.createInventory(this, 27, ChatColor.DARK_BLUE + "Selling Settings");
 
-        ItemStack item = i.clone();
+        ItemStack item = itemToSell.clone();
         ItemMeta d = item.getItemMeta().clone();
         ArrayList<String> arr = new ArrayList<>();
         arr.add("");
@@ -52,8 +54,8 @@ public class ItemSettingsIH implements InventoryHolder, Listener {
 
         inv.setItem(10, item);
 
-        if (s.Checktime(System.currentTimeMillis())) {
-            if (sponsor) {
+        if (stand.canSponsor(System.currentTimeMillis())) {
+            if (isSponsoring) {
 
                 ItemStack sponsor = new ItemStack(Material.FILLED_MAP);
                 ItemMeta m = sponsor.getItemMeta();
@@ -66,7 +68,7 @@ public class ItemSettingsIH implements InventoryHolder, Listener {
                 ene.add(ChatColor.GRAY + "You can sponsor an item every " + (Stand.timesponsor / 60000) + " minutes.");
                 ene.add("");
 
-                if (s.getSponsor() != null) {
+                if (stand.getSponsor() != null) {
 
                     ene.add(ChatColor.DARK_RED + "N.B.: " + ChatColor.RED
                             + "You already have a sponsored item. Sponsoring");
@@ -91,7 +93,7 @@ public class ItemSettingsIH implements InventoryHolder, Listener {
                 ene.add(ChatColor.GRAY + "Sponsoring an item shows it on the newspaper.");
                 ene.add(ChatColor.GRAY + "You can sponsor an item every " + (Stand.timesponsor / 60000) + " minutes.");
                 ene.add("");
-                if (s.getSponsor() != null) {
+                if (stand.getSponsor() != null) {
 
                     ene.add(ChatColor.DARK_RED + "N.B.: " + ChatColor.RED
                             + "You already have a sponsored item. Sponsoring");
@@ -112,7 +114,7 @@ public class ItemSettingsIH implements InventoryHolder, Listener {
             ArrayList<String> ene = new ArrayList<>();
             ene.add("");
             ene.add(ChatColor.DARK_RED + "You've already sponsored an item.");
-            ene.add(ChatColor.DARK_RED + "Wait " + s.getMissTimeinMins(System.currentTimeMillis())
+            ene.add(ChatColor.DARK_RED + "Wait " + stand.getMissTimeinMins(System.currentTimeMillis())
                     + " minutes to sponsor another item.");
             ene.add("");
             ene.add(ChatColor.GRAY + "Sponsoring an item shows it on the newspaper.");
@@ -136,7 +138,7 @@ public class ItemSettingsIH implements InventoryHolder, Listener {
             mw = prezzo.getItemMeta();
             mw.setDisplayName(ChatColor.translateAlternateColorCodes('&', StandManager.configconfig
                     .getString("price-message").replace("<value>", price + "")));
-//TODO qua era presente un metodo che sistemava il prezzo
+
             mw.setLore(Arrays.asList("", ChatColor.GOLD + "Click to change the price"));
             prezzo.setItemMeta(mw);
 
@@ -161,8 +163,6 @@ public class ItemSettingsIH implements InventoryHolder, Listener {
 
         return inv;
     }
-
-    double price = 0.0;
 
     @EventHandler
     private void onClick(InventoryClickEvent e) {
@@ -201,8 +201,8 @@ public class ItemSettingsIH implements InventoryHolder, Listener {
                         }
 
                     }).preventClose().text("price") // prevents the inventory from being close
-                    .item(new ItemStack(Material.GOLD_BLOCK)) // use a custom item for the first slot
-                    //TODO muovi questa deprecanza e altre se ne trovi
+                    .itemLeft(new ItemStack(Material.GOLD_BLOCK)) // use a custom item for the first slot
+
                     .title("Enter the price here") // set the title of the GUI (only works in 1.14+)
                     .plugin(StandManager.getInstance()) // set the plugin instance
                     .open((Player) e.getWhoClicked());
@@ -211,9 +211,9 @@ public class ItemSettingsIH implements InventoryHolder, Listener {
 
         if (e.getSlot() == 15) {
 
-            if (s.Checktime(System.currentTimeMillis())) {
+            if (stand.canSponsor(System.currentTimeMillis())) {
 
-                if (!this.sponsor) {
+                if (!this.isSponsoring) {
                     ItemStack sponsor = new ItemStack(Material.FILLED_MAP);
                     ItemMeta m = sponsor.getItemMeta();
                     m.setDisplayName(ChatColor.GOLD + "Sposor item");
@@ -225,7 +225,7 @@ public class ItemSettingsIH implements InventoryHolder, Listener {
                     ene.add(ChatColor.GRAY + "You can sponsor an item every " + (Stand.timesponsor / 60000)
                             + " minutes.");
                     ene.add("");
-                    if (s.getSponsor() != null) {
+                    if (stand.getSponsor() != null) {
 
                         ene.add(ChatColor.DARK_RED + "N.B.: " + ChatColor.RED
                                 + "You already have a sponsored item. Sponsoring");
@@ -238,7 +238,7 @@ public class ItemSettingsIH implements InventoryHolder, Listener {
                     sponsor.setItemMeta(m);
                     e.getInventory().setItem(15, sponsor);
 
-                    this.sponsor = true;
+                    this.isSponsoring = true;
 
                 } else {
 
@@ -253,7 +253,7 @@ public class ItemSettingsIH implements InventoryHolder, Listener {
                     ene.add(ChatColor.GRAY + "You can sponsor an item every " + (Stand.timesponsor / 60000)
                             + " minutes.");
                     ene.add("");
-                    if (s.getSponsor() != null) {
+                    if (stand.getSponsor() != null) {
 
                         ene.add(ChatColor.DARK_RED + "N.B.: " + ChatColor.RED
                                 + "You already have a sponsored item. Sponsoring");
@@ -266,7 +266,7 @@ public class ItemSettingsIH implements InventoryHolder, Listener {
                     sponsorItem.setItemMeta(m);
                     e.getInventory().setItem(15, sponsorItem);
 
-                    this.sponsor = false;
+                    this.isSponsoring = false;
                 }
 
             }
@@ -277,13 +277,13 @@ public class ItemSettingsIH implements InventoryHolder, Listener {
             if (priceSet) {
                 chiudi = true;
 
-                if (s.getItems().size() == 0)
-                    s.getInvBuyer().setItem(1, new ItemStack(Material.AIR));
-                SellingItem k = new SellingItem(i, slot, price, s.getP());
-                s.getItems().add(k);
+                if (stand.getItems().size() == 0)
+                    stand.getInvBuyer().setItem(1, new ItemStack(Material.AIR));
+                SellingItem k = new SellingItem(itemToSell, slotNumber, price, stand.getP());
+                stand.getItems().add(k);
 
-                s.getInvBuyer().setItem(k.getSlot(), k.getWithpriceBuyer());
-                s.getInvSeller().setItem(k.getSlot(), k.getWithpriceSeller());
+                stand.getInvBuyer().setItem(k.getSlot(), k.getWithpriceBuyer());
+                stand.getInvSeller().setItem(k.getSlot(), k.getWithpriceSeller());
 
                 Player p = ((Player) e.getWhoClicked());
                 p.closeInventory();
@@ -296,21 +296,21 @@ public class ItemSettingsIH implements InventoryHolder, Listener {
                                 .replace("<type>", k.getI().getType().toString().toLowerCase().replace("_", " "))
                                 .replace("<amount>", k.getI().getAmount() + "")));
 
-                if (sponsor) {
+                if (isSponsoring) {
 
                     e.getWhoClicked().sendMessage(ChatColor.translateAlternateColorCodes('&',
                             StandManager.configconfig.getString("sponsor-set")));
-                    if (s.getSponsor() != null) {
+                    if (stand.getSponsor() != null) {
 
-                        s.getInvBuyer().setItem(s.getSponsor().getSlot(), s.getSponsor().getWithpriceBuyer());
-                        s.getInvSeller().setItem(s.getSponsor().getSlot(), s.getSponsor().getWithpriceSeller());
+                        stand.getInvBuyer().setItem(stand.getSponsor().getSlot(), stand.getSponsor().getWithpriceBuyer());
+                        stand.getInvSeller().setItem(stand.getSponsor().getSlot(), stand.getSponsor().getWithpriceSeller());
 
                     }
-                    s.setTimeSponsor(System.currentTimeMillis());
-                    s.setSponsor(k);
+                    stand.setTimeSponsor(System.currentTimeMillis());
+                    stand.setSponsor(k);
 
-                    s.getInvBuyer().setItem(k.getSlot(), k.getWithpriceESpondorBuyer());
-                    s.getInvSeller().setItem(k.getSlot(), k.getWithpriceESpondorSeller());
+                    stand.getInvBuyer().setItem(k.getSlot(), k.getWithpriceESpondorBuyer());
+                    stand.getInvSeller().setItem(k.getSlot(), k.getWithpriceESpondorSeller());
 
                 }
 
@@ -326,7 +326,7 @@ public class ItemSettingsIH implements InventoryHolder, Listener {
         if (e.getInventory().getHolder() == this) {
 
             if (!chiudi) {
-                e.getPlayer().getInventory().addItem(i);
+                e.getPlayer().getInventory().addItem(itemToSell);
 
                 InventoryClickEvent.getHandlerList().unregister(this);
                 InventoryCloseEvent.getHandlerList().unregister(this);

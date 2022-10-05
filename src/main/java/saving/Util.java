@@ -329,7 +329,7 @@ public class Util {
         Map<K, V> map = new HashMap<>();
         ConfigurationSection sect = yaml.getConfigurationSection(path);
         for (String k : sect.getKeys(false)) {
-            @SuppressWarnings("unchecked")
+
             V v = (V) sect.get(k);
             // Optional<K> opt = transformKey.apply(k);
             // if (opt.isPresent()) {

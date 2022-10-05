@@ -14,7 +14,6 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.UUID;
 
 public class Stand implements Cloneable, ConfigurationSerializable, InventoryHolder {
@@ -58,7 +57,7 @@ public class Stand implements Cloneable, ConfigurationSerializable, InventoryHol
         }.runTaskLater(StandManager.getInstance(), 40);
     }
 
-    public boolean Checktime(long time) {
+    public boolean canSponsor(long time) {
         Player pl = Bukkit.getPlayer(p);
         if (pl != null && pl.hasPermission("stand.bypass.sponsortime")) {
 
@@ -120,11 +119,12 @@ public class Stand implements Cloneable, ConfigurationSerializable, InventoryHol
 
     }
 
+
     public void calculateSlots(Player p) {
 
-        int slot = defaultSlot;
-//TODO
-      /*  for (Entry<String, Integer> s : StandManager.getAdvancementSlot().entrySet()) {
+       /*  int slot = defaultSlot;
+
+       for (Entry<String, Integer> s : StandManager.getAdvancementSlot().entrySet()) {
 
             if (AdvancementAddOnUtils.isAchievementGranted(p, s.getKey())) {
 
@@ -132,7 +132,7 @@ public class Stand implements Cloneable, ConfigurationSerializable, InventoryHol
 
             }
 
-        }*/
+        }
 
         for (Entry<String, Integer> s : StandManager.getAdvancementPerms().entrySet()) {
 
@@ -146,7 +146,7 @@ public class Stand implements Cloneable, ConfigurationSerializable, InventoryHol
 
         normalSlots = Math.min(slot, normalSlotsMax);
 
-        updateInventory();
+        updateInventory();*/
 
     }
 
@@ -261,7 +261,7 @@ public class Stand implements Cloneable, ConfigurationSerializable, InventoryHol
         playerName = name;
     }
 
-    @SuppressWarnings("unchecked")
+
     public static Stand deserialize(Map<String, Object> args) {
         Validate.notNull(args, "Invalid args");
 

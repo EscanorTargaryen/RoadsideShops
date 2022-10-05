@@ -127,7 +127,7 @@ public class SavingUtil<S extends ConfigurationSerializable> {
         }
     }
 
-    @SuppressWarnings("unchecked")
+   
     public List<S> loadAll() {
         YamlConfiguration yaml = new YamlConfiguration();
         List<S> list = new LinkedList<>();

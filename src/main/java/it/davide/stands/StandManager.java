@@ -1,6 +1,5 @@
 package it.davide.stands;
 
-
 import com.fren_gor.invManagementPlugin.api.SafeInventoryActions;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
@@ -35,6 +34,9 @@ import java.util.Map.Entry;
 
 public class StandManager extends JavaPlugin implements Listener {
 
+//TODO capire se serve il metodo calculate slots
+//TODO metodo per sistemare i prezzi?
+//TODO ci sono deprecate?
     private final HashMap<String, Stand> stands = new HashMap<>();
     private final File config = new File(getDataFolder() + "/config.yml");
 
@@ -63,7 +65,6 @@ public class StandManager extends JavaPlugin implements Listener {
     @Override
     public void onLoad() {
         saveResource("config.yml", false);
-        new StandUtils(this);
 
     }
 
@@ -385,7 +386,7 @@ public class StandManager extends JavaPlugin implements Listener {
 
                                         e.getWhoClicked().sendMessage(ChatColor.translateAlternateColorCodes('&',
                                                 StandManager.configconfig.getString("bought-message")
-                                                        .replace("<price>", c.getPrice()+"")
+                                                        .replace("<price>", c.getPrice() + "")
                                                         .replace("<type>",
                                                                 c.getI().getType().toString().toLowerCase().replace("_", " "))
                                                         .replace("<amount>", c.getI().getAmount() + "")
@@ -396,7 +397,7 @@ public class StandManager extends JavaPlugin implements Listener {
                                             Bukkit.getPlayer(stand.getP()).sendMessage(ChatColor.translateAlternateColorCodes(
                                                     '&',
                                                     StandManager.configconfig.getString("seller-message")
-                                                            .replace("<price>",c.getPrice()+"")
+                                                            .replace("<price>", c.getPrice() + "")
                                                             .replace("<type>",
                                                                     c.getI().getType().toString().toLowerCase().replace("_",
                                                                             " "))
@@ -407,7 +408,7 @@ public class StandManager extends JavaPlugin implements Listener {
                                             stand.getOffMessages().add(ChatColor.translateAlternateColorCodes('&',
                                                     StandManager.configconfig.getString("seller-message")
 
-                                                            .replace("<price>", c.getPrice()+"")
+                                                            .replace("<price>", c.getPrice() + "")
                                                             .replace("<type>",
                                                                     c.getI().getType().toString().toLowerCase().replace("_",
                                                                             " "))
@@ -463,16 +464,6 @@ public class StandManager extends JavaPlugin implements Listener {
 
     }
 
-    //TODO remove
-   /* @EventHandler
-    public void onadvancement(AdvancementGrantEvent e) {
-
-        Player p = e.getPlayer();
-        Stand stand = getStand(p);
-        if (stand != null)
-            stand.calculateSlots(p);
-
-    }*/
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, Command command, @NotNull String label, String[] args) {

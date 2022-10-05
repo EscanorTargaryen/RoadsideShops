@@ -72,7 +72,7 @@ public class RemoveOSponsorIH implements InventoryHolder, Listener {
             sponsor.setItemMeta(m);
             inv.setItem(22, sponsor);
 
-        } else if (s.Checktime(System.currentTimeMillis())) {
+        } else if (s.canSponsor(System.currentTimeMillis())) {
 
             ItemStack sponsorItem = new ItemStack(Material.PAPER);
             ItemMeta m = sponsorItem.getItemMeta();
@@ -211,7 +211,7 @@ public class RemoveOSponsorIH implements InventoryHolder, Listener {
             if (s.getSponsor() != null && s.getSponsor().equals(i))
                 return;
 
-            if (s.Checktime(System.currentTimeMillis())) {
+            if (s.canSponsor(System.currentTimeMillis())) {
 
                 if (!this.sponsor) {
                     ItemStack sponsor = new ItemStack(Material.FILLED_MAP);

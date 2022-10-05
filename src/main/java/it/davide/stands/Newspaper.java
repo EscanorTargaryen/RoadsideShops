@@ -25,7 +25,7 @@ import java.util.concurrent.ThreadLocalRandom;
 public class Newspaper implements Listener, InventoryHolder {
 
     ArrayList<SellingItem> list = new ArrayList<>();
-    final int pagine = 3;
+    //final int pagine = 3;
     int pagina = 1;
     ItemStack right = HeadLib.WOODEN_ARROW_RIGHT.toItemStack(ChatColor.BLUE + "Change Page", "",
             ChatColor.GRAY + "Click to view next page");
