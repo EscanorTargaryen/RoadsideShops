@@ -29,9 +29,18 @@
             <id>spigot-repo</id>
             <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
         </repository>
+        <repository>
+            <id>dre-repo</id>
+            <url>https://erethon.de/repo/</url>
+        </repository>
     </repositories>
 
     <dependencies>
+        <dependency>
+            <groupId>de.erethon</groupId>
+            <artifactId>headlib</artifactId>
+            <version>3.0.10</version>
+        </dependency>
         <!-- JetBrains Annotations -->
         <dependency>
             <groupId>org.jetbrains</groupId>
