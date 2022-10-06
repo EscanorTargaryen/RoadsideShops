@@ -36,10 +36,10 @@ import java.util.Map.Entry;
 public class StandManager extends JavaPlugin implements Listener {
 
 
-    private final HashMap<String, Stand> stands = new HashMap<>();
+    private final HashMap<String, Shop> stands = new HashMap<>();
     private final File config = new File(getDataFolder() + "/config.yml");
 
-    private SavingUtil<Stand> savesStand;
+    private SavingUtil<Shop> savesStand;
 
     static public YamlConfiguration configconfig = new YamlConfiguration();
 
@@ -82,7 +82,7 @@ public class StandManager extends JavaPlugin implements Listener {
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {
         Player p = e.getPlayer();
-        Stand d = getStand(p);
+        Shop d = getStand(p);
 
         if (d != null) {
 
@@ -110,7 +110,7 @@ public class StandManager extends JavaPlugin implements Listener {
 
     }
 
-    public void saveStand(Stand k) {
+    public void saveStand(Shop k) {
 
         savesStand.save(k);
 
@@ -118,7 +118,7 @@ public class StandManager extends JavaPlugin implements Listener {
 
     public void saveAllStand() {
 
-        for (Stand j : stands.values())
+        for (Shop j : stands.values())
 
             savesStand.save(j);
 
@@ -129,12 +129,12 @@ public class StandManager extends JavaPlugin implements Listener {
 
     }
 
-    private void registerStand(Stand k, boolean save) {
+    private void registerStand(Shop k, boolean save) {
 
         return;
     }
 
-    public void registerStand(Stand k) {
+    public void registerStand(Shop k) {
 
         registerStand(k, true);
 
@@ -146,7 +146,7 @@ public class StandManager extends JavaPlugin implements Listener {
         Bukkit.getPluginManager().registerEvents(this, this);
         instance = this;
 
-        ConfigurationSerialization.registerClass(Stand.class, "Stand");
+        ConfigurationSerialization.registerClass(Shop.class, "Stand");
         ConfigurationSerialization.registerClass(SellingItem.class, "SellingItem");
 
         configconfig = YamlConfiguration.loadConfiguration(config);
@@ -174,7 +174,7 @@ public class StandManager extends JavaPlugin implements Listener {
             return;
         }
 
-        savesStand = new SavingUtil<>(this, s -> s.getP().toString(), ".stand");
+        savesStand = new SavingUtil<>(this, s -> s.getPlayerUUID().toString(), ".stand");
         registerAllStand();
 
         Map<String, Object> d = configconfig.getConfigurationSection("advancementSlot").getValues(false);
@@ -241,7 +241,7 @@ public class StandManager extends JavaPlugin implements Listener {
 
     public boolean containsPlayer(String name) {
 
-        for (Stand s : stands.values()) {
+        for (Shop s : stands.values()) {
 
             if (s.getPlayerName().equals(name))
 
@@ -252,9 +252,9 @@ public class StandManager extends JavaPlugin implements Listener {
 
     }
 
-    public Stand getStand(String playerName) {
+    public Shop getStand(String playerName) {
 
-        for (Stand s : stands.values()) {
+        for (Shop s : stands.values()) {
 
             if (s.getPlayerName().equals(playerName))
                 return s;
@@ -264,9 +264,9 @@ public class StandManager extends JavaPlugin implements Listener {
 
     }
 
-    public Stand getStand(InventoryHolder f) {
+    public Shop getStand(InventoryHolder f) {
 
-        for (Stand s : stands.values()) {
+        for (Shop s : stands.values()) {
 
             if (s.getHolder().equals(f))
                 return s;
@@ -276,7 +276,7 @@ public class StandManager extends JavaPlugin implements Listener {
 
     }
 
-    public Stand getStand(Player p) {
+    public Shop getStand(Player p) {
 
         return stands.get(p.getUniqueId().toString());
     }
@@ -298,11 +298,11 @@ public class StandManager extends JavaPlugin implements Listener {
                 || e.getCurrentItem().getType() == Material.AIR)
             return;
 
-        Stand stand = getStand(e.getView().getTopInventory().getHolder());
+        Shop shop = getStand(e.getView().getTopInventory().getHolder());
 
-        if (e.getWhoClicked().getUniqueId().equals(stand.getP())) {
+        if (e.getWhoClicked().getUniqueId().equals(shop.getPlayerUUID())) {
 
-            if (e.getClickedInventory().getHolder() != (stand.getHolder())) {
+            if (e.getClickedInventory().getHolder() != (shop.getHolder())) {
 
                 if (e.getClick() == ClickType.DOUBLE_CLICK || e.getClick() == ClickType.SHIFT_LEFT
                         || e.getClick() == ClickType.SHIFT_RIGHT) {
@@ -314,10 +314,10 @@ public class StandManager extends JavaPlugin implements Listener {
                 return;
             }
 
-            if (stand.getItemAt(e.getSlot()) == null) {
+            if (shop.getItemAt(e.getSlot()) == null) {
                 e.setCancelled(true);
 
-                if (!stand.canSell(e.getSlot()))
+                if (!shop.canSell(e.getSlot()))
                     return;
 
                 if (e.getCursor() == null || e.getCursor().getType() == Material.AIR) {
@@ -333,7 +333,7 @@ public class StandManager extends JavaPlugin implements Listener {
                         ItemStack i = e.getCursor().clone();
                         e.getView().setCursor(new ItemStack(Material.AIR));
 
-                        new ItemSettingsIH(stand, i, (Player) e.getWhoClicked(), e.getSlot());
+                        new ItemSettingsIH(shop, i, (Player) e.getWhoClicked(), e.getSlot());
 
                     }
                 }.runTaskLater(this, 2);
@@ -341,7 +341,7 @@ public class StandManager extends JavaPlugin implements Listener {
             } else {
 
                 e.setCancelled(true);
-                new RemoveOSponsorIH(stand, stand.getItemAt(e.getSlot()), (Player) e.getWhoClicked());
+                new RemoveOSponsorIH(shop, shop.getItemAt(e.getSlot()), (Player) e.getWhoClicked());
 
             }
 
@@ -352,13 +352,13 @@ public class StandManager extends JavaPlugin implements Listener {
 
             if (e.getCursor() == null || e.getCursor().getType() == Material.AIR) {
 
-                for (SellingItem c : stand.getItems()) {
+                for (SellingItem c : shop.getItems()) {
 
                     if (c.getSlot() == e.getSlot()) {
 
                         if (getEconomy().has((OfflinePlayer) e.getWhoClicked(), c.getPrice())) {
 
-                            PlayerBuyStandEvent ev = new PlayerBuyStandEvent(stand, c, (Player) e.getWhoClicked());
+                            PlayerBuyStandEvent ev = new PlayerBuyStandEvent(shop, c, (Player) e.getWhoClicked());
 
                             Bukkit.getPluginManager().callEvent(ev);
 
@@ -369,17 +369,17 @@ public class StandManager extends JavaPlugin implements Listener {
                                     case MODIFIED: {
 
                                         getEconomy().withdrawPlayer((OfflinePlayer) e.getWhoClicked(), c.getPrice());
-                                        getEconomy().depositPlayer(Bukkit.getOfflinePlayer(stand.getP()), c.getPrice());
+                                        getEconomy().depositPlayer(Bukkit.getOfflinePlayer(shop.getPlayerUUID()), c.getPrice());
                                         venduto = c;
                                         e.setCancelled(true);
 
-                                        if (c.equals(stand.getSponsor())) {
-                                            stand.getInvBuyer().setItem(stand.getSponsor().getSlot(),
-                                                    stand.getSponsor().getWithpriceBuyer());
-                                            stand.getInvSeller().setItem(stand.getSponsor().getSlot(),
-                                                    stand.getSponsor().getWithpriceSeller());
+                                        if (c.equals(shop.getSponsor())) {
+                                            shop.getInvBuyer().setItem(shop.getSponsor().getSlot(),
+                                                    shop.getSponsor().getWithpriceBuyer());
+                                            shop.getInvSeller().setItem(shop.getSponsor().getSlot(),
+                                                    shop.getSponsor().getWithpriceSeller());
 
-                                            stand.setSponsor(null);
+                                            shop.setSponsor(null);
 
                                         }
 
@@ -389,11 +389,11 @@ public class StandManager extends JavaPlugin implements Listener {
                                                         .replace("<type>",
                                                                 c.getI().getType().toString().toLowerCase().replace("_", " "))
                                                         .replace("<amount>", c.getI().getAmount() + "")
-                                                        .replace("<name>", stand.getPlayerName())));
+                                                        .replace("<name>", shop.getPlayerName())));
 
-                                        if (Bukkit.getPlayer(stand.getP()) != null) {
+                                        if (Bukkit.getPlayer(shop.getPlayerUUID()) != null) {
 
-                                            Bukkit.getPlayer(stand.getP()).sendMessage(ChatColor.translateAlternateColorCodes(
+                                            Bukkit.getPlayer(shop.getPlayerUUID()).sendMessage(ChatColor.translateAlternateColorCodes(
                                                     '&',
                                                     StandManager.configconfig.getString("seller-message")
                                                             .replace("<price>", c.getPrice() + "")
@@ -401,10 +401,10 @@ public class StandManager extends JavaPlugin implements Listener {
                                                                     c.getI().getType().toString().toLowerCase().replace("_",
                                                                             " "))
                                                             .replace("<amount>", c.getI().getAmount() + "")
-                                                            .replace("<name>", stand.getPlayerName())));
+                                                            .replace("<name>", shop.getPlayerName())));
 
                                         } else {
-                                            stand.getOffMessages().add(ChatColor.translateAlternateColorCodes('&',
+                                            shop.getOffMessages().add(ChatColor.translateAlternateColorCodes('&',
                                                     StandManager.configconfig.getString("seller-message")
 
                                                             .replace("<price>", c.getPrice() + "")
@@ -412,7 +412,7 @@ public class StandManager extends JavaPlugin implements Listener {
                                                                     c.getI().getType().toString().toLowerCase().replace("_",
                                                                             " "))
                                                             .replace("<amount>", c.getI().getAmount() + "")
-                                                            .replace("<name>", stand.getPlayerName())));
+                                                            .replace("<name>", shop.getPlayerName())));
 
                                         }
                                         new BukkitRunnable() {
@@ -420,9 +420,9 @@ public class StandManager extends JavaPlugin implements Listener {
                                             @Override
                                             public void run() {
 
-                                                stand.getInvSeller().setItem(c.getSlot(), new ItemStack(unlockedslot));
+                                                shop.getInvSeller().setItem(c.getSlot(), new ItemStack(unlockedslot));
 
-                                                stand.getInvBuyer().setItem(c.getSlot(), new ItemStack(Material.AIR));
+                                                shop.getInvBuyer().setItem(c.getSlot(), new ItemStack(Material.AIR));
 
                                             }
                                         }.runTaskLater(this, 2);
@@ -450,7 +450,7 @@ public class StandManager extends JavaPlugin implements Listener {
                 }
                 if (venduto != null) {
 
-                    stand.getItems().remove(venduto);
+                    shop.getItems().remove(venduto);
 
                 }
 
@@ -479,7 +479,7 @@ public class StandManager extends JavaPlugin implements Listener {
 
                 if (!containsPlayer(p)) {
 
-                    registerStand(new Stand(p.getUniqueId(), p.getName()));
+                    registerStand(new Shop(p.getUniqueId(), p.getName()));
 
                 }
                 getStand(p).openInventory(p, "seller");

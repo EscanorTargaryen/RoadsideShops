@@ -16,7 +16,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-public class Stand implements Cloneable, ConfigurationSerializable, InventoryHolder {
+public class Shop implements Cloneable, ConfigurationSerializable, InventoryHolder {
 
     private final UUID p;
 
@@ -51,7 +51,7 @@ public class Stand implements Cloneable, ConfigurationSerializable, InventoryHol
 
             @Override
             public void run() {
-                Stand.timesponsor = StandManager.configconfig.getLong("sponsor-time-mills");
+                Shop.timesponsor = StandManager.configconfig.getLong("sponsor-time-mills");
 
             }
         }.runTaskLater(StandManager.getInstance(), 40);
@@ -247,7 +247,7 @@ public class Stand implements Cloneable, ConfigurationSerializable, InventoryHol
         return false;
     }
 
-    public Stand(UUID p, String name, ArrayList<SellingItem> m, SellingItem sponsor) {
+    public Shop(UUID p, String name, ArrayList<SellingItem> m, SellingItem sponsor) {
 
         this.p = p;
         playerName = name;
@@ -255,17 +255,17 @@ public class Stand implements Cloneable, ConfigurationSerializable, InventoryHol
         this.sponsor = sponsor;
     }
 
-    public Stand(UUID p, String name) {
+    public Shop(UUID p, String name) {
 
         this.p = p;
         playerName = name;
     }
 
 
-    public static Stand deserialize(Map<String, Object> args) {
+    public static Shop deserialize(Map<String, Object> args) {
         Validate.notNull(args, "Invalid args");
 
-        return new Stand(UUID.fromString((String) args.get("playerUUID")), (String) args.get("playername"),
+        return new Shop(UUID.fromString((String) args.get("playerUUID")), (String) args.get("playername"),
                 (ArrayList<SellingItem>) args.get("items"), (SellingItem) args.get("sponsor"));
     }
 
@@ -281,9 +281,9 @@ public class Stand implements Cloneable, ConfigurationSerializable, InventoryHol
     }
 
     @Override
-    public Stand clone() {
+    public Shop clone() {
         try {
-            return (Stand) super.clone();
+            return (Shop) super.clone();
         } catch (CloneNotSupportedException e) {
             return null;
         }
@@ -303,10 +303,10 @@ public class Stand implements Cloneable, ConfigurationSerializable, InventoryHol
         if (this == obj) {
             return true;
         }
-        if (!(obj instanceof Stand)) {
+        if (!(obj instanceof Shop)) {
             return false;
         }
-        Stand other = (Stand) obj;
+        Shop other = (Shop) obj;
         if (p == null) {
             if (other.p != null) {
                 return false;
@@ -319,7 +319,7 @@ public class Stand implements Cloneable, ConfigurationSerializable, InventoryHol
         } else return playerName.equals(other.playerName);
     }
 
-    public UUID getP() {
+    public UUID getPlayerUUID() {
         return p;
     }
 

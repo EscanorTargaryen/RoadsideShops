@@ -35,7 +35,7 @@ public class Newspaper implements Listener, InventoryHolder {
     boolean animation = false;
     private final ItemStack glass;
 
-    public Newspaper(Collection<Stand> collection, Player p) {
+    public Newspaper(Collection<Shop> collection, Player p) {
         Bukkit.getPluginManager().registerEvents(this, StandManager.getInstance());
 
         glass = new ItemStack(Material.GRAY_STAINED_GLASS_PANE);
@@ -45,10 +45,10 @@ public class Newspaper implements Listener, InventoryHolder {
 
         ArrayList<SellingItem> sel = new ArrayList<>();
 
-        for (Stand s : collection) {
+        for (Shop s : collection) {
 
             if (s.getSponsor() != null) {
-                if (!s.getP().equals(p.getUniqueId()))
+                if (!s.getPlayerUUID().equals(p.getUniqueId()))
 
                     sel.add(s.getSponsor());
 

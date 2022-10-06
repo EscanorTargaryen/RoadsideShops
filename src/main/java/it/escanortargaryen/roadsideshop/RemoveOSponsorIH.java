@@ -24,10 +24,10 @@ import java.util.List;
 
 public class RemoveOSponsorIH implements InventoryHolder, Listener {
 
-    Stand s;
+    Shop s;
     SellingItem i;
 
-    public RemoveOSponsorIH(Stand s, SellingItem m, Player p) {
+    public RemoveOSponsorIH(Shop s, SellingItem m, Player p) {
 
         Bukkit.getPluginManager().registerEvents(this, StandManager.getInstance());
 
@@ -67,7 +67,7 @@ public class RemoveOSponsorIH implements InventoryHolder, Listener {
                     + " minutes to sponsor another item.");
             ene.add("");
             ene.add(ChatColor.GRAY + "Sponsoring an item shows it on the newspaper.");
-            ene.add(ChatColor.GRAY + "You can sponsor an item every " + (Stand.timesponsor / 60000) + " minutes.");
+            ene.add(ChatColor.GRAY + "You can sponsor an item every " + (Shop.timesponsor / 60000) + " minutes.");
             m.setLore(ene);
             sponsor.setItemMeta(m);
             inv.setItem(22, sponsor);
@@ -82,7 +82,7 @@ public class RemoveOSponsorIH implements InventoryHolder, Listener {
             ene.add(ChatColor.RED + "The item isn't sponsored at the moment.");
             ene.add("");
             ene.add(ChatColor.GRAY + "Sponsoring an item shows it on the newspaper.");
-            ene.add(ChatColor.GRAY + "You can sponsor an item every " + (Stand.timesponsor / 60000) + " minutes.");
+            ene.add(ChatColor.GRAY + "You can sponsor an item every " + (Shop.timesponsor / 60000) + " minutes.");
             ene.add("");
             if (s.getSponsor() != null) {
 
@@ -108,7 +108,7 @@ public class RemoveOSponsorIH implements InventoryHolder, Listener {
                     + " minutes to sponsor another item.");
             ene.add("");
             ene.add(ChatColor.GRAY + "Sponsoring an item shows it on the newspaper.");
-            ene.add(ChatColor.GRAY + "You can sponsor an item every " + (Stand.timesponsor / 60000) + " minutes.");
+            ene.add(ChatColor.GRAY + "You can sponsor an item every " + (Shop.timesponsor / 60000) + " minutes.");
             m.setLore(ene);
             sponsor.setItemMeta(m);
             inv.setItem(22, sponsor);
@@ -222,7 +222,7 @@ public class RemoveOSponsorIH implements InventoryHolder, Listener {
                     ene.add(ChatColor.GREEN + "The item will be sponsored.");
                     ene.add("");
                     ene.add(ChatColor.GRAY + "Sponsoring an item shows it on the newspaper.");
-                    ene.add(ChatColor.GRAY + "You can sponsor an item every " + (Stand.timesponsor / 60000)
+                    ene.add(ChatColor.GRAY + "You can sponsor an item every " + (Shop.timesponsor / 60000)
                             + " minutes.");
                     ene.add("");
                     if (s.getSponsor() != null) {
@@ -250,7 +250,7 @@ public class RemoveOSponsorIH implements InventoryHolder, Listener {
                     ene.add(ChatColor.RED + "The item isn't sponsored at the moment.");
                     ene.add("");
                     ene.add(ChatColor.GRAY + "Sponsoring an item shows it on the newspaper.");
-                    ene.add(ChatColor.GRAY + "You can sponsor an item every " + (Stand.timesponsor / 60000)
+                    ene.add(ChatColor.GRAY + "You can sponsor an item every " + (Shop.timesponsor / 60000)
                             + " minutes.");
                     ene.add("");
                     if (s.getSponsor() != null) {

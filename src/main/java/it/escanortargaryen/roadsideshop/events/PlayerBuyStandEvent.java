@@ -1,7 +1,7 @@
 package it.escanortargaryen.roadsideshop.events;
 
 import it.escanortargaryen.roadsideshop.SellingItem;
-import it.escanortargaryen.roadsideshop.Stand;
+import it.escanortargaryen.roadsideshop.Shop;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
@@ -10,15 +10,15 @@ import org.jetbrains.annotations.NotNull;
 
 public class PlayerBuyStandEvent extends Event implements Cancellable {
 
-    private final Stand stand;
+    private final Shop shop;
 
     private final SellingItem item;
 
     private final Player buyer;
 
-    public PlayerBuyStandEvent(Stand stand2, SellingItem c, Player whoClicked) {
+    public PlayerBuyStandEvent(Shop shop2, SellingItem c, Player whoClicked) {
 
-        stand = stand2;
+        shop = shop2;
         item = c;
         buyer = whoClicked;
 
@@ -48,8 +48,8 @@ public class PlayerBuyStandEvent extends Event implements Cancellable {
         cancelled = b;
     }
 
-    public Stand getStand() {
-        return stand;
+    public Shop getStand() {
+        return shop;
     }
 
     public SellingItem getItem() {

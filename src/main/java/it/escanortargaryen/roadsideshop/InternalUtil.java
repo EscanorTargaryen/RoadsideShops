@@ -4,9 +4,16 @@ package it.escanortargaryen.roadsideshop;
 //TODO metodo per sistemare i prezzi?
 //TODO ci sono deprecate?
 
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+
+import java.util.ArrayList;
+
 /* TODO cose da sistemare in una classe:
 
-  typo
+        typo
         warnings
         spazi
         documentazione
@@ -15,4 +22,78 @@ package it.escanortargaryen.roadsideshop;
         rimuovere import inutili
         no parole in italiano*/
 class InternalUtil {
+
+    public static ItemStack generateMapItem(Shop shop, boolean isSponsoring) {
+        ItemStack sponsor ;
+        if (shop.canSponsor(System.currentTimeMillis())) {
+            if (isSponsoring) {
+
+                sponsor = new ItemStack(Material.FILLED_MAP);
+                ItemMeta m = sponsor.getItemMeta();
+                m.setDisplayName(ChatColor.GOLD + "Sposor item");
+                ArrayList<String> ene = new ArrayList<>();
+                ene.add("");
+                ene.add(ChatColor.GREEN + "The item will be sponsored.");
+                ene.add("");
+                ene.add(ChatColor.GRAY + "Sponsoring an item shows it on the newspaper.");
+                ene.add(ChatColor.GRAY + "You can sponsor an item every " + (Shop.timesponsor / 60000) + " minutes.");
+                ene.add("");
+
+                if (shop.getSponsor() != null) {
+
+                    ene.add(ChatColor.DARK_RED + "N.B.: " + ChatColor.RED
+                            + "You already have a sponsored item. Sponsoring");
+                    ene.add(ChatColor.RED + "this item is going to unsponsor the other one.");
+                    ene.add("");
+
+                }
+                ene.add(ChatColor.GOLD + "Click to unsponsor");
+                m.setLore(ene);
+                sponsor.setItemMeta(m);
+
+            } else {
+
+                sponsor = new ItemStack(Material.PAPER);
+                ItemMeta m = sponsor.getItemMeta();
+                m.setDisplayName(ChatColor.YELLOW + "Sponsor item");
+                ArrayList<String> ene = new ArrayList<>();
+                ene.add("");
+                ene.add(ChatColor.RED + "The item isn't sponsored at the moment.");
+                ene.add("");
+                ene.add(ChatColor.GRAY + "Sponsoring an item shows it on the newspaper.");
+                ene.add(ChatColor.GRAY + "You can sponsor an item every " + (Shop.timesponsor / 60000) + " minutes.");
+                ene.add("");
+                if (shop.getSponsor() != null) {
+
+                    ene.add(ChatColor.DARK_RED + "N.B.: " + ChatColor.RED
+                            + "You already have a sponsored item. Sponsoring");
+                    ene.add(ChatColor.RED + "this item is going to unsponsor the other one.");
+                    ene.add("");
+
+                }
+                ene.add(ChatColor.GOLD + "Click to sponsor");
+                m.setLore(ene);
+                sponsor.setItemMeta(m);
+
+            }
+
+        } else {
+            sponsor = new ItemStack(Material.FILLED_MAP);
+            ItemMeta m = sponsor.getItemMeta();
+            m.setDisplayName(ChatColor.GOLD + "Sposor item");
+            ArrayList<String> ene = new ArrayList<>();
+            ene.add("");
+            ene.add(ChatColor.DARK_RED + "You've already sponsored an item.");
+            ene.add(ChatColor.DARK_RED + "Wait " + shop.getMissTimeinMins(System.currentTimeMillis())
+                    + " minutes to sponsor another item.");
+            ene.add("");
+            ene.add(ChatColor.GRAY + "Sponsoring an item shows it on the newspaper.");
+            ene.add(ChatColor.GRAY + "You can sponsor an item every " + (Shop.timesponsor / 60000) + " minutes.");
+            m.setLore(ene);
+            sponsor.setItemMeta(m);
+
+        }
+        return sponsor.clone();
+    }
+
 }
