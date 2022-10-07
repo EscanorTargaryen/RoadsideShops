@@ -15,3 +15,47 @@ sponsor-item-set: '&6You setted&a <type>x<amount> &6 for &a <price>CC &6 as a sp
 bought-message: '&6 You bought &a <type>x<amount> &6for&a <price>CC &6 from <name> s stand'
 seller-message: '&6You sold &a <type>x<amount> &6for&a <price>CC &6to <name>'
 sponsor-time-mills: 5000
+
+sponsor-button:
+  title: "§6Sponsor item"
+  sponsoring:
+    - ""
+    - "§aThe item will be sponsored."
+    - "§7Sponsoring an item shows it on the newspaper."
+    - "§7You can sponsor an item every %minutes% minutes."
+    - ""
+    - "§6Click to unsponsor"
+  sponsoring-change:
+    - ""
+    - "§aThe item will be sponsored."
+    - "§7Sponsoring an item shows it on the newspaper."
+    - "§7You can sponsor an item every %minutes% minutes."
+    - ""
+    - "§4N.B.: §cYou already have a sponsored item. Sponsoring"
+    - "§cthis item is going to unsponsor the other one."
+    - ""
+    - "§6Click to unsponsor"
+  not-sponsoring:
+    - ""
+    - "§cThe item isn't sponsored at the moment."
+    - "§7Sponsoring an item shows it on the newspaper."
+    - "§7You can sponsor an item every %minutes% minutes."
+    - ""
+    - "§6Click to sponsor"
+  not-sponsoring-change:
+    - ""
+    - "§cThe item isn't sponsored at the moment."
+    - "§7Sponsoring an item shows it on the newspaper."
+    - "§7You can sponsor an item every %minutes% minutes."
+    - ""
+    - "§4N.B.: §cYou already have a sponsored item. Sponsoring"
+    - "§cthis item is going to unsponsor the other one."
+    - ""
+    - "§6Click to sponsor"
+  wait:
+    - ""
+    - "§4You've already sponsored an item."
+    - "§4Wait %minutesToSponsor% minutes to sponsor another item."
+    - ""
+    - "§7Sponsoring an item shows it on the newspaper."
+    - "§7You can sponsor an item every %minutes% minutes."

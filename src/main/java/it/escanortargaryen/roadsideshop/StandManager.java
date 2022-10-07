@@ -3,6 +3,7 @@ package it.escanortargaryen.roadsideshop;
 import com.fren_gor.invManagementPlugin.api.SafeInventoryActions;
 import it.escanortargaryen.roadsideshop.events.PlayerBuyStandEvent;
 import it.escanortargaryen.roadsideshop.saving.ConfigManager;
+import it.escanortargaryen.roadsideshop.saving.SavingUtil;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -10,7 +11,6 @@ import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -26,13 +26,9 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
-import it.escanortargaryen.roadsideshop.saving.SavingUtil;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
-import java.util.Map.Entry;
 
 public class StandManager extends JavaPlugin implements Listener {
 
@@ -125,7 +121,6 @@ public class StandManager extends JavaPlugin implements Listener {
     }
 
     private void registerStand(Shop k, boolean save) {
-
         return;
     }
 
@@ -172,8 +167,6 @@ public class StandManager extends JavaPlugin implements Listener {
         savesStand = new SavingUtil<>(this, s -> s.getPlayerUUID().toString(), ".stand");
         registerAllStand();
 
-
-
         not = new ItemStack(Material.BLACK_STAINED_GLASS_PANE);
         ItemMeta w = not.getItemMeta();
         w.setDisplayName(ChatColor.translateAlternateColorCodes('&',
@@ -213,11 +206,6 @@ public class StandManager extends JavaPlugin implements Listener {
     @Override
     public void onDisable() {
         saveAllStand();
-    }
-
-    public boolean containsPlayer(Player p) {
-
-        return stands.containsKey(p.getUniqueId().toString());
     }
 
     public boolean containsPlayer(String name) {
@@ -457,9 +445,9 @@ public class StandManager extends JavaPlugin implements Listener {
 
             if (args.length == 0) {
 
-                if (!containsPlayer(p)) {
+                if (!stands.containsKey(p.getUniqueId().toString())) {
 
-                    registerStand(new Shop(p.getUniqueId(), p.getName()));
+                    stands.put(p.getUniqueId().toString(), new Shop(p.getUniqueId(), p.getName()));
 
                 }
                 getStand(p).openInventory(p, "seller");

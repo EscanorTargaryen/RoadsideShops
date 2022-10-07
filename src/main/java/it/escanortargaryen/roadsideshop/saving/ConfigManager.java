@@ -4,6 +4,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ConfigManager {
@@ -22,7 +23,11 @@ public class ConfigManager {
     private String sponsorItemSet;
     private String boughtMessage;
     private String sellerMessage;
-    private int sponsorTimeMills;
+    private long sponsorTimeMills;
+
+    private String sponsorButtonTitle;
+
+    private List<String> sponsoring, sponsoringChange, notSponsoring, notSponsoringChange, waitToSponsor;
 
     public ConfigManager(Plugin pl) {
 
@@ -32,7 +37,6 @@ public class ConfigManager {
     }
 
     public void loadAndValidateConfig() {
-
         priceMessage = config.getString("price-message");
         unlockedSlotPanelTitle = config.getString("unlocked-slot-panel-title");
         unlockedSlotPanelLore = config.getStringList("unlocked-slot-lore");
@@ -45,11 +49,13 @@ public class ConfigManager {
         sponsorItemSet = config.getString("sponsor-item-set");
         boughtMessage = config.getString("bought-message");
         sellerMessage = config.getString("seller-message");
-        sponsorTimeMills = config.getInt("sponsor-time-mills");
-    }
-
-    public YamlConfiguration getConfig() {
-        return config;
+        sponsorTimeMills = config.getLong("sponsor-time-mills");
+        sponsorButtonTitle = config.getString("sponsor-button.title");
+        sponsoring = config.getStringList("sponsor-button.sponsoring");
+        sponsoringChange = config.getStringList("sponsor-button.sponsoring-change");
+        notSponsoring = config.getStringList("sponsor-button.not-sponsoring");
+        notSponsoringChange = config.getStringList("sponsor-button.not-sponsoring-change");
+        waitToSponsor = config.getStringList("sponsor-button.wait");
     }
 
     public String getPriceMessage() {
@@ -100,7 +106,68 @@ public class ConfigManager {
         return sellerMessage;
     }
 
-    public int getSponsorTimeMills() {
+    public long getSponsorTimeMills() {
         return sponsorTimeMills;
     }
+
+    public String getSponsorButtonTitle() {
+        return sponsorButtonTitle;
+    }
+
+    public List<String> getNotSponsoring(long minutes) {
+
+        List<String> ret = new ArrayList<>();
+
+        for (String i : notSponsoring) {
+
+            ret.add(i.replace("%minutes%", minutes + ""));
+        }
+
+        return ret;
+    }
+
+    public List<String> getNotSponsoringChange(long minutes) {
+        List<String> ret = new ArrayList<>();
+
+        for (String i : notSponsoringChange) {
+
+            ret.add(i.replace("%minutes%", minutes + ""));
+        }
+
+        return ret;
+    }
+
+    public List<String> getSponsoring(long minutes) {
+        List<String> ret = new ArrayList<>();
+
+        for (String i : sponsoring) {
+
+            ret.add(i.replace("%minutes%", minutes + ""));
+        }
+
+        return ret;
+    }
+
+    public List<String> getSponsoringChange(long minutes) {
+        List<String> ret = new ArrayList<>();
+
+        for (String i : sponsoringChange) {
+
+            ret.add(i.replace("%minutes%", minutes + ""));
+        }
+
+        return ret;
+    }
+
+    public List<String> getWaitToSponsor(long minutes, long minuteToSponsor) {
+        List<String> ret = new ArrayList<>();
+
+        for (String i : waitToSponsor) {
+
+            ret.add(i.replace("%minutes%", minutes + "").replace("%minutesToSponsor%", minuteToSponsor + ""));
+        }
+
+        return ret;
+    }
+
 }
