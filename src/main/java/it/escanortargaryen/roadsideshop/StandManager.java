@@ -2,6 +2,7 @@ package it.escanortargaryen.roadsideshop;
 
 import com.fren_gor.invManagementPlugin.api.SafeInventoryActions;
 import it.escanortargaryen.roadsideshop.events.PlayerBuyStandEvent;
+import it.escanortargaryen.roadsideshop.saving.ConfigManager;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -35,17 +36,11 @@ import java.util.Map.Entry;
 
 public class StandManager extends JavaPlugin implements Listener {
 
-
     private final HashMap<String, Shop> stands = new HashMap<>();
-    private final File config = new File(getDataFolder() + "/config.yml");
 
     private SavingUtil<Shop> savesStand;
 
-    static public YamlConfiguration configconfig = new YamlConfiguration();
-
-    static private final HashMap<String, Integer> advancementSlot = new HashMap<>();
-
-    static private final HashMap<String, Integer> advancementPerms = new HashMap<>();
+    public static ConfigManager CONFIGMANAGER;
 
     public static ItemStack unlockedslot = new ItemStack(Material.GRAY_STAINED_GLASS_PANE);
     public static ItemStack not;
@@ -149,14 +144,14 @@ public class StandManager extends JavaPlugin implements Listener {
         ConfigurationSerialization.registerClass(Shop.class, "Stand");
         ConfigurationSerialization.registerClass(SellingItem.class, "SellingItem");
 
-        configconfig = YamlConfiguration.loadConfiguration(config);
+        CONFIGMANAGER = new ConfigManager(this);
 
         unlockedslot = new ItemStack(Material.GRAY_STAINED_GLASS_PANE);
         ItemMeta h = unlockedslot.getItemMeta();
-        h.setDisplayName(ChatColor.translateAlternateColorCodes('&',
-                StandManager.configconfig.getString("unlocked-slot-panel-title")));
+        h.setDisplayName(ChatColor.translateAlternateColorCodes('&', CONFIGMANAGER.getUnlockedSlotPanelTitle()
+        ));
 
-        ArrayList<String> ene = (ArrayList<String>) StandManager.configconfig.getList("unlocked-slot-lore");
+        ArrayList<String> ene = (ArrayList<String>) CONFIGMANAGER.getUnlockedSlotPanelLore();
 
         ArrayList<String> ino = new ArrayList<>();
 
@@ -177,28 +172,14 @@ public class StandManager extends JavaPlugin implements Listener {
         savesStand = new SavingUtil<>(this, s -> s.getPlayerUUID().toString(), ".stand");
         registerAllStand();
 
-        Map<String, Object> d = configconfig.getConfigurationSection("advancementSlot").getValues(false);
 
-        for (Entry<String, Object> c : d.entrySet()) {
-
-            advancementSlot.put(c.getKey().replace('!', ':'), (Integer) c.getValue());
-
-        }
-
-        Map<String, Object> b = configconfig.getConfigurationSection("permissionslot").getValues(false);
-
-        for (Entry<String, Object> c : b.entrySet()) {
-
-            advancementPerms.put(c.getKey().replace('_', '.'), (Integer) c.getValue());
-
-        }
 
         not = new ItemStack(Material.BLACK_STAINED_GLASS_PANE);
         ItemMeta w = not.getItemMeta();
         w.setDisplayName(ChatColor.translateAlternateColorCodes('&',
-                StandManager.configconfig.getString("locked-slot-panel-title")));
+                CONFIGMANAGER.getLockedSlotPanelTitle()));
 
-        ene = (ArrayList<String>) StandManager.configconfig.getList("locked-slot-lore");
+        ene = (ArrayList<String>) CONFIGMANAGER.getLockedSlotPanelLore();
 
         ino = new ArrayList<>();
 
@@ -218,8 +199,8 @@ public class StandManager extends JavaPlugin implements Listener {
         log.setItemMeta(ws);
 
         String s = "\n§a           _____  _                     _§6   _____                         \n"
-                + "§a	  / ____|| |                   | | §6/ ____|                        §fby §cEscanorTargaryen §fof   \n"
-                + "§a	 | (___  | |_  __ _  _ __    __| |§6| |      ___   _ __  ___             §6Command§7Craft \n"
+                + "§a	  / ____|| |                   | | §6/ ____|                        §fby §cEscanorTargaryen   \n"
+                + "§a	 | (___  | |_  __ _  _ __    __| |§6| |      ___   _ __  ___             \n"
                 + "§a	  \\___ \\ | __|/ _` || '_ \\  / _` |§6| |     / _ \\ | '__|/ _ \\     \n"
                 + "§a	  ____) || |_| (_| || | | || (_| |§6| |____| (_) || |  |  __/      §2Enabled version: "
                 + this.getDescription().getVersion() + "\n"
@@ -384,7 +365,7 @@ public class StandManager extends JavaPlugin implements Listener {
                                         }
 
                                         e.getWhoClicked().sendMessage(ChatColor.translateAlternateColorCodes('&',
-                                                StandManager.configconfig.getString("bought-message")
+                                                CONFIGMANAGER.getBoughtMessage()
                                                         .replace("<price>", c.getPrice() + "")
                                                         .replace("<type>",
                                                                 c.getI().getType().toString().toLowerCase().replace("_", " "))
@@ -395,7 +376,7 @@ public class StandManager extends JavaPlugin implements Listener {
 
                                             Bukkit.getPlayer(shop.getPlayerUUID()).sendMessage(ChatColor.translateAlternateColorCodes(
                                                     '&',
-                                                    StandManager.configconfig.getString("seller-message")
+                                                    CONFIGMANAGER.getSellerMessage()
                                                             .replace("<price>", c.getPrice() + "")
                                                             .replace("<type>",
                                                                     c.getI().getType().toString().toLowerCase().replace("_",
@@ -405,7 +386,7 @@ public class StandManager extends JavaPlugin implements Listener {
 
                                         } else {
                                             shop.getOffMessages().add(ChatColor.translateAlternateColorCodes('&',
-                                                    StandManager.configconfig.getString("seller-message")
+                                                    CONFIGMANAGER.getSellerMessage()
 
                                                             .replace("<price>", c.getPrice() + "")
                                                             .replace("<type>",
@@ -462,7 +443,6 @@ public class StandManager extends JavaPlugin implements Listener {
         }
 
     }
-
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, Command command, @NotNull String label, String[] args) {
@@ -528,11 +508,4 @@ public class StandManager extends JavaPlugin implements Listener {
         return instance;
     }
 
-    public static HashMap<String, Integer> getAdvancementPerms() {
-        return advancementPerms;
-    }
-
-    public static HashMap<String, Integer> getAdvancementSlot() {
-        return advancementSlot;
-    }
 }

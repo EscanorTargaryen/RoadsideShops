@@ -3,6 +3,7 @@ package it.escanortargaryen.roadsideshop;
 
 import com.fren_gor.invManagementPlugin.api.SafeInventoryActions;
 import de.erethon.headlib.HeadLib;
+import it.escanortargaryen.roadsideshop.saving.ConfigManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -24,15 +25,15 @@ import java.util.List;
 
 public class RemoveOSponsorIH implements InventoryHolder, Listener {
 
-    Shop s;
-    SellingItem i;
+    private Shop shop;
+    private  SellingItem sellingItem;
 
-    public RemoveOSponsorIH(Shop s, SellingItem m, Player p) {
+    public RemoveOSponsorIH(Shop shop, SellingItem sellingItem, Player p) {
 
         Bukkit.getPluginManager().registerEvents(this, StandManager.getInstance());
 
-        this.s = s;
-        i = m;
+        this.shop = shop;
+        this.sellingItem = sellingItem;
         p.openInventory(getInventory());
     }
 
@@ -42,7 +43,7 @@ public class RemoveOSponsorIH implements InventoryHolder, Listener {
 
         Inventory inv = Bukkit.createInventory(this, 27, ChatColor.DARK_BLUE + "Item Settings");
 
-        ItemStack t = i.getWithpriceSeller().clone();
+        ItemStack t = sellingItem.getWithpriceSeller().clone();
         ItemMeta tt = t.getItemMeta();
         List<String> a = tt.getLore();
         a.remove(a.size() - 1);
@@ -55,7 +56,7 @@ public class RemoveOSponsorIH implements InventoryHolder, Listener {
         inv.setItem(20, HeadLib.WOODEN_ARROW_LEFT.toItemStack(ChatColor.BLUE + "Come back", "",
                 ChatColor.GRAY + "Click to exit settings"));
 
-        if (s.getSponsor() != null && s.getSponsor().equals(i)) {
+        if (shop.getSponsor() != null && shop.getSponsor().equals(sellingItem)) {
 
             ItemStack sponsor = new ItemStack(Material.FILLED_MAP);
             ItemMeta m = sponsor.getItemMeta();
@@ -63,7 +64,7 @@ public class RemoveOSponsorIH implements InventoryHolder, Listener {
             ArrayList<String> ene = new ArrayList<>();
             ene.add("");
             ene.add(ChatColor.DARK_RED + "The item is just a sponsored item.");
-            ene.add(ChatColor.DARK_RED + "Wait " + s.getMissTimeinMins(System.currentTimeMillis())
+            ene.add(ChatColor.DARK_RED + "Wait " + shop.getMissTimeinMins(System.currentTimeMillis())
                     + " minutes to sponsor another item.");
             ene.add("");
             ene.add(ChatColor.GRAY + "Sponsoring an item shows it on the newspaper.");
@@ -72,7 +73,7 @@ public class RemoveOSponsorIH implements InventoryHolder, Listener {
             sponsor.setItemMeta(m);
             inv.setItem(22, sponsor);
 
-        } else if (s.canSponsor(System.currentTimeMillis())) {
+        } else if (shop.canSponsor(System.currentTimeMillis())) {
 
             ItemStack sponsorItem = new ItemStack(Material.PAPER);
             ItemMeta m = sponsorItem.getItemMeta();
@@ -84,7 +85,7 @@ public class RemoveOSponsorIH implements InventoryHolder, Listener {
             ene.add(ChatColor.GRAY + "Sponsoring an item shows it on the newspaper.");
             ene.add(ChatColor.GRAY + "You can sponsor an item every " + (Shop.timesponsor / 60000) + " minutes.");
             ene.add("");
-            if (s.getSponsor() != null) {
+            if (shop.getSponsor() != null) {
 
                 ene.add(ChatColor.DARK_RED + "N.B.: " + ChatColor.RED
                         + "You already have a sponsored item. Sponsoring");
@@ -104,7 +105,7 @@ public class RemoveOSponsorIH implements InventoryHolder, Listener {
             ArrayList<String> ene = new ArrayList<>();
             ene.add("");
             ene.add(ChatColor.DARK_RED + "You've already sponsored an item.");
-            ene.add(ChatColor.DARK_RED + "Wait " + s.getMissTimeinMins(System.currentTimeMillis())
+            ene.add(ChatColor.DARK_RED + "Wait " + shop.getMissTimeinMins(System.currentTimeMillis())
                     + " minutes to sponsor another item.");
             ene.add("");
             ene.add(ChatColor.GRAY + "Sponsoring an item shows it on the newspaper.");
@@ -162,27 +163,27 @@ public class RemoveOSponsorIH implements InventoryHolder, Listener {
 
             Player p = (Player) e.getWhoClicked();
 
-            switch (SafeInventoryActions.addItem(p.getInventory(), i.getI())) {
+            switch (SafeInventoryActions.addItem(p.getInventory(), sellingItem.getI())) {
 
                 case MODIFIED: {
 
-                    s.getInvSeller().setItem(i.getSlot(), here);
-                    s.getInvBuyer().setItem(i.getSlot(), new ItemStack(Material.AIR));
+                    shop.getInvSeller().setItem(sellingItem.getSlot(), here);
+                    shop.getInvBuyer().setItem(sellingItem.getSlot(), new ItemStack(Material.AIR));
 
-                    s.getItems().remove(i);
+                    shop.getItems().remove(sellingItem);
 
                     e.getWhoClicked().closeInventory();
-                    if (s != null && s.getSponsor().equals(i)) {
-                        s.setSponsor(null);
+                    if (shop != null && shop.getSponsor().equals(sellingItem)) {
+                        shop.setSponsor(null);
 
                     }
 
                     e.getWhoClicked()
-                            .sendMessage(StandManager.configconfig.getString("remove-item").replace("&", "§")
-                                    .replace("<price>", i.getPrice()+"")
+                            .sendMessage(StandManager.CONFIGMANAGER.getRemoveItem().replace("&", "§")
+                                    .replace("<price>", sellingItem.getPrice()+"")
 
-                                    .replace("<type>", i.getI().getType().toString().toLowerCase().replace("_", " "))
-                                    .replace("<amount>", i.getI().getAmount() + ""));
+                                    .replace("<type>", sellingItem.getI().getType().toString().toLowerCase().replace("_", " "))
+                                    .replace("<amount>", sellingItem.getI().getAmount() + ""));
 
                     new BukkitRunnable() {
 
@@ -208,10 +209,10 @@ public class RemoveOSponsorIH implements InventoryHolder, Listener {
         }
 
         if (e.getSlot() == 22) {
-            if (s.getSponsor() != null && s.getSponsor().equals(i))
+            if (shop.getSponsor() != null && shop.getSponsor().equals(sellingItem))
                 return;
 
-            if (s.canSponsor(System.currentTimeMillis())) {
+            if (shop.canSponsor(System.currentTimeMillis())) {
 
                 if (!this.sponsor) {
                     ItemStack sponsor = new ItemStack(Material.FILLED_MAP);
@@ -225,7 +226,7 @@ public class RemoveOSponsorIH implements InventoryHolder, Listener {
                     ene.add(ChatColor.GRAY + "You can sponsor an item every " + (Shop.timesponsor / 60000)
                             + " minutes.");
                     ene.add("");
-                    if (s.getSponsor() != null) {
+                    if (shop.getSponsor() != null) {
 
                         ene.add(ChatColor.DARK_RED + "N.B.: " + ChatColor.RED
                                 + "You already have a sponsored item. Sponsoring");
@@ -253,7 +254,7 @@ public class RemoveOSponsorIH implements InventoryHolder, Listener {
                     ene.add(ChatColor.GRAY + "You can sponsor an item every " + (Shop.timesponsor / 60000)
                             + " minutes.");
                     ene.add("");
-                    if (s.getSponsor() != null) {
+                    if (shop.getSponsor() != null) {
 
                         ene.add(ChatColor.DARK_RED + "N.B.: " + ChatColor.RED
                                 + "You already have a sponsored item. Sponsoring");
@@ -283,26 +284,26 @@ public class RemoveOSponsorIH implements InventoryHolder, Listener {
             if (sponsor) {
 
                 e.getPlayer()
-                        .sendMessage(StandManager.configconfig.getString("sponsor-item-set").replace("&", "§")
-                                .replace("<price>", i.getPrice()+"")
-                                .replace("<type>", i.getI().getType().toString().toLowerCase().replace("_", " "))
-                                .replace("<amount>", i.getI().getAmount() + ""));
+                        .sendMessage(StandManager.CONFIGMANAGER.getSponsorItemSet().replace("&", "§")
+                                .replace("<price>", sellingItem.getPrice()+"")
+                                .replace("<type>", sellingItem.getI().getType().toString().toLowerCase().replace("_", " "))
+                                .replace("<amount>", sellingItem.getI().getAmount() + ""));
 
-                if (s.getSponsor() != null) {
+                if (shop.getSponsor() != null) {
 
-                    s.getInvBuyer().setItem(s.getSponsor().getSlot(), s.getSponsor().getWithpriceBuyer());
-                    s.getInvSeller().setItem(s.getSponsor().getSlot(), s.getSponsor().getWithpriceSeller());
+                    shop.getInvBuyer().setItem(shop.getSponsor().getSlot(), shop.getSponsor().getWithpriceBuyer());
+                    shop.getInvSeller().setItem(shop.getSponsor().getSlot(), shop.getSponsor().getWithpriceSeller());
 
                 }
 
-                s.setTimeSponsor(System.currentTimeMillis());
-                s.setSponsor(i);
+                shop.setTimeSponsor(System.currentTimeMillis());
+                shop.setSponsor(sellingItem);
 
-                s.getInvBuyer().setItem(i.getSlot(), i.getWithpriceESpondorBuyer());
-                s.getInvSeller().setItem(i.getSlot(), i.getWithpriceESpondorSeller());
+                shop.getInvBuyer().setItem(sellingItem.getSlot(), sellingItem.getWithpriceESpondorBuyer());
+                shop.getInvSeller().setItem(sellingItem.getSlot(), sellingItem.getWithpriceESpondorSeller());
 
             }
-            StandManager.getInstance().saveStand(s);
+            StandManager.getInstance().saveStand(shop);
 
             InventoryClickEvent.getHandlerList().unregister(this);
             InventoryCloseEvent.getHandlerList().unregister(this);

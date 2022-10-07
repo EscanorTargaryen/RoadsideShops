@@ -13,6 +13,7 @@ import java.util.ArrayList;
 //TODO capire se serve il metodo calculate slots
 //TODO metodo per sistemare i prezzi?
 //TODO ci sono deprecate?
+TODO cambia la scritta all'avvio sta scritto ancora standscore
 
 TODO cose da sistemare in una classe:
 
@@ -33,7 +34,7 @@ class InternalUtil {
 
                 sponsor = new ItemStack(Material.FILLED_MAP);
                 ItemMeta m = sponsor.getItemMeta();
-                m.setDisplayName(ChatColor.GOLD + "Sposor item");
+                m.setDisplayName(ChatColor.GOLD + "Sponsor item");
                 ArrayList<String> ene = new ArrayList<>();
                 ene.add("");
                 ene.add(ChatColor.GREEN + "The item will be sponsored.");

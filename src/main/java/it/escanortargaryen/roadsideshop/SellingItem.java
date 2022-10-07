@@ -66,7 +66,7 @@ public class SellingItem implements Cloneable, ConfigurationSerializable {
         ItemMeta m = i.getItemMeta();
         ArrayList<String> p = new ArrayList<>();
         p.add("");
-        p.add(ChatColor.translateAlternateColorCodes('&', StandManager.configconfig.getString("price-message")
+        p.add(ChatColor.translateAlternateColorCodes('&', StandManager.CONFIGMANAGER.getPriceMessage()
                 .replace("<value>", price+"")));
         p.add("");
         p.add(ChatColor.GOLD + "Click to edit item");
@@ -79,7 +79,7 @@ public class SellingItem implements Cloneable, ConfigurationSerializable {
 
         p.clear();
         p.add("");
-        p.add(ChatColor.translateAlternateColorCodes('&', StandManager.configconfig.getString("price-message")
+        p.add(ChatColor.translateAlternateColorCodes('&', StandManager.CONFIGMANAGER.getPriceMessage()
                 .replace("<value>", price+"")));
         p.add("");
         p.add(ChatColor.GOLD + "Click to buy item");

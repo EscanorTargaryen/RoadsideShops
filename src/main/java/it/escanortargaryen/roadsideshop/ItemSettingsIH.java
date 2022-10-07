@@ -67,8 +67,7 @@ public class ItemSettingsIH implements InventoryHolder, Listener {
 
             prezzo = new ItemStack(Material.NAME_TAG);
             mw = prezzo.getItemMeta();
-            Objects.requireNonNull(mw).setDisplayName(ChatColor.translateAlternateColorCodes('&', Objects.requireNonNull(StandManager.configconfig
-                    .getString("price-message")).replace("<value>", price + "")));
+            Objects.requireNonNull(mw).setDisplayName(ChatColor.translateAlternateColorCodes('&', StandManager.CONFIGMANAGER.getPriceMessage().replace("<value>", price + "")));
 
             mw.setLore(Arrays.asList("", ChatColor.GOLD + "Click to change the price"));
             prezzo.setItemMeta(mw);
@@ -169,7 +168,7 @@ public class ItemSettingsIH implements InventoryHolder, Listener {
                 exit = true;
 
                 p.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                        Objects.requireNonNull(StandManager.configconfig.getString("put-item"))
+                        StandManager.CONFIGMANAGER.getPutItem()
                                 .replace("<price>", sellingItem.getPrice() + "")
                                 .replace("<type>", sellingItem.getI().getType().toString().toLowerCase().replace("_", " "))
                                 .replace("<amount>", sellingItem.getI().getAmount() + "")));
@@ -177,7 +176,7 @@ public class ItemSettingsIH implements InventoryHolder, Listener {
                 if (isSponsoring) {
 
                     e.getWhoClicked().sendMessage(ChatColor.translateAlternateColorCodes('&',
-                            Objects.requireNonNull(StandManager.configconfig.getString("sponsor-set"))));
+                            StandManager.CONFIGMANAGER.getSponsorSet()));
 
                     InternalUtil.setSponsorItem(shop, sellingItem);
 

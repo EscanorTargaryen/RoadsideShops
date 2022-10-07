@@ -51,7 +51,7 @@ public class Shop implements Cloneable, ConfigurationSerializable, InventoryHold
 
             @Override
             public void run() {
-                Shop.timesponsor = StandManager.configconfig.getLong("sponsor-time-mills");
+                Shop.timesponsor = StandManager.CONFIGMANAGER.getSponsorTimeMills();
 
             }
         }.runTaskLater(StandManager.getInstance(), 40);
