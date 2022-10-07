@@ -1,8 +1,5 @@
 package it.escanortargaryen.roadsideshop;
 
-//TODO capire se serve il metodo calculate slots
-//TODO metodo per sistemare i prezzi?
-//TODO ci sono deprecate?
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -11,7 +8,13 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
 
-/* TODO cose da sistemare in una classe:
+/*
+
+//TODO capire se serve il metodo calculate slots
+//TODO metodo per sistemare i prezzi?
+//TODO ci sono deprecate?
+
+TODO cose da sistemare in una classe:
 
         typo
         warnings
@@ -24,7 +27,7 @@ import java.util.ArrayList;
 class InternalUtil {
 
     public static ItemStack generateMapItem(Shop shop, boolean isSponsoring) {
-        ItemStack sponsor ;
+        ItemStack sponsor;
         if (shop.canSponsor(System.currentTimeMillis())) {
             if (isSponsoring) {
 
@@ -94,6 +97,21 @@ class InternalUtil {
 
         }
         return sponsor.clone();
+    }
+
+    public static void setSponsorItem(Shop shop, SellingItem sellingItem) {
+        if (shop.getSponsor() != null) {
+
+            shop.getInvBuyer().setItem(shop.getSponsor().getSlot(), shop.getSponsor().getWithpriceBuyer());
+            shop.getInvSeller().setItem(shop.getSponsor().getSlot(), shop.getSponsor().getWithpriceSeller());
+
+        }
+        shop.setTimeSponsor(System.currentTimeMillis());
+        shop.setSponsor(sellingItem);
+
+        shop.getInvBuyer().setItem(sellingItem.getSlot(), sellingItem.getWithpriceESpondorBuyer());
+        shop.getInvSeller().setItem(sellingItem.getSlot(), sellingItem.getWithpriceESpondorSeller());
+
     }
 
 }

@@ -18,12 +18,13 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Objects;
 
 public class ItemSettingsIH implements InventoryHolder, Listener {
 
-    private Shop shop;
-    private ItemStack itemToSell;
-    private int slotNumber;
+    private final Shop shop;
+    private final ItemStack itemToSell;
+    private final int slotNumber;
     private boolean isPriceSet = false, isSponsoring = false, closeInv = false, exit = false;
 
     private double price = 0.0;
@@ -44,7 +45,7 @@ public class ItemSettingsIH implements InventoryHolder, Listener {
         Inventory inv = Bukkit.createInventory(this, 27, ChatColor.DARK_BLUE + "Selling Settings");
 
         ItemStack item = itemToSell.clone();
-        ItemMeta d = item.getItemMeta().clone();
+        ItemMeta d = Objects.requireNonNull(item.getItemMeta()).clone();
         ArrayList<String> arr = new ArrayList<>();
         arr.add("");
         arr.add(ChatColor.GRAY + "Item to be sold");
@@ -60,14 +61,14 @@ public class ItemSettingsIH implements InventoryHolder, Listener {
 
             wool = new ItemStack(Material.GREEN_WOOL);
             ItemMeta mw = wool.getItemMeta();
-            mw.setDisplayName(ChatColor.YELLOW + "Sell it");
+            Objects.requireNonNull(mw).setDisplayName(ChatColor.YELLOW + "Sell it");
             mw.setLore(Arrays.asList("", ChatColor.GOLD + "Click to finish up and sell the item"));
             wool.setItemMeta(mw);
 
             prezzo = new ItemStack(Material.NAME_TAG);
             mw = prezzo.getItemMeta();
-            mw.setDisplayName(ChatColor.translateAlternateColorCodes('&', StandManager.configconfig
-                    .getString("price-message").replace("<value>", price + "")));
+            Objects.requireNonNull(mw).setDisplayName(ChatColor.translateAlternateColorCodes('&', Objects.requireNonNull(StandManager.configconfig
+                    .getString("price-message")).replace("<value>", price + "")));
 
             mw.setLore(Arrays.asList("", ChatColor.GOLD + "Click to change the price"));
             prezzo.setItemMeta(mw);
@@ -76,13 +77,13 @@ public class ItemSettingsIH implements InventoryHolder, Listener {
 
             wool = new ItemStack(Material.RED_WOOL);
             ItemMeta mw = wool.getItemMeta();
-            mw.setDisplayName(ChatColor.YELLOW + "Sell the item");
+            Objects.requireNonNull(mw).setDisplayName(ChatColor.YELLOW + "Sell the item");
             mw.setLore(Arrays.asList("", ChatColor.DARK_RED + "You must set a price before selling it"));
             wool.setItemMeta(mw);
 
             prezzo = new ItemStack(Material.NAME_TAG);
             mw = prezzo.getItemMeta();
-            mw.setDisplayName(ChatColor.YELLOW + "Set a price");
+            Objects.requireNonNull(mw).setDisplayName(ChatColor.YELLOW + "Set a price");
             mw.setLore(Arrays.asList("", ChatColor.GOLD + "Click to set a price for this item"));
             prezzo.setItemMeta(mw);
 
@@ -143,14 +144,7 @@ public class ItemSettingsIH implements InventoryHolder, Listener {
 
             if (shop.canSponsor(System.currentTimeMillis())) {
 
-                if (!this.isSponsoring) {
-
-                    this.isSponsoring = true;
-
-                } else {
-
-                    this.isSponsoring = false;
-                }
+                this.isSponsoring = !this.isSponsoring;
 
             }
             e.getInventory().setItem(15, InternalUtil.generateMapItem(shop, isSponsoring));
@@ -175,7 +169,7 @@ public class ItemSettingsIH implements InventoryHolder, Listener {
                 exit = true;
 
                 p.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                        StandManager.configconfig.getString("put-item")
+                        Objects.requireNonNull(StandManager.configconfig.getString("put-item"))
                                 .replace("<price>", sellingItem.getPrice() + "")
                                 .replace("<type>", sellingItem.getI().getType().toString().toLowerCase().replace("_", " "))
                                 .replace("<amount>", sellingItem.getI().getAmount() + "")));
@@ -183,18 +177,9 @@ public class ItemSettingsIH implements InventoryHolder, Listener {
                 if (isSponsoring) {
 
                     e.getWhoClicked().sendMessage(ChatColor.translateAlternateColorCodes('&',
-                            StandManager.configconfig.getString("sponsor-set")));
-                    if (shop.getSponsor() != null) {
+                            Objects.requireNonNull(StandManager.configconfig.getString("sponsor-set"))));
 
-                        shop.getInvBuyer().setItem(shop.getSponsor().getSlot(), shop.getSponsor().getWithpriceBuyer());
-                        shop.getInvSeller().setItem(shop.getSponsor().getSlot(), shop.getSponsor().getWithpriceSeller());
-
-                    }
-                    shop.setTimeSponsor(System.currentTimeMillis());
-                    shop.setSponsor(sellingItem);
-
-                    shop.getInvBuyer().setItem(sellingItem.getSlot(), sellingItem.getWithpriceESpondorBuyer());
-                    shop.getInvSeller().setItem(sellingItem.getSlot(), sellingItem.getWithpriceESpondorSeller());
+                    InternalUtil.setSponsorItem(shop, sellingItem);
 
                 }
 
