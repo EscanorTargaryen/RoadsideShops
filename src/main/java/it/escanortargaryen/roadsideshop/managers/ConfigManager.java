@@ -48,95 +48,97 @@ public class ConfigManager {
 
         String notSet = "is not set in config.yml";
 
-        priceMessage = config.getString("price-message");
-        if (priceMessage == null) {
+        if (!config.isSet("price-message")) {
             throw new ConfigurationException("price-message " + notSet);
         }
+        priceMessage = config.getString("price-message");
 
-        unlockedSlotPanelTitle = config.getString("unlocked-slot-panel-title");
-        if (priceMessage == null) {
+        if (!config.isSet("unlocked-slot-panel-title")) {
             throw new ConfigurationException("unlocked-slot-panel-title " + notSet);
         }
+        unlockedSlotPanelTitle = config.getString("unlocked-slot-panel-title");
 
-        unlockedSlotPanelLore = config.getStringList("unlocked-slot-lore");
-        if (priceMessage == null) {
+        if (!config.isSet("unlocked-slot-lore")) {
             throw new ConfigurationException("unlocked-slot-lore " + notSet);
         }
+        unlockedSlotPanelLore = config.getStringList("unlocked-slot-lore");
 
-        lockedSlotPanelTitle = config.getString("locked-slot-panel-title");
-        if (priceMessage == null) {
+        if (!config.isSet("locked-slot-panel-title")) {
             throw new ConfigurationException("locked-slot-panel-title " + notSet);
         }
+        lockedSlotPanelTitle = config.getString("locked-slot-panel-title");
 
-        lockedSlotPanelLore = config.getStringList("locked-slot-lore");
-        if (priceMessage == null) {
+        if (!config.isSet("locked-slot-lore")) {
             throw new ConfigurationException("locked-slot-lore " + notSet);
         }
+        lockedSlotPanelLore = config.getStringList("locked-slot-lore");
 
-        putItem = config.getString("put-item");
-        if (priceMessage == null) {
+        if (!config.isSet("put-item")) {
             throw new ConfigurationException("put-item " + notSet);
         }
+        putItem = config.getString("put-item");
 
-        sponsorSet = config.getString("sponsor-set");
-        if (priceMessage == null) {
+        if (!config.isSet("sponsor-set")) {
             throw new ConfigurationException("sponsor-set " + notSet);
         }
+        sponsorSet = config.getString("sponsor-set");
 
-        noAdv = config.getString("no-adv");
-        if (priceMessage == null) {
+        if (!config.isSet("no-adv")) {
             throw new ConfigurationException("no-adv " + notSet);
         }
+        noAdv = config.getString("no-adv");
 
-        removeItem = config.getString("remove-item");
-        if (priceMessage == null) {
+        if (!config.isSet("remove-item")) {
             throw new ConfigurationException("remove-item " + notSet);
         }
+        removeItem = config.getString("remove-item");
 
-        boughtMessage = config.getString("bought-message");
-        if (priceMessage == null) {
+        if (!config.isSet("bought-message")) {
             throw new ConfigurationException("bought-message " + notSet);
         }
+        boughtMessage = config.getString("bought-message");
 
-        sellerMessage = config.getString("seller-message");
-        if (priceMessage == null) {
+        if (!config.isSet("seller-message")) {
             throw new ConfigurationException("seller-message " + notSet);
         }
+        sellerMessage = config.getString("seller-message");
 
-        SPONSORTIME = config.getLong("sponsor-time");
-        if (priceMessage == null) {
+        if (!config.isSet("sponsor-time")) {
             throw new ConfigurationException("sponsor-time " + notSet);
         }
+        SPONSORTIME = config.getLong("sponsor-time");
+        if(SPONSORTIME<0)throw new ConfigurationException("sponsor-time could not be negative");
 
-        sponsorButtonTitle = config.getString("sponsor-button.title");
-        if (priceMessage == null) {
+
+        if (!config.isSet("sponsor-button.title")) {
             throw new ConfigurationException("sponsor-button.title " + notSet);
         }
+        sponsorButtonTitle = config.getString("sponsor-button.title");
 
-        sponsoring = config.getStringList("sponsor-button.sponsoring");
-        if (priceMessage == null) {
+        if (!config.isSet("sponsor-button.sponsoring")) {
             throw new ConfigurationException("sponsor-button.sponsoring " + notSet);
         }
+        sponsoring = config.getStringList("sponsor-button.sponsoring");
 
-        sponsoringChange = config.getStringList("sponsor-button.sponsoring-change");
-        if (priceMessage == null) {
+        if (!config.isSet("sponsor-button.sponsoring-change")) {
             throw new ConfigurationException("sponsor-button.sponsoring-change " + notSet);
         }
+        sponsoringChange = config.getStringList("sponsor-button.sponsoring-change");
 
-        notSponsoring = config.getStringList("sponsor-button.not-sponsoring");
-        if (priceMessage == null) {
+        if (!config.isSet("sponsor-button.not-sponsoring")) {
             throw new ConfigurationException("sponsor-button.not-sponsoring " + notSet);
         }
+        notSponsoring = config.getStringList("sponsor-button.not-sponsoring");
 
-        notSponsoringChange = config.getStringList("sponsor-button.not-sponsoring-change");
-        if (priceMessage == null) {
+        if (!config.isSet("sponsor-button.not-sponsoring-change")) {
             throw new ConfigurationException("sponsor-button.not-sponsoring-change " + notSet);
         }
+        notSponsoringChange = config.getStringList("sponsor-button.not-sponsoring-change");
 
-        waitToSponsor = config.getStringList("sponsor-button.wait");
-        if (priceMessage == null) {
+        if (!config.isSet("sponsor-button.wait")) {
             throw new ConfigurationException("sponsor-button.wait " + notSet);
         }
+        waitToSponsor = config.getStringList("sponsor-button.wait");
 
     }
 
