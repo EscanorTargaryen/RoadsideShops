@@ -136,7 +136,7 @@ public class RoadsideShops extends JavaPlugin implements Listener {
         Objects.requireNonNull(ws).setDisplayName(ChatColor.WHITE + "");
         log.setItemMeta(ws);
 
-        String s = "§7---§cRoadside §6Shops§7---\n§fby §cEscanorTargaryen\n §2Enabled version: " + this.getDescription().getVersion() + "\n§7------------------------";
+        String s = "§7----§cRoadside §6Shops§7----§r\n§fby §cEscanorTargaryen§r\n§2Enabled version: " + this.getDescription().getVersion() + "§r\n§7------------------------§r";
 
         Bukkit.getConsoleSender().sendMessage(s);
         new ShopsManager();

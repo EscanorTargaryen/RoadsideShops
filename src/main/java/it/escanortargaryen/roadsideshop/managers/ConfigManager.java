@@ -28,11 +28,13 @@ public class ConfigManager {
     private String sellerMessage;
     public static long SPONSORTIME;
 
+    private int unlockedSlots;
+
     private String sponsorButtonTitle;
 
     private List<String> sponsoring, sponsoringChange, notSponsoring, notSponsoringChange, waitToSponsor;
 
-    private String leftarrowTitle, rightarrowTitle, newspaperTitle;
+    private String leftarrowTitle, rightarrowTitle, newspaperTitle, shopTitle,itemSettingsTitle;
 
     private List<String> leftarrowLore, rightarrowLore, itemSaleSeller, itemSaleBuyer, itemSaleSellerSponsor, itemSaleBuyerSponsor, loreForNewspaper;
 
@@ -193,6 +195,28 @@ public class ConfigManager {
         }
         loreForNewspaper = config.getStringList("item-sale-lore.newspaper");
 
+        if (!config.isSet("shop-title")) {
+            throw new ConfigurationException("shop-title " + notSet);
+        }
+        shopTitle = config.getString("shop-title");
+
+        if (!config.isSet("item-settings.title")) {
+            throw new ConfigurationException("item-settings.title " + notSet);
+        }
+        itemSettingsTitle = config.getString("item-settings.title");
+
+        if (!config.isSet("unlocked-slot")) {
+            throw new ConfigurationException("unlocked-slot " + notSet);
+        }
+        unlockedSlots = config.getInt("unlocked-slot");
+        if(unlockedSlots <0 || unlockedSlots >14){
+            throw new ConfigurationException("unlocked-slot must be positive and less than 15");
+
+        }
+    }
+
+    public int getUnlockedSlots() {
+        return unlockedSlots;
     }
 
     public List<String> getItemSaleBuyer(double price) {
@@ -204,6 +228,11 @@ public class ConfigManager {
         }
 
         return ino;
+    }
+
+    public String getItemSettingsTitle() {
+        return ChatColor.translateAlternateColorCodes('&', itemSettingsTitle);
+
     }
 
     public List<String> getItemSaleBuyerSponsor(double price) {
@@ -339,6 +368,10 @@ public class ConfigManager {
 
     public String getNoAdv() {
         return ChatColor.translateAlternateColorCodes('&', noAdv);
+    }
+
+    public String getShopTitle(String owner) {
+        return ChatColor.translateAlternateColorCodes('&', shopTitle.replace("<playerName>", owner));
     }
 
     public String getRemoveItem(double price, String type, int amount) {

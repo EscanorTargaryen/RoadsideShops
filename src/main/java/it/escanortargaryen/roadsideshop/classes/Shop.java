@@ -3,7 +3,6 @@ package it.escanortargaryen.roadsideshop.classes;
 import it.escanortargaryen.roadsideshop.RoadsideShops;
 import it.escanortargaryen.roadsideshop.managers.ConfigManager;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
@@ -15,7 +14,7 @@ import java.util.UUID;
 
 public class Shop implements Cloneable, InventoryHolder {
 
-    private final UUID p;
+    private final UUID playerUUID;
 
     private Inventory invSeller = null;
 
@@ -25,14 +24,12 @@ public class Shop implements Cloneable, InventoryHolder {
 
     private SellingItem sponsor = null;
 
-    public final int normalSlotsMax = 14;
+    public final int maxSlots = 14;
 
 //	private final int autoSlotsMax = 2;
     // private int autoSlots = 0;
 
-    final private int defaultSlot = 3;
-
-    private int normalSlots = 3;
+    private int unlockedSlotsNumber = RoadsideShops.CONFIGMANAGER.getUnlockedSlots();
 
     private ArrayList<SellingItem> items = new ArrayList<>();
 
@@ -40,21 +37,21 @@ public class Shop implements Cloneable, InventoryHolder {
 
     private final InventoryHolder holder = this;
 
-    private long lastsponsor = 0L;
+    private long lastSponsor = 0L;
 
     public boolean canSponsor(long time) {
-        Player pl = Bukkit.getPlayer(p);
+        Player pl = Bukkit.getPlayer(playerUUID);
         if (pl != null && pl.hasPermission("shop.bypass.sponsortime")) {
 
             return true;
         }
 
-        return (time - lastsponsor) / 60000 > ConfigManager.SPONSORTIME;
+        return (time - lastSponsor) / 60000 > ConfigManager.SPONSORTIME;
 
     }
 
     public long getMissTimeinMins(long time) {
-        long i = ConfigManager.SPONSORTIME - (time - lastsponsor) / 60000;
+        long i = ConfigManager.SPONSORTIME - (time - lastSponsor) / 60000;
         if (i < 0) {
 
             return 0;
@@ -66,7 +63,7 @@ public class Shop implements Cloneable, InventoryHolder {
 
     public void setTimeSponsor(long time) {
 
-        lastsponsor = time;
+        lastSponsor = time;
 
     }
 
@@ -146,7 +143,7 @@ public class Shop implements Cloneable, InventoryHolder {
     @Override
     public @NotNull Inventory getInventory() {
 
-        invSeller = Bukkit.createInventory(this, 18, ChatColor.DARK_BLUE + playerName + "'s shop");
+        invSeller = Bukkit.createInventory(this, 18, RoadsideShops.CONFIGMANAGER.getShopTitle(playerName));
 
         ItemStack here = RoadsideShops.unlockedslot;
 
@@ -155,7 +152,7 @@ public class Shop implements Cloneable, InventoryHolder {
             invSeller.setItem(i, RoadsideShops.not);
         }
 
-        for (int i = 1; i < normalSlots + 1; i++) {
+        for (int i = 1; i < unlockedSlotsNumber + 1; i++) {
 
             if (i > 7) {
 
@@ -188,7 +185,7 @@ public class Shop implements Cloneable, InventoryHolder {
 
             }
 
-        invBuyer = Bukkit.createInventory(this, 18, ChatColor.DARK_BLUE + playerName + "'s shop");
+        invBuyer = Bukkit.createInventory(this, 18, RoadsideShops.CONFIGMANAGER.getShopTitle(playerName));
 
         invBuyer.setItem(0, RoadsideShops.log);
         invBuyer.setItem(8, RoadsideShops.log);
@@ -217,29 +214,29 @@ public class Shop implements Cloneable, InventoryHolder {
 
         if (slot > 0 && slot < 8) {
 
-            return slot <= normalSlots;
+            return slot <= unlockedSlotsNumber;
 
         } else if (slot > 9 && slot < 17) {
 
             int temp = slot - 2;
 
-            return temp <= normalSlots;
+            return temp <= unlockedSlotsNumber;
         }
 
         return false;
     }
 
-    public Shop(UUID p, String name, ArrayList<SellingItem> m, SellingItem sponsor) {
+    public Shop(UUID playerUUID, String name, ArrayList<SellingItem> m, SellingItem sponsor) {
 
-        this.p = p;
+        this.playerUUID = playerUUID;
         playerName = name;
         items = m;
         this.sponsor = sponsor;
     }
 
-    public Shop(UUID p, String name) {
+    public Shop(UUID playerUUID, String name) {
 
-        this.p = p;
+        this.playerUUID = playerUUID;
         playerName = name;
     }
 
@@ -256,7 +253,7 @@ public class Shop implements Cloneable, InventoryHolder {
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ((p == null) ? 0 : p.hashCode());
+        result = prime * result + ((playerUUID == null) ? 0 : playerUUID.hashCode());
         result = prime * result + ((playerName == null) ? 0 : playerName.hashCode());
         return result;
     }
@@ -270,11 +267,11 @@ public class Shop implements Cloneable, InventoryHolder {
             return false;
         }
         Shop other = (Shop) obj;
-        if (p == null) {
-            if (other.p != null) {
+        if (playerUUID == null) {
+            if (other.playerUUID != null) {
                 return false;
             }
-        } else if (!p.equals(other.p)) {
+        } else if (!playerUUID.equals(other.playerUUID)) {
             return false;
         }
         if (playerName == null) {
@@ -283,7 +280,7 @@ public class Shop implements Cloneable, InventoryHolder {
     }
 
     public UUID getPlayerUUID() {
-        return p;
+        return playerUUID;
     }
 
     public Inventory getInvSeller() {
@@ -306,8 +303,8 @@ public class Shop implements Cloneable, InventoryHolder {
         return playerName;
     }
 
-    public int getNormalSlots() {
-        return normalSlots;
+    public int getUnlockedSlotsNumber() {
+        return unlockedSlotsNumber;
     }
 
     public ArrayList<SellingItem> getItems() {

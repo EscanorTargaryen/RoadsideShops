@@ -52,7 +52,12 @@ public class SellingItem implements Cloneable {
         this.playerUUID = pl;
 
         ItemMeta m = i.getItemMeta();
-        ArrayList<String> p = new ArrayList<>(Objects.requireNonNull(Objects.requireNonNull(m).getLore()));
+        Objects.requireNonNull(m);
+        ArrayList<String> p = new ArrayList<>();
+        if (m.getLore() != null) {
+            p.addAll(m.getLore());
+
+        }
         p.addAll(RoadsideShops.CONFIGMANAGER.getItemSaleSeller(price));
         m.setLore(p);
         ItemStack h = i.clone();
@@ -60,7 +65,11 @@ public class SellingItem implements Cloneable {
         withPriceSeller = h;
 
         m = i.getItemMeta();
-        p = new ArrayList<>(Objects.requireNonNull(Objects.requireNonNull(m).getLore()));
+        p = new ArrayList<>();
+        if (m.getLore() != null) {
+            p.addAll(m.getLore());
+
+        }
         p.addAll(RoadsideShops.CONFIGMANAGER.getItemSaleSellerSponsor(price));
         m.setLore(p);
         h = i.clone();
@@ -68,7 +77,11 @@ public class SellingItem implements Cloneable {
         withPriceAndSponsorSeller = h;
 
         m = i.getItemMeta();
-        p = new ArrayList<>(Objects.requireNonNull(Objects.requireNonNull(m).getLore()));
+        p = new ArrayList<>();
+        if (m.getLore() != null) {
+            p.addAll(m.getLore());
+
+        }
         p.addAll(RoadsideShops.CONFIGMANAGER.getItemSaleBuyer(price));
         m.setLore(p);
         h = i.clone();
@@ -76,7 +89,11 @@ public class SellingItem implements Cloneable {
         withPriceBuyer = h;
 
         m = i.getItemMeta();
-        p = new ArrayList<>(Objects.requireNonNull(Objects.requireNonNull(m).getLore()));
+        p = new ArrayList<>();
+        if (m.getLore() != null) {
+            p.addAll(m.getLore());
+
+        }
         p.addAll(RoadsideShops.CONFIGMANAGER.getItemSaleBuyerSponsor(price));
         m.setLore(p);
         h = i.clone();
@@ -86,7 +103,11 @@ public class SellingItem implements Cloneable {
         String name = Bukkit.getOfflinePlayer(this.playerUUID).getName();
 
         m = i.getItemMeta();
-        p = new ArrayList<>(Objects.requireNonNull(Objects.requireNonNull(m).getLore()));
+        p = new ArrayList<>();
+        if (m.getLore() != null) {
+            p.addAll(m.getLore());
+
+        }
         p.addAll(RoadsideShops.CONFIGMANAGER.getLoreForNewspaper(price, name));
         m.setLore(p);
         h = i.clone();

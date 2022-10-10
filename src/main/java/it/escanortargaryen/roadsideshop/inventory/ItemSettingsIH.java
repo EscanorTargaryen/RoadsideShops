@@ -46,15 +46,9 @@ public class ItemSettingsIH implements InventoryHolder, Listener {
     @Override
     public Inventory getInventory() {
 
-        Inventory inv = Bukkit.createInventory(this, 27, ChatColor.DARK_BLUE + "Selling Settings");
+        Inventory inv = Bukkit.createInventory(this, 27, RoadsideShops.CONFIGMANAGER.getItemSettingsTitle());
 
         ItemStack item = itemToSell.clone();
-        ItemMeta d = Objects.requireNonNull(item.getItemMeta()).clone();
-        ArrayList<String> arr = new ArrayList<>();
-        arr.add("");
-        arr.add(ChatColor.GRAY + "Item to be sold");
-        d.setLore(arr);
-        item.setItemMeta(d);
 
         inv.setItem(10, item);
 

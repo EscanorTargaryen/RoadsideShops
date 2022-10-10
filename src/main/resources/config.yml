@@ -6,6 +6,8 @@
 #The time in seconds to set an item as sponsored after already placing one
 sponsor-time: 300
 
+#The number of the unlocked slots (must be positive and less than 15)
+unlocked-slot: 13
 
 #  --Messages--
 
@@ -126,6 +128,13 @@ item-sale-lore:
     - ""
     - "&6Click to checkout the shop"
 
+#The title of the shop
+#Placeholders:
+# <playerName> - The name of the player
+shop-title: "&1<playerName>'s shop"
+
+item-settings:
+  title: "&1Sale Settings"
 
 #Change the button that sets whether an items can be sponsored or not
 #Placeholders:
