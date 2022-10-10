@@ -47,7 +47,7 @@ public class RemoveOSponsorIH implements InventoryHolder, Listener {
 
         Inventory inv = Bukkit.createInventory(this, 27, ChatColor.DARK_BLUE + "Item Settings");
 
-        ItemStack t = sellingItem.getWithpriceSeller().clone();
+        ItemStack t = sellingItem.getWithPriceSeller().clone();
         ItemMeta tt = t.getItemMeta();
         List<String> a = Objects.requireNonNull(tt).getLore();
         Objects.requireNonNull(a).remove(a.size() - 1);

@@ -32,6 +32,10 @@ public class ConfigManager {
 
     private List<String> sponsoring, sponsoringChange, notSponsoring, notSponsoringChange, waitToSponsor;
 
+    private String leftarrowTitle, rightarrowTitle, newspaperTitle;
+
+    private List<String> leftarrowLore, rightarrowLore, itemSaleSeller, itemSaleBuyer, itemSaleSellerSponsor, itemSaleBuyerSponsor, loreForNewspaper;
+
     public ConfigManager(Plugin pl) {
 
         final File c = new File(pl.getDataFolder() + "/config.yml");
@@ -107,8 +111,7 @@ public class ConfigManager {
             throw new ConfigurationException("sponsor-time " + notSet);
         }
         SPONSORTIME = config.getLong("sponsor-time");
-        if(SPONSORTIME<0)throw new ConfigurationException("sponsor-time could not be negative");
-
+        if (SPONSORTIME < 0) throw new ConfigurationException("sponsor-time could not be negative");
 
         if (!config.isSet("sponsor-button.title")) {
             throw new ConfigurationException("sponsor-button.title " + notSet);
@@ -140,6 +143,145 @@ public class ConfigManager {
         }
         waitToSponsor = config.getStringList("sponsor-button.wait");
 
+        if (!config.isSet("newspaper.arrows.right.lore")) {
+            throw new ConfigurationException("newspaper.arrows.right.lore " + notSet);
+        }
+        rightarrowLore = config.getStringList("newspaper.arrows.right.lore");
+
+        if (!config.isSet("newspaper.arrows.left.lore")) {
+            throw new ConfigurationException("newspaper.arrows.left.lore " + notSet);
+        }
+        leftarrowLore = config.getStringList("newspaper.arrows.left.lore");
+
+        if (!config.isSet("newspaper.arrows.left.title")) {
+            throw new ConfigurationException("newspaper.arrows.left.title " + notSet);
+        }
+        leftarrowTitle = config.getString("newspaper.arrows.left.title");
+
+        if (!config.isSet("newspaper.arrows.right.title")) {
+            throw new ConfigurationException("newspaper.arrows.right.title " + notSet);
+        }
+        rightarrowTitle = config.getString("newspaper.arrows.right.title");
+
+        if (!config.isSet("newspaper.title")) {
+            throw new ConfigurationException("newspaper.title " + notSet);
+        }
+        newspaperTitle = config.getString("newspaper.title");
+
+        if (!config.isSet("item-sale-lore.seller")) {
+            throw new ConfigurationException("item-sale-lore.seller " + notSet);
+        }
+        itemSaleSeller = config.getStringList("item-sale-lore.seller");
+
+        if (!config.isSet("item-sale-lore.buyer")) {
+            throw new ConfigurationException("item-sale-lore.buyer " + notSet);
+        }
+        itemSaleBuyer = config.getStringList("item-sale-lore.buyer");
+
+        if (!config.isSet("item-sale-lore.seller-sponsor")) {
+            throw new ConfigurationException("item-sale-lore.seller-sponsor " + notSet);
+        }
+        itemSaleSellerSponsor = config.getStringList("item-sale-lore.seller-sponsor");
+
+        if (!config.isSet("item-sale-lore.buyer-sponsor")) {
+            throw new ConfigurationException("item-sale-lore.buyer-sponsor " + notSet);
+        }
+        itemSaleBuyerSponsor = config.getStringList("item-sale-lore.buyer-sponsor");
+
+        if (!config.isSet("item-sale-lore.newspaper")) {
+            throw new ConfigurationException("item-sale-lore.newspaper " + notSet);
+        }
+        loreForNewspaper = config.getStringList("item-sale-lore.newspaper");
+
+    }
+
+    public List<String> getItemSaleBuyer(double price) {
+        ArrayList<String> ino = new ArrayList<>();
+
+        for (String s : itemSaleBuyer) {
+            ino.add(ChatColor.translateAlternateColorCodes('&', s).replace("<price>", price + "").replace("<price-message>", getPriceMessage(price)));
+
+        }
+
+        return ino;
+    }
+
+    public List<String> getItemSaleBuyerSponsor(double price) {
+        ArrayList<String> ino = new ArrayList<>();
+
+        for (String s : itemSaleBuyerSponsor) {
+            ino.add(ChatColor.translateAlternateColorCodes('&', s).replace("<price>", price + "").replace("<price-message>", getPriceMessage(price)));
+
+        }
+
+        return ino;
+    }
+
+    public List<String> getItemSaleSellerSponsor(double price) {
+        ArrayList<String> ino = new ArrayList<>();
+
+        for (String s : itemSaleSellerSponsor) {
+            ino.add(ChatColor.translateAlternateColorCodes('&', s).replace("<price>", price + "").replace("<price-message>", getPriceMessage(price)));
+
+        }
+
+        return ino;
+    }
+
+    public List<String> getItemSaleSeller(double price) {
+        ArrayList<String> ino = new ArrayList<>();
+
+        for (String s : itemSaleSeller) {
+            ino.add(ChatColor.translateAlternateColorCodes('&', s).replace("<price>", price + "").replace("<price-message>", getPriceMessage(price)));
+
+        }
+
+        return ino;
+    }
+
+    public List<String> getLoreForNewspaper(double price, String ownerName) {
+        ArrayList<String> ino = new ArrayList<>();
+
+        for (String s : loreForNewspaper) {
+            ino.add(ChatColor.translateAlternateColorCodes('&', s).replace("<price>", price + "").replace("<price-message>", getPriceMessage(price).replace("<ownerName>", ownerName)));
+
+        }
+
+        return ino;
+    }
+
+    public List<String> getLeftarrowLore() {
+        ArrayList<String> ino = new ArrayList<>();
+
+        for (String s : leftarrowLore) {
+            ino.add(ChatColor.translateAlternateColorCodes('&', s));
+
+        }
+
+        return ino;
+    }
+
+    public String getLeftarrowTitle() {
+        return ChatColor.translateAlternateColorCodes('&', leftarrowTitle);
+    }
+
+    public String getNewspaperTitle() {
+        return ChatColor.translateAlternateColorCodes('&', newspaperTitle);
+    }
+
+    public List<String> getRightarrowLore() {
+        ArrayList<String> ino = new ArrayList<>();
+
+        for (String s : rightarrowLore) {
+            ino.add(ChatColor.translateAlternateColorCodes('&', s));
+
+        }
+
+        return ino;
+    }
+
+    public String getRightarrowTitle() {
+        return ChatColor.translateAlternateColorCodes('&', rightarrowTitle);
     }
 
     public String getPriceMessage(double price) {

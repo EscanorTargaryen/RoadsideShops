@@ -178,11 +178,11 @@ public class Shop implements Cloneable, InventoryHolder {
 
                 if (s.equals(sponsor)) {
 
-                    invSeller.setItem(s.getSlot(), s.getWithpriceESpondorSeller());
+                    invSeller.setItem(s.getSlot(), s.getWithPriceAndSponsorSeller());
 
                 } else {
 
-                    invSeller.setItem(s.getSlot(), s.getWithpriceSeller());
+                    invSeller.setItem(s.getSlot(), s.getWithPriceSeller());
 
                 }
 
@@ -200,11 +200,11 @@ public class Shop implements Cloneable, InventoryHolder {
 
                 if (s.equals(sponsor)) {
 
-                    invBuyer.setItem(s.getSlot(), s.getWithpriceESpondorBuyer());
+                    invBuyer.setItem(s.getSlot(), s.getWithPriceAndSponsorBuyer());
 
                 } else {
 
-                    invBuyer.setItem(s.getSlot(), s.getWithpriceBuyer());
+                    invBuyer.setItem(s.getSlot(), s.getWithPriceBuyer());
 
                 }
 

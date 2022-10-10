@@ -68,6 +68,65 @@ bought-message: '&6 You bought &a <type>x<amount> &6for&a <price>CC &6 from <nam
 # <name> - The name of the customer
 seller-message: '&6You sold &a <type>x<amount> &6for&a <price>CC &6to <name>'
 
+item-sale-lore:
+  #In addition to the lore of the item when it is for sale, displayed by the shop owner
+  #Placeholders:
+  # <price-message> - The price of the item but
+  # <price> - The price of the item
+  seller:
+    - ""
+    - "<price-message>"
+    - ""
+    - "&6Click to edit item"
+
+  #In addition to the lore of the item when it is for sale, displayed by the buyer
+  #Placeholders:
+  # <price-message> - The price of the item but
+  # <price> - The price of the item
+  buyer:
+    - ""
+    - "<price-message>"
+    - ""
+    - "&6Click to buy the item"
+
+  #In addition to the lore of the item when it is for sale and sponsored, displayed by the shop owner
+  #Placeholders:
+  # <price-message> - The price of the item but
+  # <price> - The price of the item
+  seller-sponsor:
+    - ""
+    - "<price-message>"
+    - ""
+    - "&cSponsored Item"
+    - ""
+    - "&6Click to edit item"
+
+  #In addition to the lore of the item when it is for sale and sponsored, displayed by the buyer
+  #Placeholders:
+  # <price-message> - The price of the item but
+  # <price> - The price of the item
+  buyer-sponsor:
+    - ""
+    - "<price-message>"
+    - ""
+    - "&cSponsored Item"
+    - ""
+    - "&6Click to buy the item"
+
+  #In addition to the lore of the item when it is in the newspaper
+  #Placeholders:
+  # <price-message> - The price of the item but
+  # <price> - The price of the item
+  # <ownerName> - The owner name of the shop
+  newspaper:
+    - ""
+    - "<price-message>"
+    - ""
+    - "&eOwner: &7<ownerName>"
+    - ""
+    - "&6Click to checkout the shop"
+
+
 #Change the button that sets whether an items can be sponsored or not
 #Placeholders:
 # <minutes> - How often can you put an object as sponsored
@@ -127,3 +186,17 @@ sponsor-button:
     - ""
     - "&7Sponsoring an item shows it on the newspaper."
     - "&7You can sponsor an item every <minutes> minutes."
+
+newspaper:
+  title: "&6Newspaper"
+  arrows:
+    right:
+      title: "&6Change Page"
+      lore:
+        - ""
+        - "&7Click to view next page"
+    left:
+      title: "&6Change Page"
+      lore:
+        - ""
+        - "&7Click to view next page"

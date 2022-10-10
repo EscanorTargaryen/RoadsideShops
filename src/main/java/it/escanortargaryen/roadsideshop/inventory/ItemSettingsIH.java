@@ -163,8 +163,8 @@ public class ItemSettingsIH implements InventoryHolder, Listener {
                 SellingItem sellingItem = new SellingItem(itemToSell, slotNumber, price, shop.getPlayerUUID());
                 shop.getItems().add(sellingItem);
 
-                shop.getInvBuyer().setItem(sellingItem.getSlot(), sellingItem.getWithpriceBuyer());
-                shop.getInvSeller().setItem(sellingItem.getSlot(), sellingItem.getWithpriceSeller());
+                shop.getInvBuyer().setItem(sellingItem.getSlot(), sellingItem.getWithPriceBuyer());
+                shop.getInvSeller().setItem(sellingItem.getSlot(), sellingItem.getWithPriceSeller());
 
                 Player p = ((Player) e.getWhoClicked());
                 p.closeInventory();

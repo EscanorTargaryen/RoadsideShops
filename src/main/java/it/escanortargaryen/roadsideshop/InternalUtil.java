@@ -96,15 +96,15 @@ public class InternalUtil {
     public static void setSponsorItem(Shop shop, SellingItem sellingItem) {
         if (shop.getSponsor() != null) {
 
-            shop.getInvBuyer().setItem(shop.getSponsor().getSlot(), shop.getSponsor().getWithpriceBuyer());
-            shop.getInvSeller().setItem(shop.getSponsor().getSlot(), shop.getSponsor().getWithpriceSeller());
+            shop.getInvBuyer().setItem(shop.getSponsor().getSlot(), shop.getSponsor().getWithPriceBuyer());
+            shop.getInvSeller().setItem(shop.getSponsor().getSlot(), shop.getSponsor().getWithPriceSeller());
 
         }
         shop.setTimeSponsor(System.currentTimeMillis());
         shop.setSponsor(sellingItem);
 
-        shop.getInvBuyer().setItem(sellingItem.getSlot(), sellingItem.getWithpriceESpondorBuyer());
-        shop.getInvSeller().setItem(sellingItem.getSlot(), sellingItem.getWithpriceESpondorSeller());
+        shop.getInvBuyer().setItem(sellingItem.getSlot(), sellingItem.getWithPriceAndSponsorBuyer());
+        shop.getInvSeller().setItem(sellingItem.getSlot(), sellingItem.getWithPriceAndSponsorSeller());
 
     }
 

@@ -2,7 +2,6 @@ package it.escanortargaryen.roadsideshop.classes;
 
 import it.escanortargaryen.roadsideshop.RoadsideShops;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -14,35 +13,35 @@ public class SellingItem implements Cloneable {
 
     private final ItemStack i;
 
-    private final ItemStack withpriceSeller;
+    private final ItemStack withPriceSeller;
 
-    private final ItemStack withpriceBuyer;
+    private final ItemStack withPriceBuyer;
 
     private final ItemStack forNewspaper;
 
-    private final ItemStack withpriceESpondorSeller;
+    private final ItemStack withPriceAndSponsorSeller;
 
-    private final ItemStack withpriceESpondorBuyer;
+    private final ItemStack withPriceAndSponsorBuyer;
 
     private final int slot;
 
     private final double price;
-    private final UUID p;
+    private final UUID playerUUID;
 
-    public ItemStack getWithpriceBuyer() {
-        return withpriceBuyer.clone();
+    public ItemStack getWithPriceBuyer() {
+        return withPriceBuyer.clone();
     }
 
-    public ItemStack getWithpriceESpondorBuyer() {
-        return withpriceESpondorBuyer.clone();
+    public ItemStack getWithPriceAndSponsorBuyer() {
+        return withPriceAndSponsorBuyer.clone();
     }
 
-    public ItemStack getWithpriceESpondorSeller() {
-        return withpriceESpondorSeller.clone();
+    public ItemStack getWithPriceAndSponsorSeller() {
+        return withPriceAndSponsorSeller.clone();
     }
 
-    public ItemStack getWithpriceSeller() {
-        return withpriceSeller.clone();
+    public ItemStack getWithPriceSeller() {
+        return withPriceSeller.clone();
     }
 
     public SellingItem(ItemStack i, int slot, double price, UUID pl) {
@@ -50,67 +49,49 @@ public class SellingItem implements Cloneable {
         this.i = i;
         this.slot = slot;
         this.price = price;
-        this.p = pl;
+        this.playerUUID = pl;
 
         ItemMeta m = i.getItemMeta();
-        ArrayList<String> p = new ArrayList<>();
-        p.add("");
-        p.add(RoadsideShops.CONFIGMANAGER.getPriceMessage(price)
-                );
-        p.add("");
-        p.add(ChatColor.GOLD + "Click to edit item");
-        if (Objects.requireNonNull(m).getLore() != null)
-            p.addAll(m.getLore());
+        ArrayList<String> p = new ArrayList<>(Objects.requireNonNull(Objects.requireNonNull(m).getLore()));
+        p.addAll(RoadsideShops.CONFIGMANAGER.getItemSaleSeller(price));
         m.setLore(p);
         ItemStack h = i.clone();
         h.setItemMeta(m);
-        withpriceSeller = h;
+        withPriceSeller = h;
 
-        p.clear();
-        p.add("");
-        p.add( RoadsideShops.CONFIGMANAGER.getPriceMessage(price));
-        p.add("");
-        p.add(ChatColor.GOLD + "Click to buy item");
+        m = i.getItemMeta();
+        p = new ArrayList<>(Objects.requireNonNull(Objects.requireNonNull(m).getLore()));
+        p.addAll(RoadsideShops.CONFIGMANAGER.getItemSaleSellerSponsor(price));
+        m.setLore(p);
+        h = i.clone();
+        h.setItemMeta(m);
+        withPriceAndSponsorSeller = h;
 
-        ItemStack o = withpriceSeller.clone();
-        ItemMeta s1 = Objects.requireNonNull(withpriceSeller.getItemMeta()).clone();
-        s1.setLore(p);
-        o.setItemMeta(s1);
-        withpriceBuyer = o;
+        m = i.getItemMeta();
+        p = new ArrayList<>(Objects.requireNonNull(Objects.requireNonNull(m).getLore()));
+        p.addAll(RoadsideShops.CONFIGMANAGER.getItemSaleBuyer(price));
+        m.setLore(p);
+        h = i.clone();
+        h.setItemMeta(m);
+        withPriceBuyer = h;
 
-        ItemMeta ms = withpriceSeller.getItemMeta();
-        ArrayList<String> p1 = new ArrayList<>();
-        if (ms.getLore() != null)
-            p1.addAll(ms.getLore());
-        p1.remove(p1.size() - 1);
-        p1.remove(p1.size() - 1);
+        m = i.getItemMeta();
+        p = new ArrayList<>(Objects.requireNonNull(Objects.requireNonNull(m).getLore()));
+        p.addAll(RoadsideShops.CONFIGMANAGER.getItemSaleBuyerSponsor(price));
+        m.setLore(p);
+        h = i.clone();
+        h.setItemMeta(m);
+        withPriceAndSponsorBuyer = h;
 
-        p1.add(ChatColor.AQUA + "Sponsored Item");
-        p1.add("");
-        p1.add(ChatColor.GOLD + "Click to edit item");
+        String name = Bukkit.getOfflinePlayer(this.playerUUID).getName();
 
-        ms.setLore(p1);
-        ItemStack s = withpriceSeller.clone();
-        s.setItemMeta(ms);
-        withpriceESpondorSeller = s;
-        p1.remove(p1.size() - 1);
-        p1.add(ChatColor.GOLD + "Click to buy item");
-        withpriceESpondorBuyer = withpriceESpondorSeller.clone();
-        ItemMeta k = withpriceESpondorBuyer.getItemMeta();
-        Objects.requireNonNull(k).setLore(p1);
-        withpriceESpondorBuyer.setItemMeta(k);
-
-        String nome = Bukkit.getOfflinePlayer(this.p).getName();
-        forNewspaper = withpriceSeller.clone();
-        ms = forNewspaper.getItemMeta();
-        ArrayList<String> ar = new ArrayList<>(Objects.requireNonNull(Objects.requireNonNull(ms).getLore()));
-        ar.remove(ar.size() - 1);
-        ar.remove(ar.size() - 1);
-        ar.add(ChatColor.YELLOW + "Owner: " + ChatColor.GRAY + nome);
-        ar.add("");
-        ar.add(ChatColor.GOLD + "Click to checkout " + nome + "'s shop");
-        ms.setLore(ar);
-        forNewspaper.setItemMeta(ms);
+        m = i.getItemMeta();
+        p = new ArrayList<>(Objects.requireNonNull(Objects.requireNonNull(m).getLore()));
+        p.addAll(RoadsideShops.CONFIGMANAGER.getLoreForNewspaper(price, name));
+        m.setLore(p);
+        h = i.clone();
+        h.setItemMeta(m);
+        forNewspaper = h;
 
     }
 
@@ -120,15 +101,15 @@ public class SellingItem implements Cloneable {
         int result = 1;
         result = prime * result + ((forNewspaper == null) ? 0 : forNewspaper.hashCode());
         result = prime * result + ((i == null) ? 0 : i.hashCode());
-        result = prime * result + ((p == null) ? 0 : p.hashCode());
+        result = prime * result + ((playerUUID == null) ? 0 : playerUUID.hashCode());
         long temp;
         temp = Double.doubleToLongBits(price);
         result = prime * result + (int) (temp ^ (temp >>> 32));
         result = prime * result + slot;
-        result = prime * result + ((withpriceBuyer == null) ? 0 : withpriceBuyer.hashCode());
-        result = prime * result + ((withpriceESpondorBuyer == null) ? 0 : withpriceESpondorBuyer.hashCode());
-        result = prime * result + ((withpriceESpondorSeller == null) ? 0 : withpriceESpondorSeller.hashCode());
-        result = prime * result + ((withpriceSeller == null) ? 0 : withpriceSeller.hashCode());
+        result = prime * result + ((withPriceBuyer == null) ? 0 : withPriceBuyer.hashCode());
+        result = prime * result + ((withPriceAndSponsorBuyer == null) ? 0 : withPriceAndSponsorBuyer.hashCode());
+        result = prime * result + ((withPriceAndSponsorSeller == null) ? 0 : withPriceAndSponsorSeller.hashCode());
+        result = prime * result + ((withPriceSeller == null) ? 0 : withPriceSeller.hashCode());
         return result;
     }
 
@@ -155,11 +136,11 @@ public class SellingItem implements Cloneable {
         } else if (!i.equals(other.i)) {
             return false;
         }
-        if (p == null) {
-            if (other.p != null) {
+        if (playerUUID == null) {
+            if (other.playerUUID != null) {
                 return false;
             }
-        } else if (!p.equals(other.p)) {
+        } else if (!playerUUID.equals(other.playerUUID)) {
             return false;
         }
         if (Double.doubleToLongBits(price) != Double.doubleToLongBits(other.price)) {
@@ -168,30 +149,30 @@ public class SellingItem implements Cloneable {
         if (slot != other.slot) {
             return false;
         }
-        if (withpriceBuyer == null) {
-            if (other.withpriceBuyer != null) {
+        if (withPriceBuyer == null) {
+            if (other.withPriceBuyer != null) {
                 return false;
             }
-        } else if (!withpriceBuyer.equals(other.withpriceBuyer)) {
+        } else if (!withPriceBuyer.equals(other.withPriceBuyer)) {
             return false;
         }
-        if (withpriceESpondorBuyer == null) {
-            if (other.withpriceESpondorBuyer != null) {
+        if (withPriceAndSponsorBuyer == null) {
+            if (other.withPriceAndSponsorBuyer != null) {
                 return false;
             }
-        } else if (!withpriceESpondorBuyer.equals(other.withpriceESpondorBuyer)) {
+        } else if (!withPriceAndSponsorBuyer.equals(other.withPriceAndSponsorBuyer)) {
             return false;
         }
-        if (withpriceESpondorSeller == null) {
-            if (other.withpriceESpondorSeller != null) {
+        if (withPriceAndSponsorSeller == null) {
+            if (other.withPriceAndSponsorSeller != null) {
                 return false;
             }
-        } else if (!withpriceESpondorSeller.equals(other.withpriceESpondorSeller)) {
+        } else if (!withPriceAndSponsorSeller.equals(other.withPriceAndSponsorSeller)) {
             return false;
         }
-        if (withpriceSeller == null) {
-            return other.withpriceSeller == null;
-        } else return withpriceSeller.equals(other.withpriceSeller);
+        if (withPriceSeller == null) {
+            return other.withPriceSeller == null;
+        } else return withPriceSeller.equals(other.withPriceSeller);
     }
 
     public ItemStack getI() {
@@ -210,8 +191,8 @@ public class SellingItem implements Cloneable {
         return price;
     }
 
-    public UUID getP() {
-        return p;
+    public UUID getPlayerUUID() {
+        return playerUUID;
     }
 
     @Override

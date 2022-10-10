@@ -136,9 +136,9 @@ public class ShopsManager implements Listener {
 
                                         if (c.equals(shop.getSponsor())) {
                                             shop.getInvBuyer().setItem(shop.getSponsor().getSlot(),
-                                                    shop.getSponsor().getWithpriceBuyer());
+                                                    shop.getSponsor().getWithPriceBuyer());
                                             shop.getInvSeller().setItem(shop.getSponsor().getSlot(),
-                                                    shop.getSponsor().getWithpriceSeller());
+                                                    shop.getSponsor().getWithPriceSeller());
 
                                             shop.setSponsor(null);
 
