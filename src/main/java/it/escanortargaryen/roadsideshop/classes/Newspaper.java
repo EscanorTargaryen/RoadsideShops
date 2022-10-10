@@ -73,7 +73,7 @@ public class Newspaper implements Listener, InventoryHolder {
         }
 
         if (list.size() == 0) {
-            p.sendMessage(ChatColor.translateAlternateColorCodes('&', RoadsideShops.CONFIGMANAGER.getNoAdv()));
+            p.sendMessage(RoadsideShops.CONFIGMANAGER.getNoAdv());
 
         } else {
 

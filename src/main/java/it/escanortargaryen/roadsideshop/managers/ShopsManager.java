@@ -144,36 +144,16 @@ public class ShopsManager implements Listener {
 
                                         }
 
-                                        e.getWhoClicked().sendMessage(ChatColor.translateAlternateColorCodes('&',
-                                                RoadsideShops.CONFIGMANAGER.getBoughtMessage()
-                                                        .replace("<price>", c.getPrice() + "")
-                                                        .replace("<type>",
-                                                                c.getI().getType().toString().toLowerCase().replace("_", " "))
-                                                        .replace("<amount>", c.getI().getAmount() + "")
-                                                        .replace("<name>", shop.getPlayerName())));
+                                        e.getWhoClicked().sendMessage(RoadsideShops.CONFIGMANAGER.getBoughtMessage(c.getPrice(), c.getI().getType().toString(), c.getI().getAmount(), shop.getPlayerName()));
 
                                         if (Bukkit.getPlayer(shop.getPlayerUUID()) != null) {
 
-                                            Objects.requireNonNull(Bukkit.getPlayer(shop.getPlayerUUID())).sendMessage(ChatColor.translateAlternateColorCodes(
-                                                    '&',
-                                                    RoadsideShops.CONFIGMANAGER.getSellerMessage()
-                                                            .replace("<price>", c.getPrice() + "")
-                                                            .replace("<type>",
-                                                                    c.getI().getType().toString().toLowerCase().replace("_",
-                                                                            " "))
-                                                            .replace("<amount>", c.getI().getAmount() + "")
-                                                            .replace("<name>", shop.getPlayerName())));
+                                            Objects.requireNonNull(Bukkit.getPlayer(shop.getPlayerUUID())).sendMessage(RoadsideShops.CONFIGMANAGER.getSellerMessage(
+                                                    c.getPrice(), c.getI().getType().toString(), c.getI().getAmount(), shop.getPlayerName()));
 
                                         } else {
-                                            shop.getOffMessages().add(ChatColor.translateAlternateColorCodes('&',
-                                                    RoadsideShops.CONFIGMANAGER.getSellerMessage()
-
-                                                            .replace("<price>", c.getPrice() + "")
-                                                            .replace("<type>",
-                                                                    c.getI().getType().toString().toLowerCase().replace("_",
-                                                                            " "))
-                                                            .replace("<amount>", c.getI().getAmount() + "")
-                                                            .replace("<name>", shop.getPlayerName())));
+                                            shop.getOffMessages().add(RoadsideShops.CONFIGMANAGER.getSellerMessage(
+                                                    c.getPrice(), c.getI().getType().toString(), c.getI().getAmount(), shop.getPlayerName()));
 
                                         }
                                         new BukkitRunnable() {

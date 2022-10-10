@@ -1,72 +1,129 @@
 # Roadside Shop config
 # For help see the official wiki
 
-#Plugin settings:
+#  --Plugin settings--
+
+#The time in seconds to set an item as sponsored after already placing one
+sponsor-time: 300
 
 
+#  --Messages--
 
+#The message to be shown when showing the price
+#Placeholders:
+# <value> - The price of the item
+price-message: 'Price: <value>'
 
-#Messages:
+#The title of the item indicating an unlocked slot
+unlocked-slot-panel-title: '&6Shop Slot'
 
-#
-price-message: 'Price: <value> CC'
-unlocked-slot-panel-title: 'Stand Slot'
+#The lore of the item indicating an unlocked slot
 unlocked-slot-lore:
-- Add
-- Something
-locked-slot-panel-title: 'Unlocked Slot'
-locked-slot-lore:
-- not today
-- Something
-put-item: '&6You put &a<type>x<amount>&6 for&a <price>CC'
-sponsor-set: '&6You setted this item as a sponsor'
-no-adv: '&4There aren t advertisement now, try later'
-remove-item: '&6You removed&a <type>x<amount> &6 for &a <price>CC &6 from your stand'
-sponsor-item-set: '&6You setted&a <type>x<amount> &6 for &a <price>CC &6 as a sponsor'
-bought-message: '&6 You bought &a <type>x<amount> &6for&a <price>CC &6 from <name> s stand'
-seller-message: '&6You sold &a <type>x<amount> &6for&a <price>CC &6to <name>'
-sponsor-time-mills: 5000
+  - "&7Click to add an item!"
 
+#The title of the item indicating a locked slot
+locked-slot-panel-title: '&cLocked Slot'
+
+#The lore of the item indicating a locked slot
+locked-slot-lore:
+  - "&7This slot is locked"
+
+#The message of when you put an item up for sale
+#Placeholders:
+# <type> - The type of the item
+# <amount> - The amount of the item
+# <price> - The price of the item
+put-item: '&6You put &a<type>x<amount>&6 for&a <price>'
+
+#The message of when you put an item up for sale and set it as sponsored
+#Placeholders:
+# <type> - The type of the item
+# <amount> - The amount of the item
+# <price> - The price of the item
+sponsor-set: '&6You set this item as a sponsor'
+
+#Message that is shown when there is no items to display in the newspaper
+no-adv: '&4There aren t advertisement now, try later'
+
+#Message that is shown when you remove an item from the shop
+#Placeholders:
+# <type> - The type of the item
+# <amount> - The amount of the item
+# <price> - The price of the item
+remove-item: '&6You removed&a <type>x<amount> &6 for &a <price> &6 from your shop'
+
+#Message that is shown when you buy an item from a shop
+#Placeholders:
+# <type> - The type of the item
+# <amount> - The amount of the item
+# <price> - The price of the item
+# <name> - The name of the owner of the shop
+bought-message: '&6 You bought &a <type>x<amount> &6for&a <price>CC &6 from <name> s shop'
+
+#Message that is shown when you sell an item from your shop
+#Placeholders:
+# <type> - The type of the item
+# <amount> - The amount of the item
+# <price> - The price of the item
+# <name> - The name of the customer
+seller-message: '&6You sold &a <type>x<amount> &6for&a <price>CC &6to <name>'
+
+#Change the button that sets whether an items can be sponsored or not
+#Placeholders:
+# <minutes> - How often can you put an object as sponsored
 sponsor-button:
-  title: "§6Sponsor item"
+  #Button title
+  title: "&6Sponsor item"
+
+  #Description of the button when you set the item as sponsored (there was no item as sponsored precendently)
   sponsoring:
     - ""
-    - "§aThe item will be sponsored."
-    - "§7Sponsoring an item shows it on the newspaper."
-    - "§7You can sponsor an item every %minutes% minutes."
+    - "&aThe item will be sponsored."
+    - "&7Sponsoring an item shows it on the newspaper."
+    - "&7You can sponsor an item every <minutes> minutes."
     - ""
-    - "§6Click to unsponsor"
+    - "&6Click to unsponsor"
+
+  #Description of the button when you set the item as sponsored (there is an item as sponsored precendently)
   sponsoring-change:
     - ""
-    - "§aThe item will be sponsored."
-    - "§7Sponsoring an item shows it on the newspaper."
-    - "§7You can sponsor an item every %minutes% minutes."
+    - "&aThe item will be sponsored."
+    - "&7Sponsoring an item shows it on the newspaper."
+    - "&7You can sponsor an item every <minutes> minutes."
     - ""
-    - "§4N.B.: §cYou already have a sponsored item. Sponsoring"
-    - "§cthis item is going to unsponsor the other one."
+    - "&4N.B.: &cYou already have a sponsored item. Sponsoring"
+    - "&cthis item is going to unsponsor the other one."
     - ""
-    - "§6Click to unsponsor"
+    - "&6Click to unsponsor"
+
+  #Description of the button when you have not set the item as sponsored (there was no item as sponsored precendently)
   not-sponsoring:
     - ""
-    - "§cThe item isn't sponsored at the moment."
-    - "§7Sponsoring an item shows it on the newspaper."
-    - "§7You can sponsor an item every %minutes% minutes."
+    - "&cThe item isn't sponsored at the moment."
+    - "&7Sponsoring an item shows it on the newspaper."
+    - "&7You can sponsor an item every <minutes> minutes."
     - ""
-    - "§6Click to sponsor"
+    - "&6Click to sponsor"
+
+  #Description of the button when you have not set the item as sponsored (there is an item as sponsored precendently)
   not-sponsoring-change:
     - ""
-    - "§cThe item isn't sponsored at the moment."
-    - "§7Sponsoring an item shows it on the newspaper."
-    - "§7You can sponsor an item every %minutes% minutes."
+    - "&cThe item isn't sponsored at the moment."
+    - "&7Sponsoring an item shows it on the newspaper."
+    - "&7You can sponsor an item every <minutes> minutes."
     - ""
-    - "§4N.B.: §cYou already have a sponsored item. Sponsoring"
-    - "§cthis item is going to unsponsor the other one."
+    - "&4N.B.: &cYou already have a sponsored item. Sponsoring"
+    - "&cthis item is going to unsponsor the other one."
     - ""
-    - "§6Click to sponsor"
+    - "&6Click to sponsor"
+
+  #Button description when you have to wait some time before setting an item as sponsored
+  #Placeholders:
+  # <missToSponsor> - Time until you can sponsor another item
   wait:
     - ""
-    - "§4You've already sponsored an item."
-    - "§4Wait %minutesToSponsor% minutes to sponsor another item."
+    - "&4You've already sponsored an item."
+    - "&4Wait <missToSponsor> minutes to sponsor another item."
     - ""
-    - "§7Sponsoring an item shows it on the newspaper."
-    - "§7You can sponsor an item every %minutes% minutes."
+    - "&7Sponsoring an item shows it on the newspaper."
+    - "&7You can sponsor an item every <minutes> minutes."

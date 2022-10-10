@@ -71,7 +71,7 @@ public class ItemSettingsIH implements InventoryHolder, Listener {
 
             prezzo = new ItemStack(Material.NAME_TAG);
             mw = prezzo.getItemMeta();
-            Objects.requireNonNull(mw).setDisplayName(ChatColor.translateAlternateColorCodes('&', RoadsideShops.CONFIGMANAGER.getPriceMessage().replace("<value>", price + "")));
+            Objects.requireNonNull(mw).setDisplayName(RoadsideShops.CONFIGMANAGER.getPriceMessage(price));
 
             mw.setLore(Arrays.asList("", ChatColor.GOLD + "Click to change the price"));
             prezzo.setItemMeta(mw);
@@ -171,16 +171,11 @@ public class ItemSettingsIH implements InventoryHolder, Listener {
                 Bukkit.dispatchCommand(p, "roadsideshop");
                 exit = true;
 
-                p.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                        RoadsideShops.CONFIGMANAGER.getPutItem()
-                                .replace("<price>", sellingItem.getPrice() + "")
-                                .replace("<type>", sellingItem.getI().getType().toString().toLowerCase().replace("_", " "))
-                                .replace("<amount>", sellingItem.getI().getAmount() + "")));
+                p.sendMessage(RoadsideShops.CONFIGMANAGER.getPutItem(sellingItem.getPrice(), sellingItem.getI().getType().toString(), sellingItem.getI().getAmount()));
 
                 if (isSponsoring) {
 
-                    e.getWhoClicked().sendMessage(ChatColor.translateAlternateColorCodes('&',
-                            RoadsideShops.CONFIGMANAGER.getSponsorSet()));
+                    e.getWhoClicked().sendMessage(RoadsideShops.CONFIGMANAGER.getSponsorSet(price,sellingItem.getI().getType().toString(), sellingItem.getI().getAmount() ));
 
                     InternalUtil.setSponsorItem(shop, sellingItem);
 

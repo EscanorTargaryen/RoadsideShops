@@ -1,13 +1,13 @@
 package it.escanortargaryen.roadsideshop.classes;
 
 import it.escanortargaryen.roadsideshop.RoadsideShops;
+import it.escanortargaryen.roadsideshop.managers.ConfigManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -39,20 +39,8 @@ public class Shop implements Cloneable, InventoryHolder {
     private final ArrayList<String> offMessages = new ArrayList<>();
 
     private final InventoryHolder holder = this;
-    static public long SPONSOR_TIME;
+
     private long lastsponsor = 0L;
-
-    static {
-
-        new BukkitRunnable() {
-
-            @Override
-            public void run() {
-                Shop.SPONSOR_TIME = RoadsideShops.CONFIGMANAGER.getSponsorTimeMills();
-
-            }
-        }.runTaskLater(RoadsideShops.INSTANCE, 40);
-    }
 
     public boolean canSponsor(long time) {
         Player pl = Bukkit.getPlayer(p);
@@ -61,12 +49,12 @@ public class Shop implements Cloneable, InventoryHolder {
             return true;
         }
 
-        return (time - lastsponsor) > SPONSOR_TIME;
+        return (time - lastsponsor) / 60000 > ConfigManager.SPONSORTIME;
 
     }
 
     public long getMissTimeinMins(long time) {
-        long i = (SPONSOR_TIME - (time - lastsponsor)) / 60000;
+        long i = ConfigManager.SPONSORTIME - (time - lastsponsor) / 60000;
         if (i < 0) {
 
             return 0;
@@ -200,7 +188,7 @@ public class Shop implements Cloneable, InventoryHolder {
 
             }
 
-        invBuyer = Bukkit.createInventory(this, 18, ChatColor.DARK_BLUE + playerName + "'s stand");
+        invBuyer = Bukkit.createInventory(this, 18, ChatColor.DARK_BLUE + playerName + "'s shop");
 
         invBuyer.setItem(0, RoadsideShops.log);
         invBuyer.setItem(8, RoadsideShops.log);

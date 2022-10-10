@@ -1,6 +1,7 @@
 package it.escanortargaryen.roadsideshop.managers;
 
 import it.escanortargaryen.roadsideshop.RoadsideShops;
+import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
 
@@ -23,10 +24,9 @@ public class ConfigManager {
     private String sponsorSet;
     private String noAdv;
     private String removeItem;
-    private String sponsorItemSet;
     private String boughtMessage;
     private String sellerMessage;
-    private long sponsorTimeMills;
+    public static long SPONSORTIME;
 
     private String sponsorButtonTitle;
 
@@ -93,11 +93,6 @@ public class ConfigManager {
             throw new ConfigurationException("remove-item " + notSet);
         }
 
-        sponsorItemSet = config.getString("sponsor-item-set");
-        if (priceMessage == null) {
-            throw new ConfigurationException("sponsor-item-set " + notSet);
-        }
-
         boughtMessage = config.getString("bought-message");
         if (priceMessage == null) {
             throw new ConfigurationException("bought-message " + notSet);
@@ -108,9 +103,9 @@ public class ConfigManager {
             throw new ConfigurationException("seller-message " + notSet);
         }
 
-        sponsorTimeMills = config.getLong("sponsor-time-mills");
+        SPONSORTIME = config.getLong("sponsor-time");
         if (priceMessage == null) {
-            throw new ConfigurationException("sponsor-time-mills " + notSet);
+            throw new ConfigurationException("sponsor-time " + notSet);
         }
 
         sponsorButtonTitle = config.getString("sponsor-button.title");
@@ -145,60 +140,89 @@ public class ConfigManager {
 
     }
 
-    public String getPriceMessage() {
-        return priceMessage;
+    public String getPriceMessage(double price) {
+        return ChatColor.translateAlternateColorCodes('&', priceMessage
+                .replace("<value>", price + ""));
     }
 
     public String getUnlockedSlotPanelTitle() {
-        return unlockedSlotPanelTitle;
+        return ChatColor.translateAlternateColorCodes('&', unlockedSlotPanelTitle);
     }
 
     public List<String> getUnlockedSlotPanelLore() {
-        return unlockedSlotPanelLore;
+
+        ArrayList<String> ino = new ArrayList<>();
+
+        for (String s : unlockedSlotPanelLore) {
+            ino.add(ChatColor.translateAlternateColorCodes('&', s));
+
+        }
+
+        return ino;
     }
 
     public String getLockedSlotPanelTitle() {
-        return lockedSlotPanelTitle;
+        return ChatColor.translateAlternateColorCodes('&',
+                lockedSlotPanelTitle);
     }
 
     public List<String> getLockedSlotPanelLore() {
-        return lockedSlotPanelLore;
+
+        ArrayList<String> ino = new ArrayList<>();
+
+        for (String s : lockedSlotPanelLore) {
+            ino.add(ChatColor.translateAlternateColorCodes('&', s));
+
+        }
+        return ino;
     }
 
-    public String getPutItem() {
-        return putItem;
+    public String getPutItem(double price, String type, int amount) {
+        return ChatColor.translateAlternateColorCodes('&',
+                putItem
+                        .replace("<price>", price + "")
+                        .replace("<type>", type.toLowerCase().replace("_", " "))
+                        .replace("<amount>", amount + ""));
     }
 
-    public String getSponsorSet() {
-        return sponsorSet;
+    public String getSponsorSet(double price, String type, int amount) {
+        return ChatColor.translateAlternateColorCodes('&',
+                sponsorSet
+                        .replace("<price>", price + "")
+                        .replace("<type>", type.toLowerCase().replace("_", " "))
+                        .replace("<amount>", amount + ""));
     }
 
     public String getNoAdv() {
-        return noAdv;
+        return ChatColor.translateAlternateColorCodes('&', noAdv);
     }
 
-    public String getRemoveItem() {
-        return removeItem;
+    public String getRemoveItem(double price, String type, int amount) {
+        return ChatColor.translateAlternateColorCodes('&',
+                removeItem
+                        .replace("<price>", price + "")
+                        .replace("<type>", type.toLowerCase().replace("_", " "))
+                        .replace("<amount>", amount + ""));
     }
 
-    public String getSponsorItemSet() {
-        return sponsorItemSet;
+    public String getBoughtMessage(double price, String type, int amount, String name) {
+        return ChatColor.translateAlternateColorCodes('&',
+                boughtMessage
+                        .replace("<price>", price + "")
+                        .replace("<type>", type.toLowerCase().replace("_", " "))
+                        .replace("<amount>", amount + "").replace("<name>", name));
     }
 
-    public String getBoughtMessage() {
-        return boughtMessage;
-    }
-
-    public String getSellerMessage() {
-        return sellerMessage;
-    }
-
-    public long getSponsorTimeMills() {
-        return sponsorTimeMills;
+    public String getSellerMessage(double price, String type, int amount, String name) {
+        return ChatColor.translateAlternateColorCodes('&',
+                sellerMessage
+                        .replace("<price>", price + "")
+                        .replace("<type>", type.toLowerCase().replace("_", " "))
+                        .replace("<amount>", amount + "").replace("<name>", name));
     }
 
     public String getSponsorButtonTitle() {
-        return sponsorButtonTitle;
+        return ChatColor.translateAlternateColorCodes('&', sponsorButtonTitle);
     }
 
     public List<String> getNotSponsoring(long minutes) {
@@ -207,7 +231,7 @@ public class ConfigManager {
 
         for (String i : notSponsoring) {
 
-            ret.add(i.replace("%minutes%", minutes + ""));
+            ret.add(ChatColor.translateAlternateColorCodes('&', i.replace("<minutes>", minutes + "")));
         }
 
         return ret;
@@ -218,7 +242,7 @@ public class ConfigManager {
 
         for (String i : notSponsoringChange) {
 
-            ret.add(i.replace("%minutes%", minutes + ""));
+            ret.add(ChatColor.translateAlternateColorCodes('&', i.replace("<minutes>", minutes + "")));
         }
 
         return ret;
@@ -229,7 +253,7 @@ public class ConfigManager {
 
         for (String i : sponsoring) {
 
-            ret.add(i.replace("%minutes%", minutes + ""));
+            ret.add(ChatColor.translateAlternateColorCodes('&', i.replace("<minutes>", minutes + "")));
         }
 
         return ret;
@@ -240,7 +264,7 @@ public class ConfigManager {
 
         for (String i : sponsoringChange) {
 
-            ret.add(i.replace("%minutes%", minutes + ""));
+            ret.add(ChatColor.translateAlternateColorCodes('&', i.replace("<minutes>", minutes + "")));
         }
 
         return ret;
@@ -250,8 +274,8 @@ public class ConfigManager {
         List<String> ret = new ArrayList<>();
 
         for (String i : waitToSponsor) {
+            ret.add(ChatColor.translateAlternateColorCodes('&', i.replace("<minutes>", minutes + "").replace("<missToSponsor>", minuteToSponsor + "")));
 
-            ret.add(i.replace("%minutes%", minutes + "").replace("%minutesToSponsor%", minuteToSponsor + ""));
         }
 
         return ret;

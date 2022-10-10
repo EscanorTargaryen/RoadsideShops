@@ -118,38 +118,18 @@ public class RoadsideShops extends JavaPlugin implements Listener {
 
         unlockedslot = new ItemStack(Material.GRAY_STAINED_GLASS_PANE);
         ItemMeta h = unlockedslot.getItemMeta();
-        Objects.requireNonNull(h).setDisplayName(ChatColor.translateAlternateColorCodes('&', CONFIGMANAGER.getUnlockedSlotPanelTitle()
-        ));
+        Objects.requireNonNull(h).setDisplayName(CONFIGMANAGER.getUnlockedSlotPanelTitle()
+        );
 
-        ArrayList<String> ene = (ArrayList<String>) CONFIGMANAGER.getUnlockedSlotPanelLore();
-
-        ArrayList<String> ino = new ArrayList<>();
-
-        for (String s : ene) {
-            ino.add(ChatColor.translateAlternateColorCodes('&', s));
-
-        }
-
-        h.setLore(ino);
+        h.setLore(CONFIGMANAGER.getUnlockedSlotPanelLore());
         unlockedslot.setItemMeta(h);
 
         not = new ItemStack(Material.BLACK_STAINED_GLASS_PANE);
         ItemMeta w = not.getItemMeta();
-        Objects.requireNonNull(w).setDisplayName(ChatColor.translateAlternateColorCodes('&',
-                CONFIGMANAGER.getLockedSlotPanelTitle()));
+        Objects.requireNonNull(w).setDisplayName(
+                CONFIGMANAGER.getLockedSlotPanelTitle());
 
-        ene = (ArrayList<String>) CONFIGMANAGER.getLockedSlotPanelLore();
-
-        ino = new ArrayList<>();
-
-        for (String s : ene) {
-            ino.add(ChatColor.translateAlternateColorCodes('&', s));
-
-        }
-
-        h.setLore(ino);
-
-        w.setLore(ino);
+        w.setLore(CONFIGMANAGER.getLockedSlotPanelLore());
         not.setItemMeta(w);
 
         log = new ItemStack(Material.OAK_LOG);

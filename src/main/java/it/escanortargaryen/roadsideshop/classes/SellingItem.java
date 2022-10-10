@@ -55,8 +55,8 @@ public class SellingItem implements Cloneable {
         ItemMeta m = i.getItemMeta();
         ArrayList<String> p = new ArrayList<>();
         p.add("");
-        p.add(ChatColor.translateAlternateColorCodes('&', RoadsideShops.CONFIGMANAGER.getPriceMessage()
-                .replace("<value>", price + "")));
+        p.add(RoadsideShops.CONFIGMANAGER.getPriceMessage(price)
+                );
         p.add("");
         p.add(ChatColor.GOLD + "Click to edit item");
         if (Objects.requireNonNull(m).getLore() != null)
@@ -68,8 +68,7 @@ public class SellingItem implements Cloneable {
 
         p.clear();
         p.add("");
-        p.add(ChatColor.translateAlternateColorCodes('&', RoadsideShops.CONFIGMANAGER.getPriceMessage()
-                .replace("<value>", price + "")));
+        p.add( RoadsideShops.CONFIGMANAGER.getPriceMessage(price));
         p.add("");
         p.add(ChatColor.GOLD + "Click to buy item");
 

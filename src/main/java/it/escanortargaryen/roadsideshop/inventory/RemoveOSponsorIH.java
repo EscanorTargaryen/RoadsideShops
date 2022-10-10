@@ -117,17 +117,13 @@ public class RemoveOSponsorIH implements InventoryHolder, Listener {
                     shop.getItems().remove(sellingItem);
 
                     e.getWhoClicked().closeInventory();
-                    if (shop.getSponsor()!=null&& shop.getSponsor().equals(sellingItem)) {
+                    if (shop.getSponsor() != null && shop.getSponsor().equals(sellingItem)) {
                         shop.setSponsor(null);
 
                     }
 
                     e.getWhoClicked()
-                            .sendMessage(RoadsideShops.CONFIGMANAGER.getRemoveItem().replace("&", "§")
-                                    .replace("<price>", sellingItem.getPrice() + "")
-
-                                    .replace("<type>", sellingItem.getI().getType().toString().toLowerCase().replace("_", " "))
-                                    .replace("<amount>", sellingItem.getI().getAmount() + ""));
+                            .sendMessage(RoadsideShops.CONFIGMANAGER.getRemoveItem(sellingItem.getPrice(), sellingItem.getI().getType().toString(), sellingItem.getI().getAmount()));
 
                     new BukkitRunnable() {
 
@@ -170,10 +166,7 @@ public class RemoveOSponsorIH implements InventoryHolder, Listener {
             if (isSponsoring) {
 
                 e.getPlayer()
-                        .sendMessage(RoadsideShops.CONFIGMANAGER.getSponsorItemSet().replace("&", "§")
-                                .replace("<price>", sellingItem.getPrice() + "")
-                                .replace("<type>", sellingItem.getI().getType().toString().toLowerCase().replace("_", " "))
-                                .replace("<amount>", sellingItem.getI().getAmount() + ""));
+                        .sendMessage(RoadsideShops.CONFIGMANAGER.getSponsorSet(sellingItem.getPrice(), sellingItem.getI().getType().toString(), sellingItem.getI().getAmount()));
 
                 InternalUtil.setSponsorItem(shop, sellingItem);
             }
