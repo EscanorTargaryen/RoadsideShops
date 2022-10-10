@@ -3,17 +3,14 @@ package it.escanortargaryen.roadsideshop;
 import dev.jorel.commandapi.CommandAPI;
 import dev.jorel.commandapi.CommandAPICommand;
 import dev.jorel.commandapi.CommandAPIConfig;
-import it.escanortargaryen.roadsideshop.classes.SellingItem;
 import it.escanortargaryen.roadsideshop.classes.Shop;
 import it.escanortargaryen.roadsideshop.managers.Commands;
 import it.escanortargaryen.roadsideshop.managers.ConfigManager;
-import it.escanortargaryen.roadsideshop.saving.SavingUtil;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -32,8 +29,6 @@ import java.util.Objects;
 public class RoadsideShops extends JavaPlugin implements Listener {
 
     private static final HashMap<String, Shop> cachedShops = new HashMap<>();
-
-    private SavingUtil<Shop> savesStand;
 
     public static ConfigManager CONFIGMANAGER;
 
@@ -105,30 +100,6 @@ public class RoadsideShops extends JavaPlugin implements Listener {
 
     }
 
-    public void saveStand(Shop k) {
-
-        savesStand.save(k);
-
-    }
-
-    public void saveAllStand() {
-
-        for (Shop j : cachedShops.values())
-
-            savesStand.save(j);
-
-    }
-
-    private void registerAllStand() {
-        savesStand.loadAll().forEach(k -> registerStand(k, false));
-
-    }
-
-    private void registerStand(Shop k, boolean save) {
-        return;
-    }
-
-
     @Override
     public void onEnable() {
         if (!setupEconomy()) {
@@ -140,9 +111,6 @@ public class RoadsideShops extends JavaPlugin implements Listener {
         new Commands();
         Bukkit.getPluginManager().registerEvents(this, this);
         instance = this;
-
-        ConfigurationSerialization.registerClass(Shop.class, "Stand");
-        ConfigurationSerialization.registerClass(SellingItem.class, "SellingItem");
 
         CONFIGMANAGER = new ConfigManager(this);
 
@@ -162,9 +130,6 @@ public class RoadsideShops extends JavaPlugin implements Listener {
 
         h.setLore(ino);
         unlockedslot.setItemMeta(h);
-
-        savesStand = new SavingUtil<>(this, s -> s.getPlayerUUID().toString(), ".stand");
-        registerAllStand();
 
         not = new ItemStack(Material.BLACK_STAINED_GLASS_PANE);
         ItemMeta w = not.getItemMeta();
@@ -202,11 +167,6 @@ public class RoadsideShops extends JavaPlugin implements Listener {
 
     }
 
-    @Override
-    public void onDisable() {
-        saveAllStand();
-    }
-
     public static boolean hasShop(Player player) {
 
         for (Shop s : cachedShops.values()) {
@@ -220,9 +180,6 @@ public class RoadsideShops extends JavaPlugin implements Listener {
 
     }
 
-
-
-
     public static Shop getStand(Player p) {
 
         return getStand((OfflinePlayer) p);
@@ -232,8 +189,6 @@ public class RoadsideShops extends JavaPlugin implements Listener {
 
         return cachedShops.get(p.getUniqueId().toString());
     }
-
-
 
     public static RoadsideShops getInstance() {
         return instance;

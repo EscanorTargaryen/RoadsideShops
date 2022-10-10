@@ -177,7 +177,6 @@ public class RemoveOSponsorIH implements InventoryHolder, Listener {
 
                 InternalUtil.setSponsorItem(shop, sellingItem);
             }
-            RoadsideShops.getInstance().saveStand(shop);
 
             InventoryClickEvent.getHandlerList().unregister(this);
             InventoryCloseEvent.getHandlerList().unregister(this);

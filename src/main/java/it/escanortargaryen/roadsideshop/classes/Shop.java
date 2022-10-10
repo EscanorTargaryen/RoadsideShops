@@ -1,10 +1,8 @@
 package it.escanortargaryen.roadsideshop.classes;
 
 import it.escanortargaryen.roadsideshop.RoadsideShops;
-import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
@@ -13,11 +11,9 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.UUID;
 
-public class Shop implements Cloneable, ConfigurationSerializable, InventoryHolder {
+public class Shop implements Cloneable, InventoryHolder {
 
     private final UUID p;
 
@@ -94,10 +90,8 @@ public class Shop implements Cloneable, ConfigurationSerializable, InventoryHold
                 invSeller = getInventory();
 
                 p.openInventory(invSeller);
-                RoadsideShops.getInstance().saveStand(this);
 
             } else {
-                RoadsideShops.getInstance().saveStand(this);
 
                 p.openInventory(invSeller);
 
@@ -119,7 +113,6 @@ public class Shop implements Cloneable, ConfigurationSerializable, InventoryHold
         invSeller = getInventory();
 
     }
-
 
     public void calculateSlots(Player p) {
 
@@ -260,25 +253,6 @@ public class Shop implements Cloneable, ConfigurationSerializable, InventoryHold
 
         this.p = p;
         playerName = name;
-    }
-
-
-    public static Shop deserialize(Map<String, Object> args) {
-        Validate.notNull(args, "Invalid args");
-
-        return new Shop(UUID.fromString((String) args.get("playerUUID")), (String) args.get("playername"),
-                (ArrayList<SellingItem>) args.get("items"), (SellingItem) args.get("sponsor"));
-    }
-
-    @Override
-    public @NotNull Map<String, Object> serialize() {
-
-        Map<String, Object> map = new HashMap<>();
-        map.put("playerUUID", p.toString());
-        map.put("items", items);
-        map.put("playername", playerName);
-        map.put("sponsor", sponsor);
-        return map;
     }
 
     @Override

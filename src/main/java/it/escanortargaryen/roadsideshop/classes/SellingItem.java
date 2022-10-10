@@ -1,22 +1,16 @@
 package it.escanortargaryen.roadsideshop.classes;
 
 import it.escanortargaryen.roadsideshop.RoadsideShops;
-import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.jetbrains.annotations.NotNull;
-import it.escanortargaryen.roadsideshop.saving.ItemStackSerializer;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 
-public class SellingItem implements Cloneable, ConfigurationSerializable {
+public class SellingItem implements Cloneable {
 
     private final ItemStack i;
 
@@ -51,13 +45,6 @@ public class SellingItem implements Cloneable, ConfigurationSerializable {
         return withpriceSeller.clone();
     }
 
-    public static SellingItem deserialize(Map<String, Object> args) {
-        Validate.notNull(args, "Invalid args");
-
-        return new SellingItem(Objects.requireNonNull(ItemStackSerializer.deserializeItemStack((String) args.get("item"))),
-                (int) args.get("slot"), (double) args.get("price"), UUID.fromString((String) args.get("player")));
-    }
-
     public SellingItem(ItemStack i, int slot, double price, UUID pl) {
 
         this.i = i;
@@ -69,7 +56,7 @@ public class SellingItem implements Cloneable, ConfigurationSerializable {
         ArrayList<String> p = new ArrayList<>();
         p.add("");
         p.add(ChatColor.translateAlternateColorCodes('&', RoadsideShops.CONFIGMANAGER.getPriceMessage()
-                .replace("<value>", price+"")));
+                .replace("<value>", price + "")));
         p.add("");
         p.add(ChatColor.GOLD + "Click to edit item");
         if (Objects.requireNonNull(m).getLore() != null)
@@ -82,7 +69,7 @@ public class SellingItem implements Cloneable, ConfigurationSerializable {
         p.clear();
         p.add("");
         p.add(ChatColor.translateAlternateColorCodes('&', RoadsideShops.CONFIGMANAGER.getPriceMessage()
-                .replace("<value>", price+"")));
+                .replace("<value>", price + "")));
         p.add("");
         p.add(ChatColor.GOLD + "Click to buy item");
 
@@ -126,18 +113,6 @@ public class SellingItem implements Cloneable, ConfigurationSerializable {
         ms.setLore(ar);
         forNewspaper.setItemMeta(ms);
 
-    }
-
-    @Override
-    public @NotNull Map<String, Object> serialize() {
-
-        Map<String, Object> map = new HashMap<>();
-        map.put("item", ItemStackSerializer.serializeItemStack(i));
-        map.put("slot", slot);
-        map.put("price", price);
-        map.put("player", p.toString());
-
-        return map;
     }
 
     @Override
