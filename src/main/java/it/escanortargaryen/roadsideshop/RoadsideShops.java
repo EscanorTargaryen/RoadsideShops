@@ -157,13 +157,7 @@ public class RoadsideShops extends JavaPlugin implements Listener {
         Objects.requireNonNull(ws).setDisplayName(ChatColor.WHITE + "");
         log.setItemMeta(ws);
 
-        String s = "\n§a           _____  _                     _§6   _____                         \n"
-                + "§a	  / ____|| |                   | | §6/ ____|                        §fby §cEscanorTargaryen   \n"
-                + "§a	 | (___  | |_  __ _  _ __    __| |§6| |      ___   _ __  ___             \n"
-                + "§a	  \\___ \\ | __|/ _` || '_ \\  / _` |§6| |     / _ \\ | '__|/ _ \\     \n"
-                + "§a	  ____) || |_| (_| || | | || (_| |§6| |____| (_) || |  |  __/      §2Enabled version: "
-                + this.getDescription().getVersion() + "\n"
-                + "§a	 |_____/  \\__|\\__,_||_| |_| \\__,_| §6\\_____|\\___/ |_|   \\___|    \n";
+        String s = "§7---§cRoadside §6Shops§7---\n§fby §cEscanorTargaryen\n §2Enabled version: " + this.getDescription().getVersion() + "\n§7------------------------";
 
         Bukkit.getConsoleSender().sendMessage(s);
         new ShopsManager();
