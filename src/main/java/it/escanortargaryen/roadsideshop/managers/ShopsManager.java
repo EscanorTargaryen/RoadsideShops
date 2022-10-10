@@ -1,6 +1,10 @@
-package it.escanortargaryen.roadsideshop;
+package it.escanortargaryen.roadsideshop.managers;
 
 import com.fren_gor.invManagementPlugin.api.SafeInventoryActions;
+import it.escanortargaryen.roadsideshop.inventory.ItemSettingsIH;
+import it.escanortargaryen.roadsideshop.inventory.RemoveOSponsorIH;
+import it.escanortargaryen.roadsideshop.RoadsideShops;
+import it.escanortargaryen.roadsideshop.classes.SellingItem;
 import it.escanortargaryen.roadsideshop.classes.Shop;
 import it.escanortargaryen.roadsideshop.events.PlayerBuyStandEvent;
 import org.bukkit.Bukkit;

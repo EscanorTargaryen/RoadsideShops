@@ -1,5 +1,6 @@
 package it.escanortargaryen.roadsideshop;
 
+import it.escanortargaryen.roadsideshop.classes.SellingItem;
 import it.escanortargaryen.roadsideshop.classes.Shop;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -26,7 +27,7 @@ TODO cose da sistemare in una classe:
         rimuovere codice inutile e commenti
         rimuovere import inutili
         no parole in italiano*/
-class InternalUtil {
+public class InternalUtil {
 
     public static ItemStack generateMapItem(Shop shop, boolean isSponsoring, SellingItem sellingItem) {
         ItemStack sponsor;

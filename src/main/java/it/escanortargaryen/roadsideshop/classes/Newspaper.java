@@ -1,6 +1,8 @@
-package it.escanortargaryen.roadsideshop;
+package it.escanortargaryen.roadsideshop.classes;
 
 import de.erethon.headlib.HeadLib;
+import it.escanortargaryen.roadsideshop.RoadsideShops;
+import it.escanortargaryen.roadsideshop.classes.SellingItem;
 import it.escanortargaryen.roadsideshop.classes.Shop;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;

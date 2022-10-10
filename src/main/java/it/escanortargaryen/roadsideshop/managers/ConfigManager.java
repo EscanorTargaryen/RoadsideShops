@@ -1,4 +1,4 @@
-package it.escanortargaryen.roadsideshop.saving;
+package it.escanortargaryen.roadsideshop.managers;
 
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;

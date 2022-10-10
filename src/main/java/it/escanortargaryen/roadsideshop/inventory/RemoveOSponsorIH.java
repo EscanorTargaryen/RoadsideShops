@@ -1,7 +1,10 @@
-package it.escanortargaryen.roadsideshop;
+package it.escanortargaryen.roadsideshop.inventory;
 
 import com.fren_gor.invManagementPlugin.api.SafeInventoryActions;
 import de.erethon.headlib.HeadLib;
+import it.escanortargaryen.roadsideshop.InternalUtil;
+import it.escanortargaryen.roadsideshop.RoadsideShops;
+import it.escanortargaryen.roadsideshop.classes.SellingItem;
 import it.escanortargaryen.roadsideshop.classes.Shop;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;

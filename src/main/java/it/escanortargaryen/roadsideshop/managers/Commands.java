@@ -1,7 +1,9 @@
-package it.escanortargaryen.roadsideshop;
+package it.escanortargaryen.roadsideshop.managers;
 
 import dev.jorel.commandapi.CommandAPICommand;
 import dev.jorel.commandapi.arguments.OfflinePlayerArgument;
+import it.escanortargaryen.roadsideshop.RoadsideShops;
+import it.escanortargaryen.roadsideshop.classes.Newspaper;
 import it.escanortargaryen.roadsideshop.classes.Shop;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;

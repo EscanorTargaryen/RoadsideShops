@@ -1,7 +1,6 @@
 package it.escanortargaryen.roadsideshop.classes;
 
 import it.escanortargaryen.roadsideshop.RoadsideShops;
-import it.escanortargaryen.roadsideshop.SellingItem;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;

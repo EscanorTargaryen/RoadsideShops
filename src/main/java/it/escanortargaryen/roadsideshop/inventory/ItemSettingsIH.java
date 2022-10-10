@@ -1,5 +1,8 @@
-package it.escanortargaryen.roadsideshop;
+package it.escanortargaryen.roadsideshop.inventory;
 
+import it.escanortargaryen.roadsideshop.InternalUtil;
+import it.escanortargaryen.roadsideshop.RoadsideShops;
+import it.escanortargaryen.roadsideshop.classes.SellingItem;
 import it.escanortargaryen.roadsideshop.classes.Shop;
 import net.wesjd.anvilgui.AnvilGUI;
 import org.bukkit.Bukkit;
