@@ -1,9 +1,7 @@
 package it.escanortargaryen.roadsideshop;
 
-
 import com.fren_gor.invManagementPlugin.api.SafeInventoryActions;
 import de.erethon.headlib.HeadLib;
-import it.escanortargaryen.roadsideshop.saving.ConfigManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -19,14 +17,16 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 public class RemoveOSponsorIH implements InventoryHolder, Listener {
 
-    private Shop shop;
-    private  SellingItem sellingItem;
+    private final Shop shop;
+    private final SellingItem sellingItem;
+
+    private boolean isSponsoring = false;
 
     public RemoveOSponsorIH(Shop shop, SellingItem sellingItem, Player p) {
 
@@ -45,8 +45,8 @@ public class RemoveOSponsorIH implements InventoryHolder, Listener {
 
         ItemStack t = sellingItem.getWithpriceSeller().clone();
         ItemMeta tt = t.getItemMeta();
-        List<String> a = tt.getLore();
-        a.remove(a.size() - 1);
+        List<String> a = Objects.requireNonNull(tt).getLore();
+        Objects.requireNonNull(a).remove(a.size() - 1);
         a.remove(a.size() - 1);
         tt.setLore(a);
         t.setItemMeta(tt);
@@ -56,77 +56,17 @@ public class RemoveOSponsorIH implements InventoryHolder, Listener {
         inv.setItem(20, HeadLib.WOODEN_ARROW_LEFT.toItemStack(ChatColor.BLUE + "Come back", "",
                 ChatColor.GRAY + "Click to exit settings"));
 
-        if (shop.getSponsor() != null && shop.getSponsor().equals(sellingItem)) {
-
-            ItemStack sponsor = new ItemStack(Material.FILLED_MAP);
-            ItemMeta m = sponsor.getItemMeta();
-            m.setDisplayName(ChatColor.GOLD + "Sposor item");
-            ArrayList<String> ene = new ArrayList<>();
-            ene.add("");
-            ene.add(ChatColor.DARK_RED + "The item is just a sponsored item.");
-            ene.add(ChatColor.DARK_RED + "Wait " + shop.getMissTimeinMins(System.currentTimeMillis())
-                    + " minutes to sponsor another item.");
-            ene.add("");
-            ene.add(ChatColor.GRAY + "Sponsoring an item shows it on the newspaper.");
-            ene.add(ChatColor.GRAY + "You can sponsor an item every " + (Shop.timesponsor / 60000) + " minutes.");
-            m.setLore(ene);
-            sponsor.setItemMeta(m);
-            inv.setItem(22, sponsor);
-
-        } else if (shop.canSponsor(System.currentTimeMillis())) {
-
-            ItemStack sponsorItem = new ItemStack(Material.PAPER);
-            ItemMeta m = sponsorItem.getItemMeta();
-            m.setDisplayName(ChatColor.YELLOW + "Sponsor item");
-            ArrayList<String> ene = new ArrayList<>();
-            ene.add("");
-            ene.add(ChatColor.RED + "The item isn't sponsored at the moment.");
-            ene.add("");
-            ene.add(ChatColor.GRAY + "Sponsoring an item shows it on the newspaper.");
-            ene.add(ChatColor.GRAY + "You can sponsor an item every " + (Shop.timesponsor / 60000) + " minutes.");
-            ene.add("");
-            if (shop.getSponsor() != null) {
-
-                ene.add(ChatColor.DARK_RED + "N.B.: " + ChatColor.RED
-                        + "You already have a sponsored item. Sponsoring");
-                ene.add(ChatColor.RED + "this item is going to unsponsor the other one.");
-                ene.add("");
-
-            }
-            ene.add(ChatColor.GOLD + "Click to sponsor");
-            m.setLore(ene);
-            sponsorItem.setItemMeta(m);
-            inv.setItem(22, sponsorItem);
-
-        } else {
-            ItemStack sponsor = new ItemStack(Material.FILLED_MAP);
-            ItemMeta m = sponsor.getItemMeta();
-            m.setDisplayName(ChatColor.GOLD + "Sposor item");
-            ArrayList<String> ene = new ArrayList<>();
-            ene.add("");
-            ene.add(ChatColor.DARK_RED + "You've already sponsored an item.");
-            ene.add(ChatColor.DARK_RED + "Wait " + shop.getMissTimeinMins(System.currentTimeMillis())
-                    + " minutes to sponsor another item.");
-            ene.add("");
-            ene.add(ChatColor.GRAY + "Sponsoring an item shows it on the newspaper.");
-            ene.add(ChatColor.GRAY + "You can sponsor an item every " + (Shop.timesponsor / 60000) + " minutes.");
-            m.setLore(ene);
-            sponsor.setItemMeta(m);
-            inv.setItem(22, sponsor);
-
-        }
+        inv.setItem(22, InternalUtil.generateMapItem(shop, isSponsoring, sellingItem));
 
         ItemStack remove = new ItemStack(Material.RED_STAINED_GLASS);
         ItemMeta rem = remove.getItemMeta();
-        rem.setDisplayName(ChatColor.RED + "Remove Item");
+        Objects.requireNonNull(rem).setDisplayName(ChatColor.RED + "Remove Item");
         rem.setLore(Arrays.asList("", ChatColor.GOLD + "Click to remove the item and get it back"));
         remove.setItemMeta(rem);
         inv.setItem(24, remove);
 
         return inv;
     }
-
-    boolean sponsor = false;
 
     @EventHandler
     private void onClick(InventoryClickEvent e) {
@@ -173,14 +113,14 @@ public class RemoveOSponsorIH implements InventoryHolder, Listener {
                     shop.getItems().remove(sellingItem);
 
                     e.getWhoClicked().closeInventory();
-                    if (shop != null && shop.getSponsor().equals(sellingItem)) {
+                    if (shop.getSponsor().equals(sellingItem)) {
                         shop.setSponsor(null);
 
                     }
 
                     e.getWhoClicked()
                             .sendMessage(StandManager.CONFIGMANAGER.getRemoveItem().replace("&", "§")
-                                    .replace("<price>", sellingItem.getPrice()+"")
+                                    .replace("<price>", sellingItem.getPrice() + "")
 
                                     .replace("<type>", sellingItem.getI().getType().toString().toLowerCase().replace("_", " "))
                                     .replace("<amount>", sellingItem.getI().getAmount() + ""));
@@ -209,68 +149,10 @@ public class RemoveOSponsorIH implements InventoryHolder, Listener {
         }
 
         if (e.getSlot() == 22) {
-            if (shop.getSponsor() != null && shop.getSponsor().equals(sellingItem))
-                return;
 
-            if (shop.canSponsor(System.currentTimeMillis())) {
+            e.getInventory().setItem(22, InternalUtil.generateMapItem(shop, isSponsoring, sellingItem));
 
-                if (!this.sponsor) {
-                    ItemStack sponsor = new ItemStack(Material.FILLED_MAP);
-                    ItemMeta m = sponsor.getItemMeta();
-                    m.setDisplayName(ChatColor.GOLD + "Sposor item");
-                    ArrayList<String> ene = new ArrayList<>();
-                    ene.add("");
-                    ene.add(ChatColor.GREEN + "The item will be sponsored.");
-                    ene.add("");
-                    ene.add(ChatColor.GRAY + "Sponsoring an item shows it on the newspaper.");
-                    ene.add(ChatColor.GRAY + "You can sponsor an item every " + (Shop.timesponsor / 60000)
-                            + " minutes.");
-                    ene.add("");
-                    if (shop.getSponsor() != null) {
-
-                        ene.add(ChatColor.DARK_RED + "N.B.: " + ChatColor.RED
-                                + "You already have a sponsored item. Sponsoring");
-                        ene.add(ChatColor.RED + "this item is going to unsponsor the other one.");
-                        ene.add("");
-
-                    }
-                    ene.add(ChatColor.GOLD + "Click to unsponsor");
-                    m.setLore(ene);
-                    sponsor.setItemMeta(m);
-                    e.getInventory().setItem(22, sponsor);
-
-                    this.sponsor = true;
-
-                } else {
-
-                    ItemStack sponsorItem = new ItemStack(Material.PAPER);
-                    ItemMeta m = sponsorItem.getItemMeta();
-                    m.setDisplayName(ChatColor.YELLOW + "Sponsor item");
-                    ArrayList<String> ene = new ArrayList<>();
-                    ene.add("");
-                    ene.add(ChatColor.RED + "The item isn't sponsored at the moment.");
-                    ene.add("");
-                    ene.add(ChatColor.GRAY + "Sponsoring an item shows it on the newspaper.");
-                    ene.add(ChatColor.GRAY + "You can sponsor an item every " + (Shop.timesponsor / 60000)
-                            + " minutes.");
-                    ene.add("");
-                    if (shop.getSponsor() != null) {
-
-                        ene.add(ChatColor.DARK_RED + "N.B.: " + ChatColor.RED
-                                + "You already have a sponsored item. Sponsoring");
-                        ene.add(ChatColor.RED + "this item is going to unsponsor the other one.");
-                        ene.add("");
-
-                    }
-                    ene.add(ChatColor.GOLD + "Click to sponsor");
-                    m.setLore(ene);
-                    sponsorItem.setItemMeta(m);
-                    e.getInventory().setItem(22, sponsorItem);
-
-                    this.sponsor = false;
-                }
-
-            }
+            this.isSponsoring = !this.isSponsoring;
 
         }
 
@@ -281,27 +163,15 @@ public class RemoveOSponsorIH implements InventoryHolder, Listener {
 
         if (e.getInventory().getHolder() == this) {
 
-            if (sponsor) {
+            if (isSponsoring) {
 
                 e.getPlayer()
                         .sendMessage(StandManager.CONFIGMANAGER.getSponsorItemSet().replace("&", "§")
-                                .replace("<price>", sellingItem.getPrice()+"")
+                                .replace("<price>", sellingItem.getPrice() + "")
                                 .replace("<type>", sellingItem.getI().getType().toString().toLowerCase().replace("_", " "))
                                 .replace("<amount>", sellingItem.getI().getAmount() + ""));
 
-                if (shop.getSponsor() != null) {
-
-                    shop.getInvBuyer().setItem(shop.getSponsor().getSlot(), shop.getSponsor().getWithpriceBuyer());
-                    shop.getInvSeller().setItem(shop.getSponsor().getSlot(), shop.getSponsor().getWithpriceSeller());
-
-                }
-
-                shop.setTimeSponsor(System.currentTimeMillis());
-                shop.setSponsor(sellingItem);
-
-                shop.getInvBuyer().setItem(sellingItem.getSlot(), sellingItem.getWithpriceESpondorBuyer());
-                shop.getInvSeller().setItem(sellingItem.getSlot(), sellingItem.getWithpriceESpondorSeller());
-
+                InternalUtil.setSponsorItem(shop, sellingItem);
             }
             StandManager.getInstance().saveStand(shop);
 

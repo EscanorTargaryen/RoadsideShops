@@ -1,8 +1,12 @@
 package it.escanortargaryen.roadsideshop;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+
+import java.util.ArrayList;
+import java.util.Objects;
 
 /*
 
@@ -10,7 +14,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 //TODO metodo per sistemare i prezzi?
 //TODO ci sono deprecate?
 TODO cambia la scritta all'avvio sta scritto ancora standscore
-sistema il config, fai in modo che ci siano i metodi che danno già le strighe sistemate
+TODO sistema il config, fai in modo che ci siano i metodi che danno già le strighe sistemate
 TODO cose da sistemare in una classe:
 
         typo
@@ -23,14 +27,30 @@ TODO cose da sistemare in una classe:
         no parole in italiano*/
 class InternalUtil {
 
-    public static ItemStack generateMapItem(Shop shop, boolean isSponsoring) {
+    public static ItemStack generateMapItem(Shop shop, boolean isSponsoring, SellingItem sellingItem) {
         ItemStack sponsor;
-        if (shop.canSponsor(System.currentTimeMillis())) {
+
+        if (shop.getSponsor() != null && shop.getSponsor().equals(sellingItem)) {
+            sponsor = new ItemStack(Material.FILLED_MAP);
+            ItemMeta m = sponsor.getItemMeta();
+            Objects.requireNonNull(m).setDisplayName(ChatColor.GOLD + "Sponsor item");
+            ArrayList<String> ene = new ArrayList<>();
+            ene.add("");
+            ene.add(ChatColor.DARK_RED + "The item is just a sponsored item.");
+            ene.add(ChatColor.DARK_RED + "Wait " + shop.getMissTimeinMins(System.currentTimeMillis())
+                    + " minutes to sponsor another item.");
+            ene.add("");
+            ene.add(ChatColor.GRAY + "Sponsoring an item shows it on the newspaper.");
+            ene.add(ChatColor.GRAY + "You can sponsor an item every " + (Shop.timesponsor / 60000) + " minutes.");
+            m.setLore(ene);
+            sponsor.setItemMeta(m);
+        } else if (shop.canSponsor(System.currentTimeMillis())) {
+
             if (isSponsoring) {
 
                 sponsor = new ItemStack(Material.FILLED_MAP);
                 ItemMeta m = sponsor.getItemMeta();
-                m.setDisplayName(StandManager.CONFIGMANAGER.getSponsorButtonTitle());
+                Objects.requireNonNull(m).setDisplayName(StandManager.CONFIGMANAGER.getSponsorButtonTitle());
 
                 if (shop.getSponsor() != null) {
                     m.setLore(StandManager.CONFIGMANAGER.getSponsoringChange((Shop.timesponsor / 60000)));
@@ -44,7 +64,7 @@ class InternalUtil {
 
                 sponsor = new ItemStack(Material.PAPER);
                 ItemMeta m = sponsor.getItemMeta();
-                m.setDisplayName(StandManager.CONFIGMANAGER.getSponsorButtonTitle());
+                Objects.requireNonNull(m).setDisplayName(StandManager.CONFIGMANAGER.getSponsorButtonTitle());
 
                 if (shop.getSponsor() != null) {
                     m.setLore(StandManager.CONFIGMANAGER.getNotSponsoringChange((Shop.timesponsor / 60000)));
@@ -59,7 +79,7 @@ class InternalUtil {
         } else {
             sponsor = new ItemStack(Material.FILLED_MAP);
             ItemMeta m = sponsor.getItemMeta();
-            m.setDisplayName(StandManager.CONFIGMANAGER.getSponsorButtonTitle());
+            Objects.requireNonNull(m).setDisplayName(StandManager.CONFIGMANAGER.getSponsorButtonTitle());
 
             m.setLore(StandManager.CONFIGMANAGER.getWaitToSponsor((Shop.timesponsor / 60000), shop.getMissTimeinMins(System.currentTimeMillis())));
 

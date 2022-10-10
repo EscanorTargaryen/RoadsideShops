@@ -1,6 +1,5 @@
 package it.escanortargaryen.roadsideshop;
 
-
 import de.erethon.headlib.HeadLib;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -20,19 +19,20 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Objects;
 import java.util.concurrent.ThreadLocalRandom;
 
+//TODO make newspaper number pages customizable
 public class Newspaper implements Listener, InventoryHolder {
 
-    ArrayList<SellingItem> list = new ArrayList<>();
-    //final int pagine = 3;
-    int pagina = 1;
-    ItemStack right = HeadLib.WOODEN_ARROW_RIGHT.toItemStack(ChatColor.BLUE + "Change Page", "",
+    private ArrayList<SellingItem> list = new ArrayList<>();
+    private int pagina = 1;
+    private final ItemStack right = HeadLib.WOODEN_ARROW_RIGHT.toItemStack(ChatColor.BLUE + "Change Page", "",
             ChatColor.GRAY + "Click to view next page");
-    ItemStack left = HeadLib.WOODEN_ARROW_LEFT.toItemStack(ChatColor.BLUE + "Change Page", "",
+    private final ItemStack left = HeadLib.WOODEN_ARROW_LEFT.toItemStack(ChatColor.BLUE + "Change Page", "",
             ChatColor.GRAY + "Click to view prev. page");
 
-    boolean animation = false;
+    private boolean animation = false;
     private final ItemStack glass;
 
     public Newspaper(Collection<Shop> collection, Player p) {
@@ -40,7 +40,7 @@ public class Newspaper implements Listener, InventoryHolder {
 
         glass = new ItemStack(Material.GRAY_STAINED_GLASS_PANE);
         ItemMeta m = glass.getItemMeta();
-        m.setDisplayName(ChatColor.AQUA + "");
+        Objects.requireNonNull(m).setDisplayName(ChatColor.AQUA + "");
         glass.setItemMeta(m);
 
         ArrayList<SellingItem> sel = new ArrayList<>();
@@ -244,7 +244,7 @@ public class Newspaper implements Listener, InventoryHolder {
 
         e.setCancelled(true);
 
-        if (e.getInventory().getItem(e.getSlot()).getType() == Material.PLAYER_HEAD) {
+        if (Objects.requireNonNull(e.getInventory().getItem(e.getSlot())).getType() == Material.PLAYER_HEAD) {
 
             if (e.getSlot() == 26) {
 
@@ -349,7 +349,7 @@ public class Newspaper implements Listener, InventoryHolder {
 
         }
 
-        if (e.getInventory().getItem(e.getSlot()).getType() != Material.PAPER) {
+        if (Objects.requireNonNull(e.getInventory().getItem(e.getSlot())).getType() != Material.PAPER) {
 
             if (e.getSlot() == 11) {
 

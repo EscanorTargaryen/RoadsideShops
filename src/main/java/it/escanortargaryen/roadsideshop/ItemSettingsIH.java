@@ -54,7 +54,7 @@ public class ItemSettingsIH implements InventoryHolder, Listener {
 
         inv.setItem(10, item);
 
-        inv.setItem(15, InternalUtil.generateMapItem(shop, isSponsoring));
+        inv.setItem(15, InternalUtil.generateMapItem(shop, isSponsoring, null));
         ItemStack wool, prezzo;
 
         if (isPriceSet) {
@@ -146,7 +146,7 @@ public class ItemSettingsIH implements InventoryHolder, Listener {
                 this.isSponsoring = !this.isSponsoring;
 
             }
-            e.getInventory().setItem(15, InternalUtil.generateMapItem(shop, isSponsoring));
+            e.getInventory().setItem(15, InternalUtil.generateMapItem(shop, isSponsoring, null));
 
         }
         if (e.getSlot() == 24) {
