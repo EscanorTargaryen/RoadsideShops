@@ -1,5 +1,6 @@
 package it.escanortargaryen.roadsideshop;
 
+import it.escanortargaryen.roadsideshop.classes.Shop;
 import net.wesjd.anvilgui.AnvilGUI;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -30,7 +31,7 @@ public class ItemSettingsIH implements InventoryHolder, Listener {
     private double price = 0.0;
 
     public ItemSettingsIH(Shop shop, ItemStack itemToSell, Player p, int slotNumber) {
-        Bukkit.getPluginManager().registerEvents(this, StandManager.getInstance());
+        Bukkit.getPluginManager().registerEvents(this, RoadsideShops.getInstance());
 
         this.shop = shop;
         this.slotNumber = slotNumber;
@@ -67,7 +68,7 @@ public class ItemSettingsIH implements InventoryHolder, Listener {
 
             prezzo = new ItemStack(Material.NAME_TAG);
             mw = prezzo.getItemMeta();
-            Objects.requireNonNull(mw).setDisplayName(ChatColor.translateAlternateColorCodes('&', StandManager.CONFIGMANAGER.getPriceMessage().replace("<value>", price + "")));
+            Objects.requireNonNull(mw).setDisplayName(ChatColor.translateAlternateColorCodes('&', RoadsideShops.CONFIGMANAGER.getPriceMessage().replace("<value>", price + "")));
 
             mw.setLore(Arrays.asList("", ChatColor.GOLD + "Click to change the price"));
             prezzo.setItemMeta(mw);
@@ -134,7 +135,7 @@ public class ItemSettingsIH implements InventoryHolder, Listener {
                     .itemLeft(new ItemStack(Material.GOLD_BLOCK)) // use a custom item for the first slot
 
                     .title("Enter the price here") // set the title of the GUI (only works in 1.14+)
-                    .plugin(StandManager.getInstance()) // set the plugin instance
+                    .plugin(RoadsideShops.getInstance()) // set the plugin instance
                     .open((Player) e.getWhoClicked());
 
         }
@@ -168,7 +169,7 @@ public class ItemSettingsIH implements InventoryHolder, Listener {
                 exit = true;
 
                 p.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                        StandManager.CONFIGMANAGER.getPutItem()
+                        RoadsideShops.CONFIGMANAGER.getPutItem()
                                 .replace("<price>", sellingItem.getPrice() + "")
                                 .replace("<type>", sellingItem.getI().getType().toString().toLowerCase().replace("_", " "))
                                 .replace("<amount>", sellingItem.getI().getAmount() + "")));
@@ -176,7 +177,7 @@ public class ItemSettingsIH implements InventoryHolder, Listener {
                 if (isSponsoring) {
 
                     e.getWhoClicked().sendMessage(ChatColor.translateAlternateColorCodes('&',
-                            StandManager.CONFIGMANAGER.getSponsorSet()));
+                            RoadsideShops.CONFIGMANAGER.getSponsorSet()));
 
                     InternalUtil.setSponsorItem(shop, sellingItem);
 
@@ -206,7 +207,7 @@ public class ItemSettingsIH implements InventoryHolder, Listener {
 
                         Bukkit.dispatchCommand(e.getPlayer(), "stand");
                     }
-                }.runTask(StandManager.getInstance());
+                }.runTask(RoadsideShops.getInstance());
 
             }
             if (exit) {

@@ -1,16 +1,10 @@
-main: it.escanortargaryen.roadsideshop.StandManager
+main: it.escanortargaryen.roadsideshop.RoadsideShops
 name: ${project.name}
 version: ${project.version}
 author: [EscanorTargaryen]
 
 api-version: 1.15
 depend: [Vault]
-
-commands:
-  stand:
-    description: Command
-  newspaper:
-    description: Command
 
 permissions:
   stand.bypass.sponsortime:

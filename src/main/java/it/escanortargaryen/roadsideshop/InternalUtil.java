@@ -1,5 +1,6 @@
 package it.escanortargaryen.roadsideshop;
 
+import it.escanortargaryen.roadsideshop.classes.Shop;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -50,12 +51,12 @@ class InternalUtil {
 
                 sponsor = new ItemStack(Material.FILLED_MAP);
                 ItemMeta m = sponsor.getItemMeta();
-                Objects.requireNonNull(m).setDisplayName(StandManager.CONFIGMANAGER.getSponsorButtonTitle());
+                Objects.requireNonNull(m).setDisplayName(RoadsideShops.CONFIGMANAGER.getSponsorButtonTitle());
 
                 if (shop.getSponsor() != null) {
-                    m.setLore(StandManager.CONFIGMANAGER.getSponsoringChange((Shop.timesponsor / 60000)));
+                    m.setLore(RoadsideShops.CONFIGMANAGER.getSponsoringChange((Shop.timesponsor / 60000)));
                 } else {
-                    m.setLore(StandManager.CONFIGMANAGER.getSponsoring((Shop.timesponsor / 60000)));
+                    m.setLore(RoadsideShops.CONFIGMANAGER.getSponsoring((Shop.timesponsor / 60000)));
 
                 }
                 sponsor.setItemMeta(m);
@@ -64,12 +65,12 @@ class InternalUtil {
 
                 sponsor = new ItemStack(Material.PAPER);
                 ItemMeta m = sponsor.getItemMeta();
-                Objects.requireNonNull(m).setDisplayName(StandManager.CONFIGMANAGER.getSponsorButtonTitle());
+                Objects.requireNonNull(m).setDisplayName(RoadsideShops.CONFIGMANAGER.getSponsorButtonTitle());
 
                 if (shop.getSponsor() != null) {
-                    m.setLore(StandManager.CONFIGMANAGER.getNotSponsoringChange((Shop.timesponsor / 60000)));
+                    m.setLore(RoadsideShops.CONFIGMANAGER.getNotSponsoringChange((Shop.timesponsor / 60000)));
                 } else {
-                    m.setLore(StandManager.CONFIGMANAGER.getNotSponsoring((Shop.timesponsor / 60000)));
+                    m.setLore(RoadsideShops.CONFIGMANAGER.getNotSponsoring((Shop.timesponsor / 60000)));
 
                 }
                 sponsor.setItemMeta(m);
@@ -79,9 +80,9 @@ class InternalUtil {
         } else {
             sponsor = new ItemStack(Material.FILLED_MAP);
             ItemMeta m = sponsor.getItemMeta();
-            Objects.requireNonNull(m).setDisplayName(StandManager.CONFIGMANAGER.getSponsorButtonTitle());
+            Objects.requireNonNull(m).setDisplayName(RoadsideShops.CONFIGMANAGER.getSponsorButtonTitle());
 
-            m.setLore(StandManager.CONFIGMANAGER.getWaitToSponsor((Shop.timesponsor / 60000), shop.getMissTimeinMins(System.currentTimeMillis())));
+            m.setLore(RoadsideShops.CONFIGMANAGER.getWaitToSponsor((Shop.timesponsor / 60000), shop.getMissTimeinMins(System.currentTimeMillis())));
 
             sponsor.setItemMeta(m);
 

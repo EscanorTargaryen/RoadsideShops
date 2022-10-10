@@ -2,6 +2,7 @@ package it.escanortargaryen.roadsideshop;
 
 import com.fren_gor.invManagementPlugin.api.SafeInventoryActions;
 import de.erethon.headlib.HeadLib;
+import it.escanortargaryen.roadsideshop.classes.Shop;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -30,7 +31,7 @@ public class RemoveOSponsorIH implements InventoryHolder, Listener {
 
     public RemoveOSponsorIH(Shop shop, SellingItem sellingItem, Player p) {
 
-        Bukkit.getPluginManager().registerEvents(this, StandManager.getInstance());
+        Bukkit.getPluginManager().registerEvents(this, RoadsideShops.getInstance());
 
         this.shop = shop;
         this.sellingItem = sellingItem;
@@ -94,12 +95,12 @@ public class RemoveOSponsorIH implements InventoryHolder, Listener {
                     Bukkit.dispatchCommand(e.getWhoClicked(), "stand");
 
                 }
-            }.runTask(StandManager.getInstance());
+            }.runTask(RoadsideShops.getInstance());
 
         }
 
         if (e.getSlot() == 24) {
-            ItemStack here = StandManager.unlockedslot;
+            ItemStack here = RoadsideShops.unlockedslot;
 
             Player p = (Player) e.getWhoClicked();
 
@@ -119,7 +120,7 @@ public class RemoveOSponsorIH implements InventoryHolder, Listener {
                     }
 
                     e.getWhoClicked()
-                            .sendMessage(StandManager.CONFIGMANAGER.getRemoveItem().replace("&", "§")
+                            .sendMessage(RoadsideShops.CONFIGMANAGER.getRemoveItem().replace("&", "§")
                                     .replace("<price>", sellingItem.getPrice() + "")
 
                                     .replace("<type>", sellingItem.getI().getType().toString().toLowerCase().replace("_", " "))
@@ -132,7 +133,7 @@ public class RemoveOSponsorIH implements InventoryHolder, Listener {
                             Bukkit.dispatchCommand(e.getWhoClicked(), "stand");
 
                         }
-                    }.runTask(StandManager.getInstance());
+                    }.runTask(RoadsideShops.getInstance());
                     break;
                 }
 
@@ -166,14 +167,14 @@ public class RemoveOSponsorIH implements InventoryHolder, Listener {
             if (isSponsoring) {
 
                 e.getPlayer()
-                        .sendMessage(StandManager.CONFIGMANAGER.getSponsorItemSet().replace("&", "§")
+                        .sendMessage(RoadsideShops.CONFIGMANAGER.getSponsorItemSet().replace("&", "§")
                                 .replace("<price>", sellingItem.getPrice() + "")
                                 .replace("<type>", sellingItem.getI().getType().toString().toLowerCase().replace("_", " "))
                                 .replace("<amount>", sellingItem.getI().getAmount() + ""));
 
                 InternalUtil.setSponsorItem(shop, sellingItem);
             }
-            StandManager.getInstance().saveStand(shop);
+            RoadsideShops.getInstance().saveStand(shop);
 
             InventoryClickEvent.getHandlerList().unregister(this);
             InventoryCloseEvent.getHandlerList().unregister(this);

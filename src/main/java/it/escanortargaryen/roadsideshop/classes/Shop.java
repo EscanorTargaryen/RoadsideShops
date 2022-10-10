@@ -1,5 +1,7 @@
-package it.escanortargaryen.roadsideshop;
+package it.escanortargaryen.roadsideshop.classes;
 
+import it.escanortargaryen.roadsideshop.RoadsideShops;
+import it.escanortargaryen.roadsideshop.SellingItem;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -51,10 +53,10 @@ public class Shop implements Cloneable, ConfigurationSerializable, InventoryHold
 
             @Override
             public void run() {
-                Shop.timesponsor = StandManager.CONFIGMANAGER.getSponsorTimeMills();
+                Shop.timesponsor = RoadsideShops.CONFIGMANAGER.getSponsorTimeMills();
 
             }
-        }.runTaskLater(StandManager.getInstance(), 40);
+        }.runTaskLater(RoadsideShops.getInstance(), 40);
     }
 
     public boolean canSponsor(long time) {
@@ -93,10 +95,10 @@ public class Shop implements Cloneable, ConfigurationSerializable, InventoryHold
                 invSeller = getInventory();
 
                 p.openInventory(invSeller);
-                StandManager.getInstance().saveStand(this);
+                RoadsideShops.getInstance().saveStand(this);
 
             } else {
-                StandManager.getInstance().saveStand(this);
+                RoadsideShops.getInstance().saveStand(this);
 
                 p.openInventory(invSeller);
 
@@ -166,11 +168,11 @@ public class Shop implements Cloneable, ConfigurationSerializable, InventoryHold
 
         invSeller = Bukkit.createInventory(this, 18, ChatColor.DARK_BLUE + playerName + "'s stand");
 
-        ItemStack here = StandManager.unlockedslot;
+        ItemStack here = RoadsideShops.unlockedslot;
 
         for (int i = 0; i < 18; i++) {
 
-            invSeller.setItem(i, StandManager.not);
+            invSeller.setItem(i, RoadsideShops.not);
         }
 
         for (int i = 1; i < normalSlots + 1; i++) {
@@ -186,10 +188,10 @@ public class Shop implements Cloneable, ConfigurationSerializable, InventoryHold
 
         }
 
-        invSeller.setItem(0, StandManager.log);
-        invSeller.setItem(8, StandManager.log);
-        invSeller.setItem(9, StandManager.log);
-        invSeller.setItem(17, StandManager.log);
+        invSeller.setItem(0, RoadsideShops.log);
+        invSeller.setItem(8, RoadsideShops.log);
+        invSeller.setItem(9, RoadsideShops.log);
+        invSeller.setItem(17, RoadsideShops.log);
 
         if (items != null)
             for (SellingItem s : items) {
@@ -208,10 +210,10 @@ public class Shop implements Cloneable, ConfigurationSerializable, InventoryHold
 
         invBuyer = Bukkit.createInventory(this, 18, ChatColor.DARK_BLUE + playerName + "'s stand");
 
-        invBuyer.setItem(0, StandManager.log);
-        invBuyer.setItem(8, StandManager.log);
-        invBuyer.setItem(9, StandManager.log);
-        invBuyer.setItem(17, StandManager.log);
+        invBuyer.setItem(0, RoadsideShops.log);
+        invBuyer.setItem(8, RoadsideShops.log);
+        invBuyer.setItem(9, RoadsideShops.log);
+        invBuyer.setItem(17, RoadsideShops.log);
 
         if (items != null)
             for (SellingItem s : items) {

@@ -47,6 +47,12 @@
 
     <dependencies>
         <dependency>
+            <groupId>dev.jorel</groupId>
+            <artifactId>commandapi-shade</artifactId>
+            <version>8.5.1</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
             <groupId>net.wesjd</groupId>
             <artifactId>anvilgui</artifactId>
             <version>1.5.3-SNAPSHOT</version>
@@ -118,7 +124,11 @@
                             <relocations>
                                 <relocation>
                                     <pattern>net.wesjd.anvilgui</pattern>
-                                    <shadedPattern>it.davide.stands.anvilgui</shadedPattern>
+                                    <shadedPattern>it.escanortargaryen.roadsideshop.anvilgui</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>dev.jorel.commandapi</pattern>
+                                    <shadedPattern>it.escanortargaryen.roadsideshop.commandapi</shadedPattern>
                                 </relocation>
                             </relocations>
                             <minimizeJar>false</minimizeJar>

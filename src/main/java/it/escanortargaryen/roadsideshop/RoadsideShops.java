@@ -1,6 +1,10 @@
 package it.escanortargaryen.roadsideshop;
 
 import com.fren_gor.invManagementPlugin.api.SafeInventoryActions;
+import dev.jorel.commandapi.CommandAPI;
+import dev.jorel.commandapi.CommandAPICommand;
+import dev.jorel.commandapi.CommandAPIConfig;
+import it.escanortargaryen.roadsideshop.classes.Shop;
 import it.escanortargaryen.roadsideshop.events.PlayerBuyStandEvent;
 import it.escanortargaryen.roadsideshop.saving.ConfigManager;
 import it.escanortargaryen.roadsideshop.saving.SavingUtil;
@@ -9,8 +13,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -25,14 +27,14 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 
-public class StandManager extends JavaPlugin implements Listener {
+public class RoadsideShops extends JavaPlugin implements Listener {
 
-    private final HashMap<String, Shop> stands = new HashMap<>();
+    private static final HashMap<String, Shop> cachedShops = new HashMap<>();
 
     private SavingUtil<Shop> savesStand;
 
@@ -42,7 +44,7 @@ public class StandManager extends JavaPlugin implements Listener {
     public static ItemStack not;
     public static ItemStack log;
 
-    private static StandManager instance;
+    private static RoadsideShops instance;
 
     private static Economy econ = null;
 
@@ -54,6 +56,13 @@ public class StandManager extends JavaPlugin implements Listener {
 
     @Override
     public void onLoad() {
+        CommandAPI.onLoad(new CommandAPIConfig().verboseOutput(true)); //Load with verbose output
+
+        new CommandAPICommand("ping")
+                .executes((sender, args) -> {
+                    sender.sendMessage("pong!");
+                })
+                .register();
         saveResource("config.yml", false);
 
     }
@@ -109,7 +118,7 @@ public class StandManager extends JavaPlugin implements Listener {
 
     public void saveAllStand() {
 
-        for (Shop j : stands.values())
+        for (Shop j : cachedShops.values())
 
             savesStand.save(j);
 
@@ -132,7 +141,13 @@ public class StandManager extends JavaPlugin implements Listener {
 
     @Override
     public void onEnable() {
-
+        if (!setupEconomy()) {
+            getServer().getLogger().info("Disabled due to no Vault economy found!");
+            getServer().getPluginManager().disablePlugin(this);
+            return;
+        }
+        CommandAPI.onEnable(this);
+        new Commands();
         Bukkit.getPluginManager().registerEvents(this, this);
         instance = this;
 
@@ -157,12 +172,6 @@ public class StandManager extends JavaPlugin implements Listener {
 
         h.setLore(ino);
         unlockedslot.setItemMeta(h);
-
-        if (!setupEconomy()) {
-            getServer().getLogger().info("Disabled due to no Vault economy found!");
-            getServer().getPluginManager().disablePlugin(this);
-            return;
-        }
 
         savesStand = new SavingUtil<>(this, s -> s.getPlayerUUID().toString(), ".stand");
         registerAllStand();
@@ -208,11 +217,11 @@ public class StandManager extends JavaPlugin implements Listener {
         saveAllStand();
     }
 
-    public boolean containsPlayer(String name) {
+    public static boolean hasShop(Player player) {
 
-        for (Shop s : stands.values()) {
+        for (Shop s : cachedShops.values()) {
 
-            if (s.getPlayerName().equals(name))
+            if (s.getPlayerUUID().equals(player.getUniqueId()))
 
                 return true;
 
@@ -223,19 +232,13 @@ public class StandManager extends JavaPlugin implements Listener {
 
     public Shop getStand(String playerName) {
 
-        for (Shop s : stands.values()) {
-
-            if (s.getPlayerName().equals(playerName))
-                return s;
-
-        }
-        return null;
+        return getStand(Bukkit.getPlayer(playerName));
 
     }
 
     public Shop getStand(InventoryHolder f) {
 
-        for (Shop s : stands.values()) {
+        for (Shop s : cachedShops.values()) {
 
             if (s.getHolder().equals(f))
                 return s;
@@ -245,9 +248,14 @@ public class StandManager extends JavaPlugin implements Listener {
 
     }
 
-    public Shop getStand(Player p) {
+    public static Shop getStand(Player p) {
 
-        return stands.get(p.getUniqueId().toString());
+        return getStand((OfflinePlayer) p);
+    }
+
+    public static Shop getStand(OfflinePlayer p) {
+
+        return cachedShops.get(p.getUniqueId().toString());
     }
 
     @EventHandler
@@ -412,7 +420,7 @@ public class StandManager extends JavaPlugin implements Listener {
 
                         } else {
                             e.setCancelled(true);
-                            e.getWhoClicked().sendMessage(ChatColor.RED + "You haven't enought money");
+                            e.getWhoClicked().sendMessage(ChatColor.RED + "You haven't enough money");
                         }
 
                     }
@@ -432,68 +440,17 @@ public class StandManager extends JavaPlugin implements Listener {
 
     }
 
-    @Override
-    public boolean onCommand(@NotNull CommandSender sender, Command command, @NotNull String label, String[] args) {
-
-        if (command.getName().equalsIgnoreCase("stand")) {
-
-            if (!(sender instanceof Player)) {
-                sender.sendMessage(ChatColor.RED + "Devi essere un player!");
-                return false;
-            }
-            Player p = (Player) sender;
-
-            if (args.length == 0) {
-
-                if (!stands.containsKey(p.getUniqueId().toString())) {
-
-                    stands.put(p.getUniqueId().toString(), new Shop(p.getUniqueId(), p.getName()));
-
-                }
-                getStand(p).openInventory(p, "seller");
-
-            } else if (args.length == 1) {
-
-                if (!containsPlayer(args[0])) {
-
-                    p.sendMessage(ChatColor.RED + "The player doesn' t have a stand");
-
-                } else {
-
-                    if (p.getName().equals(args[0])) {
-
-                        getStand(args[0]).openInventory(p, "seller");
-
-                    } else
-
-                        getStand(args[0]).openInventory(p, "buyer");
-
-                }
-
-            } else
-                p.sendMessage(ChatColor.RED + "Usage: /stand <playername>");
-
-        }
-
-        if (command.getName().equalsIgnoreCase("newspaper")) {
-
-            if (!(sender instanceof Player)) {
-                sender.sendMessage(ChatColor.RED + "Devi essere un player!");
-                return false;
-            }
-            Player p = (Player) sender;
-
-            new Newspaper(stands.values(), p);
-            return true;
-
-        }
-
-        return false;
-
-    }
-
-    public static StandManager getInstance() {
+    public static RoadsideShops getInstance() {
         return instance;
     }
 
+    public static Collection<Shop> getCachedShops() {
+        return cachedShops.values();
+    }
+
+    public static void createShop(Player player, Shop shop) {
+
+        cachedShops.put(player.getUniqueId().toString(), shop);
+
+    }
 }

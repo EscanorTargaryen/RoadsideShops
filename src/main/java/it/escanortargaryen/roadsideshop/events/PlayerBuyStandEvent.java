@@ -1,7 +1,7 @@
 package it.escanortargaryen.roadsideshop.events;
 
 import it.escanortargaryen.roadsideshop.SellingItem;
-import it.escanortargaryen.roadsideshop.Shop;
+import it.escanortargaryen.roadsideshop.classes.Shop;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
