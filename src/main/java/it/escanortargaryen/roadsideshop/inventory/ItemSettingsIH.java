@@ -168,7 +168,7 @@ public class ItemSettingsIH implements InventoryHolder, Listener {
 
                 Player p = ((Player) e.getWhoClicked());
                 p.closeInventory();
-                Bukkit.dispatchCommand(p, "stand");
+                Bukkit.dispatchCommand(p, "roadsideshop");
                 exit = true;
 
                 p.sendMessage(ChatColor.translateAlternateColorCodes('&',
@@ -208,7 +208,7 @@ public class ItemSettingsIH implements InventoryHolder, Listener {
                     @Override
                     public void run() {
 
-                        Bukkit.dispatchCommand(e.getPlayer(), "stand");
+                        Bukkit.dispatchCommand(e.getPlayer(), "roadsideshop");
                     }
                 }.runTask(RoadsideShops.getInstance());
 

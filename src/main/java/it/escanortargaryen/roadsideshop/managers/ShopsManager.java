@@ -23,7 +23,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.Objects;
 
-class ShopsManager implements Listener {
+public class ShopsManager implements Listener {
 
     public ShopsManager() {
         Bukkit.getPluginManager().registerEvents(this, RoadsideShops.getInstance());

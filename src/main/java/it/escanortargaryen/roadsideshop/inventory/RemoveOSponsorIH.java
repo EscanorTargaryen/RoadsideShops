@@ -95,7 +95,7 @@ public class RemoveOSponsorIH implements InventoryHolder, Listener {
 
                 @Override
                 public void run() {
-                    Bukkit.dispatchCommand(e.getWhoClicked(), "stand");
+                    Bukkit.dispatchCommand(e.getWhoClicked(), "roadsideshop");
 
                 }
             }.runTask(RoadsideShops.getInstance());
@@ -117,7 +117,7 @@ public class RemoveOSponsorIH implements InventoryHolder, Listener {
                     shop.getItems().remove(sellingItem);
 
                     e.getWhoClicked().closeInventory();
-                    if (shop.getSponsor().equals(sellingItem)) {
+                    if (shop.getSponsor()!=null&& shop.getSponsor().equals(sellingItem)) {
                         shop.setSponsor(null);
 
                     }
@@ -133,7 +133,7 @@ public class RemoveOSponsorIH implements InventoryHolder, Listener {
 
                         @Override
                         public void run() {
-                            Bukkit.dispatchCommand(e.getWhoClicked(), "stand");
+                            Bukkit.dispatchCommand(e.getWhoClicked(), "roadsideshop");
 
                         }
                     }.runTask(RoadsideShops.getInstance());

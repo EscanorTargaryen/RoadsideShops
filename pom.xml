@@ -75,7 +75,7 @@
             <groupId>com.frengor</groupId>
             <artifactId>inventorymanagementplugin</artifactId>
             <version>1.0-SNAPSHOT</version>
-            <scope>provided</scope>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.spigotmc</groupId>
@@ -129,6 +129,10 @@
                                 <relocation>
                                     <pattern>dev.jorel.commandapi</pattern>
                                     <shadedPattern>it.escanortargaryen.roadsideshop.commandapi</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>com.fren_gor</pattern>
+                                    <shadedPattern>it.escanortargaryen.roadsideshop.inventorymanagementplugin</shadedPattern>
                                 </relocation>
                             </relocations>
                             <minimizeJar>false</minimizeJar>

@@ -6,6 +6,7 @@ import dev.jorel.commandapi.CommandAPIConfig;
 import it.escanortargaryen.roadsideshop.classes.Shop;
 import it.escanortargaryen.roadsideshop.managers.Commands;
 import it.escanortargaryen.roadsideshop.managers.ConfigManager;
+import it.escanortargaryen.roadsideshop.managers.ShopsManager;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -109,6 +110,7 @@ public class RoadsideShops extends JavaPlugin implements Listener {
         }
         CommandAPI.onEnable(this);
         new Commands();
+
         Bukkit.getPluginManager().registerEvents(this, this);
         instance = this;
 
@@ -164,7 +166,7 @@ public class RoadsideShops extends JavaPlugin implements Listener {
                 + "§a	 |_____/  \\__|\\__,_||_| |_| \\__,_| §6\\_____|\\___/ |_|   \\___|    \n";
 
         Bukkit.getConsoleSender().sendMessage(s);
-
+        new ShopsManager();
     }
 
     public static boolean hasShop(Player player) {
