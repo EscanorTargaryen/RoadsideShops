@@ -22,7 +22,6 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Objects;
@@ -73,7 +72,7 @@ public class RoadsideShops extends JavaPlugin implements Listener {
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {
         Player p = e.getPlayer();
-        Shop d = getStand(p);
+        Shop d = getShop(p);
 
         if (d != null) {
 
@@ -156,12 +155,12 @@ public class RoadsideShops extends JavaPlugin implements Listener {
 
     }
 
-    public static Shop getStand(Player p) {
+    public static Shop getShop(Player p) {
 
-        return getStand((OfflinePlayer) p);
+        return getShop((OfflinePlayer) p);
     }
 
-    public static Shop getStand(OfflinePlayer p) {
+    public static Shop getShop(OfflinePlayer p) {
 
         return cachedShops.get(p.getUniqueId().toString());
     }

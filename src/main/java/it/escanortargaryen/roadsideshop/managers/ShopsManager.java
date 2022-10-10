@@ -6,7 +6,7 @@ import it.escanortargaryen.roadsideshop.inventory.RemoveOSponsorIH;
 import it.escanortargaryen.roadsideshop.RoadsideShops;
 import it.escanortargaryen.roadsideshop.classes.SellingItem;
 import it.escanortargaryen.roadsideshop.classes.Shop;
-import it.escanortargaryen.roadsideshop.events.PlayerBuyStandEvent;
+import it.escanortargaryen.roadsideshop.events.PlayerBuyShopEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -30,7 +30,7 @@ public class ShopsManager implements Listener {
 
     }
 
-    public Shop getStand(InventoryHolder f) {
+    public Shop getShop(InventoryHolder f) {
 
         for (Shop s : RoadsideShops.getCachedShops()) {
 
@@ -46,7 +46,7 @@ public class ShopsManager implements Listener {
     private void onClick(InventoryClickEvent e) {
 
         e.getView().getTopInventory();
-        if (getStand(e.getView().getTopInventory().getHolder()) == null)
+        if (getShop(e.getView().getTopInventory().getHolder()) == null)
 
             return;
 
@@ -59,7 +59,7 @@ public class ShopsManager implements Listener {
                 || e.getCurrentItem().getType() == Material.AIR)
             return;
 
-        Shop shop = getStand(e.getView().getTopInventory().getHolder());
+        Shop shop = getShop(e.getView().getTopInventory().getHolder());
 
         if (e.getWhoClicked().getUniqueId().equals(shop.getPlayerUUID())) {
 
@@ -119,7 +119,7 @@ public class ShopsManager implements Listener {
 
                         if (RoadsideShops.getEconomy().has((OfflinePlayer) e.getWhoClicked(), c.getPrice())) {
 
-                            PlayerBuyStandEvent ev = new PlayerBuyStandEvent(shop, c, (Player) e.getWhoClicked());
+                            PlayerBuyShopEvent ev = new PlayerBuyShopEvent(shop, c, (Player) e.getWhoClicked());
 
                             Bukkit.getPluginManager().callEvent(ev);
 

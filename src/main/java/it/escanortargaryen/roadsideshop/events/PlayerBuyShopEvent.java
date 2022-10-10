@@ -8,7 +8,7 @@ import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;
 
-public class PlayerBuyStandEvent extends Event implements Cancellable {
+public class PlayerBuyShopEvent extends Event implements Cancellable {
 
     private final Shop shop;
 
@@ -16,7 +16,7 @@ public class PlayerBuyStandEvent extends Event implements Cancellable {
 
     private final Player buyer;
 
-    public PlayerBuyStandEvent(Shop shop2, SellingItem c, Player whoClicked) {
+    public PlayerBuyShopEvent(Shop shop2, SellingItem c, Player whoClicked) {
 
         shop = shop2;
         item = c;
@@ -48,7 +48,7 @@ public class PlayerBuyStandEvent extends Event implements Cancellable {
         cancelled = b;
     }
 
-    public Shop getStand() {
+    public Shop getShop() {
         return shop;
     }
 

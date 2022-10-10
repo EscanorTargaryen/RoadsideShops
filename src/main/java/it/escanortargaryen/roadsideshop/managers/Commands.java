@@ -23,7 +23,7 @@ public class Commands {
                 RoadsideShops.createShop(p, new Shop(p.getUniqueId(), p.getName()));
 
             }
-            RoadsideShops.getStand(p).openInventory(p, "seller");
+            RoadsideShops.getShop(p).openInventory(p, "seller");
 
         }).register();
 
@@ -33,17 +33,17 @@ public class Commands {
 
             if (!RoadsideShops.hasShop(p)) {
 
-                p.sendMessage(ChatColor.RED + "The player does' t have a stand");
+                p.sendMessage(ChatColor.RED + "The player does' t have a shop");
 
             } else {
 
                 if (p.getName().equals(shopOwner)) {
 
-                    RoadsideShops.getStand(shopOwner).openInventory(p, "seller");
+                    RoadsideShops.getShop(shopOwner).openInventory(p, "seller");
 
                 } else
 
-                    RoadsideShops.getStand(shopOwner).openInventory(p, "buyer");
+                    RoadsideShops.getShop(shopOwner).openInventory(p, "buyer");
 
             }
 

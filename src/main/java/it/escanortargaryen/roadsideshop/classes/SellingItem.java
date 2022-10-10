@@ -108,7 +108,7 @@ public class SellingItem implements Cloneable {
         ar.remove(ar.size() - 1);
         ar.add(ChatColor.YELLOW + "Owner: " + ChatColor.GRAY + nome);
         ar.add("");
-        ar.add(ChatColor.GOLD + "Click to checkout " + nome + "'s stand");
+        ar.add(ChatColor.GOLD + "Click to checkout " + nome + "'s shop");
         ms.setLore(ar);
         forNewspaper.setItemMeta(ms);
 

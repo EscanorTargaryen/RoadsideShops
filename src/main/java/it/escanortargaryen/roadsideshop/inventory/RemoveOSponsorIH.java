@@ -139,7 +139,7 @@ public class RemoveOSponsorIH implements InventoryHolder, Listener {
                 case NOT_ENOUGH_SPACE:
                 case NOT_MODIFIED: {
 
-                    p.sendMessage(ChatColor.RED + "You can't remove item from the stand: inventory full");
+                    p.sendMessage(ChatColor.RED + "You can't remove item from the shop: inventory full");
 
                     break;
                 }

@@ -44,7 +44,7 @@ public class Shop implements Cloneable, InventoryHolder {
 
     public boolean canSponsor(long time) {
         Player pl = Bukkit.getPlayer(p);
-        if (pl != null && pl.hasPermission("stand.bypass.sponsortime")) {
+        if (pl != null && pl.hasPermission("shop.bypass.sponsortime")) {
 
             return true;
         }
@@ -146,7 +146,7 @@ public class Shop implements Cloneable, InventoryHolder {
     @Override
     public @NotNull Inventory getInventory() {
 
-        invSeller = Bukkit.createInventory(this, 18, ChatColor.DARK_BLUE + playerName + "'s stand");
+        invSeller = Bukkit.createInventory(this, 18, ChatColor.DARK_BLUE + playerName + "'s shop");
 
         ItemStack here = RoadsideShops.unlockedslot;
 

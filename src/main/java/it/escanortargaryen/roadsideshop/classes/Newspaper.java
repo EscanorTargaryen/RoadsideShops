@@ -356,81 +356,81 @@ public class Newspaper implements Listener, InventoryHolder {
 
                 if (pagina == 1)
                     Bukkit.dispatchCommand(e.getWhoClicked(),
-                            "stand " + Bukkit.getOfflinePlayer(list.get(0).getP()).getName());
+                            "roadsideshop " + Bukkit.getOfflinePlayer(list.get(0).getP()).getName());
 
                 if (pagina == 2)
                     Bukkit.dispatchCommand(e.getWhoClicked(),
-                            "stand " + Bukkit.getOfflinePlayer(list.get(6).getP()).getName());
+                            "roadsideshop " + Bukkit.getOfflinePlayer(list.get(6).getP()).getName());
                 if (pagina == 3)
                     Bukkit.dispatchCommand(e.getWhoClicked(),
-                            "stand " + Bukkit.getOfflinePlayer(list.get(12).getP()).getName());
+                            "roadsideshop " + Bukkit.getOfflinePlayer(list.get(12).getP()).getName());
 
             }
             if (e.getSlot() == 20) {
 
                 if (pagina == 1)
                     Bukkit.dispatchCommand(e.getWhoClicked(),
-                            "stand " + Bukkit.getOfflinePlayer(list.get(1).getP()).getName());
+                            "roadsideshop " + Bukkit.getOfflinePlayer(list.get(1).getP()).getName());
 
                 if (pagina == 2)
                     Bukkit.dispatchCommand(e.getWhoClicked(),
-                            "stand " + Bukkit.getOfflinePlayer(list.get(7).getP()).getName());
+                            "roadsideshop " + Bukkit.getOfflinePlayer(list.get(7).getP()).getName());
                 if (pagina == 3)
                     Bukkit.dispatchCommand(e.getWhoClicked(),
-                            "stand " + Bukkit.getOfflinePlayer(list.get(13).getP()).getName());
+                            "roadsideshop " + Bukkit.getOfflinePlayer(list.get(13).getP()).getName());
 
             }
             if (e.getSlot() == 29) {
                 if (pagina == 1)
                     Bukkit.dispatchCommand(e.getWhoClicked(),
-                            "stand " + Bukkit.getOfflinePlayer(list.get(2).getP()).getName());
+                            "roadsideshop " + Bukkit.getOfflinePlayer(list.get(2).getP()).getName());
 
                 if (pagina == 2)
                     Bukkit.dispatchCommand(e.getWhoClicked(),
-                            "stand " + Bukkit.getOfflinePlayer(list.get(8).getP()).getName());
+                            "roadsideshop " + Bukkit.getOfflinePlayer(list.get(8).getP()).getName());
                 if (pagina == 3)
                     Bukkit.dispatchCommand(e.getWhoClicked(),
-                            "stand " + Bukkit.getOfflinePlayer(list.get(14).getP()).getName());
+                            "roadsideshop " + Bukkit.getOfflinePlayer(list.get(14).getP()).getName());
 
             }
             if (e.getSlot() == 15) {
                 if (pagina == 1)
                     Bukkit.dispatchCommand(e.getWhoClicked(),
-                            "stand " + Bukkit.getOfflinePlayer(list.get(3).getP()).getName());
+                            "roadsideshop " + Bukkit.getOfflinePlayer(list.get(3).getP()).getName());
 
                 if (pagina == 2)
                     Bukkit.dispatchCommand(e.getWhoClicked(),
-                            "stand " + Bukkit.getOfflinePlayer(list.get(9).getP()).getName());
+                            "roadsideshop " + Bukkit.getOfflinePlayer(list.get(9).getP()).getName());
                 if (pagina == 3)
                     Bukkit.dispatchCommand(e.getWhoClicked(),
-                            "stand " + Bukkit.getOfflinePlayer(list.get(15).getP()).getName());
+                            "roadsideshop " + Bukkit.getOfflinePlayer(list.get(15).getP()).getName());
 
             }
             if (e.getSlot() == 24) {
                 if (pagina == 1)
                     Bukkit.dispatchCommand(e.getWhoClicked(),
-                            "stand " + Bukkit.getOfflinePlayer(list.get(4).getP()).getName());
+                            "roadsideshop " + Bukkit.getOfflinePlayer(list.get(4).getP()).getName());
 
                 if (pagina == 2)
                     Bukkit.dispatchCommand(e.getWhoClicked(),
-                            "stand " + Bukkit.getOfflinePlayer(list.get(10).getP()).getName());
+                            "roadsideshop " + Bukkit.getOfflinePlayer(list.get(10).getP()).getName());
                 if (pagina == 3)
                     Bukkit.dispatchCommand(e.getWhoClicked(),
-                            "stand " + Bukkit.getOfflinePlayer(list.get(16).getP()).getName());
+                            "roadsideshop " + Bukkit.getOfflinePlayer(list.get(16).getP()).getName());
 
             }
             if (e.getSlot() == 33) {
 
                 if (pagina == 1)
                     Bukkit.dispatchCommand(e.getWhoClicked(),
-                            "stand " + Bukkit.getOfflinePlayer(list.get(5).getP()).getName());
+                            "roadsideshop " + Bukkit.getOfflinePlayer(list.get(5).getP()).getName());
 
                 if (pagina == 2)
                     Bukkit.dispatchCommand(e.getWhoClicked(),
-                            "stand " + Bukkit.getOfflinePlayer(list.get(11).getP()).getName());
+                            "roadsideshop " + Bukkit.getOfflinePlayer(list.get(11).getP()).getName());
                 if (pagina == 3)
                     Bukkit.dispatchCommand(e.getWhoClicked(),
-                            "stand " + Bukkit.getOfflinePlayer(list.get(17).getP()).getName());
+                            "roadsideshop " + Bukkit.getOfflinePlayer(list.get(17).getP()).getName());
 
             }
 
