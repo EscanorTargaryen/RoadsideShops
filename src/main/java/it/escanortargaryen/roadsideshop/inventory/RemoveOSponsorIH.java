@@ -34,7 +34,7 @@ public class RemoveOSponsorIH implements InventoryHolder, Listener {
 
     public RemoveOSponsorIH(Shop shop, SellingItem sellingItem, Player p) {
 
-        Bukkit.getPluginManager().registerEvents(this, RoadsideShops.getInstance());
+        Bukkit.getPluginManager().registerEvents(this, RoadsideShops.INSTANCE);
 
         this.shop = shop;
         this.sellingItem = sellingItem;
@@ -98,7 +98,7 @@ public class RemoveOSponsorIH implements InventoryHolder, Listener {
                     Bukkit.dispatchCommand(e.getWhoClicked(), "roadsideshop");
 
                 }
-            }.runTask(RoadsideShops.getInstance());
+            }.runTask(RoadsideShops.INSTANCE);
 
         }
 
@@ -136,7 +136,7 @@ public class RemoveOSponsorIH implements InventoryHolder, Listener {
                             Bukkit.dispatchCommand(e.getWhoClicked(), "roadsideshop");
 
                         }
-                    }.runTask(RoadsideShops.getInstance());
+                    }.runTask(RoadsideShops.INSTANCE);
                     break;
                 }
 

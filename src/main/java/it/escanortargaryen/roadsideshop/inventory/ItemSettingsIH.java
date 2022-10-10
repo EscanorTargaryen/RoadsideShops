@@ -34,7 +34,7 @@ public class ItemSettingsIH implements InventoryHolder, Listener {
     private double price = 0.0;
 
     public ItemSettingsIH(Shop shop, ItemStack itemToSell, Player p, int slotNumber) {
-        Bukkit.getPluginManager().registerEvents(this, RoadsideShops.getInstance());
+        Bukkit.getPluginManager().registerEvents(this, RoadsideShops.INSTANCE);
 
         this.shop = shop;
         this.slotNumber = slotNumber;
@@ -138,7 +138,7 @@ public class ItemSettingsIH implements InventoryHolder, Listener {
                     .itemLeft(new ItemStack(Material.GOLD_BLOCK)) // use a custom item for the first slot
 
                     .title("Enter the price here") // set the title of the GUI (only works in 1.14+)
-                    .plugin(RoadsideShops.getInstance()) // set the plugin instance
+                    .plugin(RoadsideShops.INSTANCE) // set the plugin instance
                     .open((Player) e.getWhoClicked());
 
         }
@@ -210,7 +210,7 @@ public class ItemSettingsIH implements InventoryHolder, Listener {
 
                         Bukkit.dispatchCommand(e.getPlayer(), "roadsideshop");
                     }
-                }.runTask(RoadsideShops.getInstance());
+                }.runTask(RoadsideShops.INSTANCE);
 
             }
             if (exit) {

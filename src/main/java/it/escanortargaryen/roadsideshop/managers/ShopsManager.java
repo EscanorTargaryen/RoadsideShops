@@ -26,7 +26,7 @@ import java.util.Objects;
 public class ShopsManager implements Listener {
 
     public ShopsManager() {
-        Bukkit.getPluginManager().registerEvents(this, RoadsideShops.getInstance());
+        Bukkit.getPluginManager().registerEvents(this, RoadsideShops.INSTANCE);
 
     }
 
@@ -97,7 +97,7 @@ public class ShopsManager implements Listener {
                         new ItemSettingsIH(shop, i, (Player) e.getWhoClicked(), e.getSlot());
 
                     }
-                }.runTaskLater(RoadsideShops.getInstance(), 2);
+                }.runTaskLater(RoadsideShops.INSTANCE, 2);
 
             } else {
 
@@ -186,7 +186,7 @@ public class ShopsManager implements Listener {
                                                 shop.getInvBuyer().setItem(c.getSlot(), new ItemStack(Material.AIR));
 
                                             }
-                                        }.runTaskLater(RoadsideShops.getInstance(), 2);
+                                        }.runTaskLater(RoadsideShops.INSTANCE, 2);
                                         break;
                                     }
 

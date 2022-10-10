@@ -2,8 +2,6 @@ package it.escanortargaryen.roadsideshop.classes;
 
 import de.erethon.headlib.HeadLib;
 import it.escanortargaryen.roadsideshop.RoadsideShops;
-import it.escanortargaryen.roadsideshop.classes.SellingItem;
-import it.escanortargaryen.roadsideshop.classes.Shop;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -39,7 +37,7 @@ public class Newspaper implements Listener, InventoryHolder {
     private final ItemStack glass;
 
     public Newspaper(Collection<Shop> collection, Player p) {
-        Bukkit.getPluginManager().registerEvents(this, RoadsideShops.getInstance());
+        Bukkit.getPluginManager().registerEvents(this, RoadsideShops.INSTANCE);
 
         glass = new ItemStack(Material.GRAY_STAINED_GLASS_PANE);
         ItemMeta m = glass.getItemMeta();
@@ -296,7 +294,7 @@ public class Newspaper implements Listener, InventoryHolder {
 
                         }
                     }
-                }.runTaskTimer(RoadsideShops.getInstance(), 0, 5);
+                }.runTaskTimer(RoadsideShops.INSTANCE, 0, 5);
 
             }
 
@@ -346,7 +344,7 @@ public class Newspaper implements Listener, InventoryHolder {
 
                         }
                     }
-                }.runTaskTimer(RoadsideShops.getInstance(), 0, 5);
+                }.runTaskTimer(RoadsideShops.INSTANCE, 0, 5);
 
             }
 

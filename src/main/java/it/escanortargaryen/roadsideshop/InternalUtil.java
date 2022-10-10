@@ -12,11 +12,12 @@ import java.util.Objects;
 
 /*
 
-//TODO capire se serve il metodo calculate slots
-//TODO metodo per sistemare i prezzi?
-//TODO ci sono deprecate?
-TODO cambia la scritta all'avvio sta scritto ancora standscore
+TODO capire se serve il metodo calculate slots
+TODO metodo per sistemare i prezzi?
 TODO sistema il config, fai in modo che ci siano i metodi che danno già le strighe sistemate
+TODO fare in modo che si apre l'inventario degli stand quando si chide uno di settings
+TODO fare in modo che si possa annullare l'inserimento del prezzo
+/TODO metti il tempo in secondi
 TODO cose da sistemare in una classe:
 
         typo
@@ -43,7 +44,7 @@ public class InternalUtil {
                     + " minutes to sponsor another item.");
             ene.add("");
             ene.add(ChatColor.GRAY + "Sponsoring an item shows it on the newspaper.");
-            ene.add(ChatColor.GRAY + "You can sponsor an item every " + (Shop.timesponsor / 60000) + " minutes.");
+            ene.add(ChatColor.GRAY + "You can sponsor an item every " + (Shop.SPONSOR_TIME / 60000) + " minutes.");
             m.setLore(ene);
             sponsor.setItemMeta(m);
         } else if (shop.canSponsor(System.currentTimeMillis())) {
@@ -55,9 +56,9 @@ public class InternalUtil {
                 Objects.requireNonNull(m).setDisplayName(RoadsideShops.CONFIGMANAGER.getSponsorButtonTitle());
 
                 if (shop.getSponsor() != null) {
-                    m.setLore(RoadsideShops.CONFIGMANAGER.getSponsoringChange((Shop.timesponsor / 60000)));
+                    m.setLore(RoadsideShops.CONFIGMANAGER.getSponsoringChange((Shop.SPONSOR_TIME / 60000)));
                 } else {
-                    m.setLore(RoadsideShops.CONFIGMANAGER.getSponsoring((Shop.timesponsor / 60000)));
+                    m.setLore(RoadsideShops.CONFIGMANAGER.getSponsoring((Shop.SPONSOR_TIME / 60000)));
 
                 }
                 sponsor.setItemMeta(m);
@@ -69,9 +70,9 @@ public class InternalUtil {
                 Objects.requireNonNull(m).setDisplayName(RoadsideShops.CONFIGMANAGER.getSponsorButtonTitle());
 
                 if (shop.getSponsor() != null) {
-                    m.setLore(RoadsideShops.CONFIGMANAGER.getNotSponsoringChange((Shop.timesponsor / 60000)));
+                    m.setLore(RoadsideShops.CONFIGMANAGER.getNotSponsoringChange((Shop.SPONSOR_TIME / 60000)));
                 } else {
-                    m.setLore(RoadsideShops.CONFIGMANAGER.getNotSponsoring((Shop.timesponsor / 60000)));
+                    m.setLore(RoadsideShops.CONFIGMANAGER.getNotSponsoring((Shop.SPONSOR_TIME / 60000)));
 
                 }
                 sponsor.setItemMeta(m);
@@ -83,7 +84,7 @@ public class InternalUtil {
             ItemMeta m = sponsor.getItemMeta();
             Objects.requireNonNull(m).setDisplayName(RoadsideShops.CONFIGMANAGER.getSponsorButtonTitle());
 
-            m.setLore(RoadsideShops.CONFIGMANAGER.getWaitToSponsor((Shop.timesponsor / 60000), shop.getMissTimeinMins(System.currentTimeMillis())));
+            m.setLore(RoadsideShops.CONFIGMANAGER.getWaitToSponsor((Shop.SPONSOR_TIME / 60000), shop.getMissTimeinMins(System.currentTimeMillis())));
 
             sponsor.setItemMeta(m);
 

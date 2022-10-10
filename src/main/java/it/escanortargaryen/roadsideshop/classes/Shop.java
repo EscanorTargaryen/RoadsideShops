@@ -39,7 +39,7 @@ public class Shop implements Cloneable, InventoryHolder {
     private final ArrayList<String> offMessages = new ArrayList<>();
 
     private final InventoryHolder holder = this;
-    static public long timesponsor;
+    static public long SPONSOR_TIME;
     private long lastsponsor = 0L;
 
     static {
@@ -48,10 +48,10 @@ public class Shop implements Cloneable, InventoryHolder {
 
             @Override
             public void run() {
-                Shop.timesponsor = RoadsideShops.CONFIGMANAGER.getSponsorTimeMills();
+                Shop.SPONSOR_TIME = RoadsideShops.CONFIGMANAGER.getSponsorTimeMills();
 
             }
-        }.runTaskLater(RoadsideShops.getInstance(), 40);
+        }.runTaskLater(RoadsideShops.INSTANCE, 40);
     }
 
     public boolean canSponsor(long time) {
@@ -61,12 +61,12 @@ public class Shop implements Cloneable, InventoryHolder {
             return true;
         }
 
-        return (time - lastsponsor) > timesponsor;
+        return (time - lastsponsor) > SPONSOR_TIME;
 
     }
 
     public long getMissTimeinMins(long time) {
-        long i = (timesponsor - (time - lastsponsor)) / 60000;
+        long i = (SPONSOR_TIME - (time - lastsponsor)) / 60000;
         if (i < 0) {
 
             return 0;

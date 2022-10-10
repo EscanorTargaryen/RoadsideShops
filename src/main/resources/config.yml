@@ -1,3 +1,14 @@
+# Roadside Shop config
+# For help see the official wiki
+
+#Plugin settings:
+
+
+
+
+#Messages:
+
+#
 price-message: 'Price: <value> CC'
 unlocked-slot-panel-title: 'Stand Slot'
 unlocked-slot-lore:

@@ -37,7 +37,7 @@ public class RoadsideShops extends JavaPlugin implements Listener {
     public static ItemStack not;
     public static ItemStack log;
 
-    private static RoadsideShops instance;
+    public static RoadsideShops INSTANCE;
 
     private static Economy econ = null;
 
@@ -112,7 +112,7 @@ public class RoadsideShops extends JavaPlugin implements Listener {
         new Commands();
 
         Bukkit.getPluginManager().registerEvents(this, this);
-        instance = this;
+        INSTANCE = this;
 
         CONFIGMANAGER = new ConfigManager(this);
 
@@ -184,10 +184,6 @@ public class RoadsideShops extends JavaPlugin implements Listener {
     public static Shop getStand(OfflinePlayer p) {
 
         return cachedShops.get(p.getUniqueId().toString());
-    }
-
-    public static RoadsideShops getInstance() {
-        return instance;
     }
 
     public static Collection<Shop> getCachedShops() {
