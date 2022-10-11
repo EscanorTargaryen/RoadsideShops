@@ -59,29 +59,29 @@ public class ItemSettingsIH implements InventoryHolder, Listener {
 
             wool = new ItemStack(Material.GREEN_WOOL);
             ItemMeta mw = wool.getItemMeta();
-            Objects.requireNonNull(mw).setDisplayName(ChatColor.YELLOW + "Sell it");
-            mw.setLore(Arrays.asList("", ChatColor.GOLD + "Click to finish up and sell the item"));
+            Objects.requireNonNull(mw).setDisplayName(RoadsideShops.CONFIGMANAGER.getSellButtonTitle());
+            mw.setLore(RoadsideShops.CONFIGMANAGER.getSellButtonLore());
             wool.setItemMeta(mw);
 
             prezzo = new ItemStack(Material.NAME_TAG);
             mw = prezzo.getItemMeta();
-            Objects.requireNonNull(mw).setDisplayName(RoadsideShops.CONFIGMANAGER.getPriceMessage(price));
+            Objects.requireNonNull(mw).setDisplayName(RoadsideShops.CONFIGMANAGER.getPriceButtonTitle());
 
-            mw.setLore(Arrays.asList("", ChatColor.GOLD + "Click to change the price"));
+            mw.setLore(RoadsideShops.CONFIGMANAGER.getPriceButtonLore(price));
             prezzo.setItemMeta(mw);
 
         } else {
 
             wool = new ItemStack(Material.RED_WOOL);
             ItemMeta mw = wool.getItemMeta();
-            Objects.requireNonNull(mw).setDisplayName(ChatColor.YELLOW + "Sell the item");
-            mw.setLore(Arrays.asList("", ChatColor.DARK_RED + "You must set a price before selling it"));
+            Objects.requireNonNull(mw).setDisplayName(RoadsideShops.CONFIGMANAGER.getSellButtonTitleNotSet());
+            mw.setLore(RoadsideShops.CONFIGMANAGER.getSellButtonLoreNotSet());
             wool.setItemMeta(mw);
 
             prezzo = new ItemStack(Material.NAME_TAG);
             mw = prezzo.getItemMeta();
-            Objects.requireNonNull(mw).setDisplayName(ChatColor.YELLOW + "Set a price");
-            mw.setLore(Arrays.asList("", ChatColor.GOLD + "Click to set a price for this item"));
+            Objects.requireNonNull(mw).setDisplayName(RoadsideShops.CONFIGMANAGER.getPriceButtonTitleNotSet());
+            mw.setLore(RoadsideShops.CONFIGMANAGER.getPriceButtonLoreNotSet());
             prezzo.setItemMeta(mw);
 
         }
@@ -169,7 +169,7 @@ public class ItemSettingsIH implements InventoryHolder, Listener {
 
                 if (isSponsoring) {
 
-                    e.getWhoClicked().sendMessage(RoadsideShops.CONFIGMANAGER.getSponsorSet(price,sellingItem.getI().getType().toString(), sellingItem.getI().getAmount() ));
+                    e.getWhoClicked().sendMessage(RoadsideShops.CONFIGMANAGER.getSponsorSet(price, sellingItem.getI().getType().toString(), sellingItem.getI().getAmount()));
 
                     InternalUtil.setSponsorItem(shop, sellingItem);
 

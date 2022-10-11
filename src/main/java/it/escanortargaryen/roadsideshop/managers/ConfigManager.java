@@ -34,9 +34,9 @@ public class ConfigManager {
 
     private List<String> sponsoring, sponsoringChange, notSponsoring, notSponsoringChange, waitToSponsor;
 
-    private String leftarrowTitle, rightarrowTitle, newspaperTitle, shopTitle,itemSettingsTitle;
+    private String leftarrowTitle, rightarrowTitle, newspaperTitle, shopTitle, itemSettingsTitle, sellButtonTitle, priceButtonTitle, sellButtonTitleNotSet, priceButtonTitleNotSet;
 
-    private List<String> leftarrowLore, rightarrowLore, itemSaleSeller, itemSaleBuyer, itemSaleSellerSponsor, itemSaleBuyerSponsor, loreForNewspaper;
+    private List<String> leftarrowLore, rightarrowLore, itemSaleSeller, itemSaleBuyer, itemSaleSellerSponsor, itemSaleBuyerSponsor, loreForNewspaper, sellButtonLore, priceButtonLore, sellButtonLoreNotSet, priceButtonLoreNotSet;
 
     public ConfigManager(Plugin pl) {
 
@@ -209,10 +209,123 @@ public class ConfigManager {
             throw new ConfigurationException("unlocked-slot " + notSet);
         }
         unlockedSlots = config.getInt("unlocked-slot");
-        if(unlockedSlots <0 || unlockedSlots >14){
+        if (unlockedSlots < 0 || unlockedSlots > 14) {
             throw new ConfigurationException("unlocked-slot must be positive and less than 15");
 
         }
+
+        if (!config.isSet("item-settings.sell-button-price-set.title")) {
+            throw new ConfigurationException("item-settings.sell-button-price-set.title " + notSet);
+        }
+        sellButtonTitle = config.getString("item-settings.sell-button-price-set.title");
+
+        if (!config.isSet("item-settings.sell-button-price-set.lore")) {
+            throw new ConfigurationException("item-settings.sell-button-price-set.lore " + notSet);
+        }
+        sellButtonLore = config.getStringList("item-settings.sell-button-price-set.lore");
+
+        if (!config.isSet("item-settings.price-button-set.title")) {
+            throw new ConfigurationException("item-settings.price-button-set-set.title " + notSet);
+        }
+        priceButtonTitle = config.getString("item-settings.price-button-set.title");
+
+        if (!config.isSet("item-settings.price-button-set.lore")) {
+            throw new ConfigurationException("item-settings.price-button-set.lore " + notSet);
+        }
+        priceButtonLore = config.getStringList("item-settings.price-button-set.lore");
+
+        if (!config.isSet("item-settings.sell-button-price-not-set.title")) {
+            throw new ConfigurationException("item-settings.sell-button-price-not-set-set.title " + notSet);
+        }
+        sellButtonTitleNotSet = config.getString("item-settings.sell-button-price-not-set.title");
+
+        if (!config.isSet("item-settings.sell-button-price-not-set.lore")) {
+            throw new ConfigurationException("item-settings.sell-button-price-not-set.lore " + notSet);
+        }
+        sellButtonLoreNotSet = config.getStringList("item-settings.sell-button-price-not-set.lore");
+
+        if (!config.isSet("item-settings.price-button-not-set.title")) {
+            throw new ConfigurationException("item-settings.price-button-not-set-set.title " + notSet);
+        }
+        priceButtonTitleNotSet = config.getString("item-settings.price-button-not-set.title");
+
+        if (!config.isSet("item-settings.price-button-not-set.lore")) {
+            throw new ConfigurationException("item-settings.price-button-not-set.lore " + notSet);
+        }
+        priceButtonLoreNotSet = config.getStringList("item-settings.price-button-not-set.lore");
+
+    }
+
+    public String getSellButtonTitle() {
+
+        return ChatColor.translateAlternateColorCodes('&', sellButtonTitle);
+
+    }
+
+    public List<String> getPriceButtonLore(double price) {
+
+        ArrayList<String> ino = new ArrayList<>();
+
+        for (String s : priceButtonLore) {
+            ino.add(ChatColor.translateAlternateColorCodes('&', s.replace("<price-message>", RoadsideShops.CONFIGMANAGER.getPriceMessage(price))));
+
+        }
+
+        return ino;
+    }
+
+    public List<String> getSellButtonLore() {
+
+        ArrayList<String> ino = new ArrayList<>();
+
+        for (String s : sellButtonLore) {
+            ino.add(ChatColor.translateAlternateColorCodes('&', s));
+
+        }
+
+        return ino;
+    }
+
+    public String getPriceButtonTitleNotSet() {
+
+        return ChatColor.translateAlternateColorCodes('&', priceButtonTitleNotSet);
+
+    }
+
+    public String getSellButtonTitleNotSet() {
+
+        return ChatColor.translateAlternateColorCodes('&', sellButtonTitleNotSet);
+
+    }
+
+    public List<String> getPriceButtonLoreNotSet() {
+
+        ArrayList<String> ino = new ArrayList<>();
+
+        for (String s : priceButtonLoreNotSet) {
+            ino.add(ChatColor.translateAlternateColorCodes('&', s));
+
+        }
+
+        return ino;
+    }
+
+    public String getPriceButtonTitle() {
+
+        return ChatColor.translateAlternateColorCodes('&', priceButtonTitle);
+
+    }
+
+    public List<String> getSellButtonLoreNotSet() {
+
+        ArrayList<String> ino = new ArrayList<>();
+
+        for (String s : sellButtonLoreNotSet) {
+            ino.add(ChatColor.translateAlternateColorCodes('&', s));
+
+        }
+
+        return ino;
     }
 
     public int getUnlockedSlots() {

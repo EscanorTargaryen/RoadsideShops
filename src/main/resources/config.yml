@@ -117,7 +117,7 @@ item-sale-lore:
 
   #In addition to the lore of the item when it is in the newspaper
   #Placeholders:
-  # <price-message> - The price of the item but
+  # <price-message> - Personalized price message
   # <price> - The price of the item
   # <ownerName> - The owner name of the shop
   newspaper:
@@ -134,7 +134,34 @@ item-sale-lore:
 shop-title: "&1<playerName>'s shop"
 
 item-settings:
+  #The title of when you open the sale settings menu of an item
   title: "&1Sale Settings"
+
+  #The characteristics of the button to put the item up for sale when the price is set
+  sell-button-price-set:
+    title: "&eSell it"
+    lore:
+      - "&6Click to finish up and sell the item"
+
+  #The characteristics of the button when the price is set
+  #Placeholders:
+  # <price-message> - Personalized price message
+  price-button-set:
+    title: "<price-message>"
+    lore:
+      - "&6Click to change the price"
+
+  #The characteristics of the button to put the item up for sale when the price is not set
+  sell-button-price-not-set:
+    title: "&eSell the item"
+    lore:
+      - "&4You must set a price before selling it"
+
+  #The characteristics of the button when the price is not set
+  price-button-not-set:
+    title: "&eSet a price"
+    lore:
+      - "&6Click to change the price"
 
 #Change the button that sets whether an items can be sponsored or not
 #Placeholders:
