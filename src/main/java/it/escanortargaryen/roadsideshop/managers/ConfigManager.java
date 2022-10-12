@@ -10,6 +10,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 public class ConfigManager {
 
@@ -28,15 +29,17 @@ public class ConfigManager {
     private String sellerMessage;
     public static long SPONSORTIME;
 
+    public static String SHOPCOMMAND, NEWSPAPERCOMMAND;
+
     private int unlockedSlots;
 
     private String sponsorButtonTitle;
 
     private List<String> sponsoring, sponsoringChange, notSponsoring, notSponsoringChange, waitToSponsor;
 
-    private String whileOffline,leftarrowTitle, rightarrowTitle, newspaperTitle, shopTitle, itemSettingsTitle, sellButtonTitle, priceButtonTitle, sellButtonTitleNotSet, priceButtonTitleNotSet, wrongPrice, anvilTitle, itemModify, backButtonTitle, removeButtonTitle, fullInv, noShop, noMoney;
+    private String whileOffline, leftarrowTitle, rightarrowTitle, newspaperTitle, shopTitle, itemSettingsTitle, sellButtonTitle, priceButtonTitle, sellButtonTitleNotSet, priceButtonTitleNotSet, wrongPrice, anvilTitle, itemModify, backButtonTitle, removeButtonTitle, fullInv, noShop, noMoney;
 
-    private List<String> sponsoredLore,leftarrowLore, rightarrowLore, itemSaleSeller, itemSaleBuyer, itemSaleSellerSponsor, itemSaleBuyerSponsor, loreForNewspaper, sellButtonLore, priceButtonLore, sellButtonLoreNotSet, priceButtonLoreNotSet, backButtonLore, removeButtonLore;
+    private List<String> sponsoredLore, leftarrowLore, rightarrowLore, itemSaleSeller, itemSaleBuyer, itemSaleSellerSponsor, itemSaleBuyerSponsor, loreForNewspaper, sellButtonLore, priceButtonLore, sellButtonLoreNotSet, priceButtonLoreNotSet, backButtonLore, removeButtonLore;
 
     public ConfigManager(Plugin pl) {
 
@@ -53,6 +56,16 @@ public class ConfigManager {
     public void loadAndValidateConfig() throws ConfigurationException {
 
         String notSet = "is not set in config.yml";
+
+        if (!config.isSet("shop-command")) {
+            throw new ConfigurationException("shop-command " + notSet);
+        }
+        SHOPCOMMAND = Objects.requireNonNull(config.getString("shop-command")).replace(" ", "");
+
+        if (!config.isSet("newspaper-command")) {
+            throw new ConfigurationException("newspaper-command " + notSet);
+        }
+        NEWSPAPERCOMMAND = Objects.requireNonNull(config.getString("newspaper-command")).replace(" ", "");
 
         if (!config.isSet("price-message")) {
             throw new ConfigurationException("price-message " + notSet);
@@ -326,7 +339,7 @@ public class ConfigManager {
 
         for (String i : sponsoredLore) {
 
-            ret.add(ChatColor.translateAlternateColorCodes('&', i.replace("<minutes>", ConfigManager.SPONSORTIME/60 +"")));
+            ret.add(ChatColor.translateAlternateColorCodes('&', i.replace("<minutes>", ConfigManager.SPONSORTIME / 60 + "")));
         }
 
         return ret;
@@ -657,7 +670,7 @@ public class ConfigManager {
 
         for (String i : notSponsoring) {
 
-            ret.add(ChatColor.translateAlternateColorCodes('&', i.replace("<minutes>", ConfigManager.SPONSORTIME/60 + "")));
+            ret.add(ChatColor.translateAlternateColorCodes('&', i.replace("<minutes>", ConfigManager.SPONSORTIME / 60 + "")));
         }
 
         return ret;
@@ -668,7 +681,7 @@ public class ConfigManager {
 
         for (String i : notSponsoringChange) {
 
-            ret.add(ChatColor.translateAlternateColorCodes('&', i.replace("<minutes>", ConfigManager.SPONSORTIME/60 +"")));
+            ret.add(ChatColor.translateAlternateColorCodes('&', i.replace("<minutes>", ConfigManager.SPONSORTIME / 60 + "")));
         }
 
         return ret;
@@ -679,7 +692,7 @@ public class ConfigManager {
 
         for (String i : sponsoring) {
 
-            ret.add(ChatColor.translateAlternateColorCodes('&', i.replace("<minutes>", ConfigManager.SPONSORTIME/60 +"")));
+            ret.add(ChatColor.translateAlternateColorCodes('&', i.replace("<minutes>", ConfigManager.SPONSORTIME / 60 + "")));
         }
 
         return ret;
@@ -690,17 +703,17 @@ public class ConfigManager {
 
         for (String i : sponsoringChange) {
 
-            ret.add(ChatColor.translateAlternateColorCodes('&', i.replace("<minutes>", ConfigManager.SPONSORTIME/60 +"")));
+            ret.add(ChatColor.translateAlternateColorCodes('&', i.replace("<minutes>", ConfigManager.SPONSORTIME / 60 + "")));
         }
 
         return ret;
     }
 
-    public List<String> getWaitToSponsor( long minuteToSponsor) {
+    public List<String> getWaitToSponsor(long minuteToSponsor) {
         List<String> ret = new ArrayList<>();
 
         for (String i : waitToSponsor) {
-            ret.add(ChatColor.translateAlternateColorCodes('&', i.replace("<minutes>", ConfigManager.SPONSORTIME/60 +"").replace("<missToSponsor>", minuteToSponsor + "")));
+            ret.add(ChatColor.translateAlternateColorCodes('&', i.replace("<minutes>", ConfigManager.SPONSORTIME / 60 + "").replace("<missToSponsor>", minuteToSponsor + "")));
 
         }
 

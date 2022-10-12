@@ -4,6 +4,7 @@ import it.escanortargaryen.roadsideshop.InternalUtil;
 import it.escanortargaryen.roadsideshop.RoadsideShops;
 import it.escanortargaryen.roadsideshop.classes.SellingItem;
 import it.escanortargaryen.roadsideshop.classes.Shop;
+import it.escanortargaryen.roadsideshop.managers.ConfigManager;
 import net.wesjd.anvilgui.AnvilGUI;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -159,7 +160,7 @@ public class ItemSettingsIH implements InventoryHolder, Listener {
 
                 Player p = ((Player) e.getWhoClicked());
                 p.closeInventory();
-                Bukkit.dispatchCommand(p, "roadsideshop");
+                Bukkit.dispatchCommand(p, ConfigManager.SHOPCOMMAND);
                 exit = true;
 
                 p.sendMessage(RoadsideShops.CONFIGMANAGER.getPutItem(sellingItem.getPrice(), sellingItem.getI().getType().toString(), sellingItem.getI().getAmount()));
@@ -194,7 +195,7 @@ public class ItemSettingsIH implements InventoryHolder, Listener {
                     @Override
                     public void run() {
 
-                        Bukkit.dispatchCommand(e.getPlayer(), "roadsideshop");
+                        Bukkit.dispatchCommand(e.getPlayer(), ConfigManager.SHOPCOMMAND);
                     }
                 }.runTask(RoadsideShops.INSTANCE);
 

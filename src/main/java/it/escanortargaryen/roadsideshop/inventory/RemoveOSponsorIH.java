@@ -6,6 +6,7 @@ import it.escanortargaryen.roadsideshop.InternalUtil;
 import it.escanortargaryen.roadsideshop.RoadsideShops;
 import it.escanortargaryen.roadsideshop.classes.SellingItem;
 import it.escanortargaryen.roadsideshop.classes.Shop;
+import it.escanortargaryen.roadsideshop.managers.ConfigManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -92,7 +93,7 @@ public class RemoveOSponsorIH implements InventoryHolder, Listener {
 
                 @Override
                 public void run() {
-                    Bukkit.dispatchCommand(e.getWhoClicked(), "roadsideshop");
+                    Bukkit.dispatchCommand(e.getWhoClicked(), ConfigManager.SHOPCOMMAND);
 
                 }
             }.runTask(RoadsideShops.INSTANCE);
@@ -126,7 +127,7 @@ public class RemoveOSponsorIH implements InventoryHolder, Listener {
 
                         @Override
                         public void run() {
-                            Bukkit.dispatchCommand(e.getWhoClicked(), "roadsideshop");
+                            Bukkit.dispatchCommand(e.getWhoClicked(), ConfigManager.SHOPCOMMAND);
 
                         }
                     }.runTask(RoadsideShops.INSTANCE);

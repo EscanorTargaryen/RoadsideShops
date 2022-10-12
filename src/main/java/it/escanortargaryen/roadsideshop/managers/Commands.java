@@ -5,7 +5,6 @@ import dev.jorel.commandapi.arguments.OfflinePlayerArgument;
 import it.escanortargaryen.roadsideshop.RoadsideShops;
 import it.escanortargaryen.roadsideshop.classes.Newspaper;
 import it.escanortargaryen.roadsideshop.classes.Shop;
-import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 
 public class Commands {
@@ -16,7 +15,8 @@ public class Commands {
     }
 
     private void enableRoadSideCommand() {
-        new CommandAPICommand("roadsideshop").executesPlayer((p, objects) -> {
+
+        new CommandAPICommand(ConfigManager.SHOPCOMMAND).executesPlayer((p, objects) -> {
 
             if (!RoadsideShops.hasShop(p)) {
 
@@ -27,7 +27,7 @@ public class Commands {
 
         }).register();
 
-        new CommandAPICommand("roadsideshop").withArguments(new OfflinePlayerArgument("shopOwner")).executesPlayer((p, objects) -> {
+        new CommandAPICommand(ConfigManager.SHOPCOMMAND).withArguments(new OfflinePlayerArgument("shopOwner")).executesPlayer((p, objects) -> {
 
             OfflinePlayer shopOwner = (OfflinePlayer) objects[0];
 
@@ -52,7 +52,7 @@ public class Commands {
 
     private void enableNewsPaperCommand() {
 
-        new CommandAPICommand("newspaper").executesPlayer((player, objects) -> {
+        new CommandAPICommand(ConfigManager.NEWSPAPERCOMMAND).executesPlayer((player, objects) -> {
 
             new Newspaper(RoadsideShops.getCachedShops(), player);
         }).register();

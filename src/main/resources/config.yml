@@ -9,6 +9,10 @@ sponsor-time: 300
 #The number of the unlocked slots (must be positive and less than 15)
 unlocked-slot: 13
 
+shop-command: "roadsideshop"
+
+newspaper-command: "newspaper"
+
 #  --Messages--
 
 #The message to be shown when showing the price

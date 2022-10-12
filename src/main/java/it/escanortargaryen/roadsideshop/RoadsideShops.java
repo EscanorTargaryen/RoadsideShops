@@ -102,7 +102,6 @@ public class RoadsideShops extends JavaPlugin implements Listener {
             return;
         }
         CommandAPI.onEnable(this);
-        new Commands();
 
         Bukkit.getPluginManager().registerEvents(this, this);
         INSTANCE = this;
@@ -130,10 +129,11 @@ public class RoadsideShops extends JavaPlugin implements Listener {
         Objects.requireNonNull(ws).setDisplayName(ChatColor.WHITE + "");
         log.setItemMeta(ws);
 
-        String s = "§7----§cRoadside §6Shops§7----§r\n§fby §cEscanorTargaryen§r\n§2Enabled version: " + this.getDescription().getVersion() + "§r\n§7------------------------§r";
-
-        Bukkit.getConsoleSender().sendMessage(s);
         new ShopsManager();
+        new Commands();
+        String s = "§7----§cRoadside §6Shops§7----§r\n§fby §cEscanorTargaryen§r\n§2Enabled version: " + this.getDescription().getVersion() + "§r\n§7------------------------§r";
+        Bukkit.getConsoleSender().sendMessage(s);
+
     }
 
     public static boolean hasShop(Player player) {
