@@ -93,7 +93,7 @@ public class ShopsManager implements Listener {
                         ItemStack i = e.getCursor().clone();
                         e.getView().setCursor(new ItemStack(Material.AIR));
 
-                        new ItemSettingsIH(shop, i, (Player) e.getWhoClicked(), e.getSlot());
+                        new ItemSettingsIH(shop, i.clone(), (Player) e.getWhoClicked(), e.getSlot());
 
                     }
                 }.runTaskLater(RoadsideShops.INSTANCE, 2);
@@ -160,7 +160,7 @@ public class ShopsManager implements Listener {
                                             @Override
                                             public void run() {
 
-                                                shop.getInvSeller().setItem(c.getSlot(), new ItemStack(RoadsideShops.unlockedSlot));
+                                                shop.getInvSeller().setItem(c.getSlot(), new ItemStack(RoadsideShops.UNLOCKEDSLOT));
 
                                                 shop.getInvBuyer().setItem(c.getSlot(), new ItemStack(Material.AIR));
 

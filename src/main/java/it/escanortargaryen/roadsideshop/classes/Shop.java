@@ -145,11 +145,11 @@ public class Shop implements Cloneable, InventoryHolder {
 
         invSeller = Bukkit.createInventory(this, 18, RoadsideShops.CONFIGMANAGER.getShopTitle(playerName));
 
-        ItemStack here = RoadsideShops.unlockedSlot;
+        ItemStack here = RoadsideShops.UNLOCKEDSLOT;
 
         for (int i = 0; i < 18; i++) {
 
-            invSeller.setItem(i, RoadsideShops.not);
+            invSeller.setItem(i, RoadsideShops.LOCKEDSLOT);
         }
 
         for (int i = 1; i < unlockedSlotsNumber + 1; i++) {
@@ -165,10 +165,10 @@ public class Shop implements Cloneable, InventoryHolder {
 
         }
 
-        invSeller.setItem(0, RoadsideShops.log);
-        invSeller.setItem(8, RoadsideShops.log);
-        invSeller.setItem(9, RoadsideShops.log);
-        invSeller.setItem(17, RoadsideShops.log);
+        invSeller.setItem(0, RoadsideShops.LOG);
+        invSeller.setItem(8, RoadsideShops.LOG);
+        invSeller.setItem(9, RoadsideShops.LOG);
+        invSeller.setItem(17, RoadsideShops.LOG);
 
         if (items != null)
             for (SellingItem s : items) {
@@ -187,10 +187,10 @@ public class Shop implements Cloneable, InventoryHolder {
 
         invBuyer = Bukkit.createInventory(this, 18, RoadsideShops.CONFIGMANAGER.getShopTitle(playerName));
 
-        invBuyer.setItem(0, RoadsideShops.log);
-        invBuyer.setItem(8, RoadsideShops.log);
-        invBuyer.setItem(9, RoadsideShops.log);
-        invBuyer.setItem(17, RoadsideShops.log);
+        invBuyer.setItem(0, RoadsideShops.LOG);
+        invBuyer.setItem(8, RoadsideShops.LOG);
+        invBuyer.setItem(9, RoadsideShops.LOG);
+        invBuyer.setItem(17, RoadsideShops.LOG);
 
         if (items != null)
             for (SellingItem s : items) {
@@ -234,10 +234,10 @@ public class Shop implements Cloneable, InventoryHolder {
         this.sponsor = sponsor;
     }
 
-    public Shop(UUID playerUUID, String name) {
+    public Shop(Player player) {
 
-        this.playerUUID = playerUUID;
-        playerName = name;
+        this.playerUUID = player.getUniqueId();
+        playerName = player.getName();
     }
 
     @Override

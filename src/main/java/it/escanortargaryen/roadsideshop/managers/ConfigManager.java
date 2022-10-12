@@ -346,7 +346,8 @@ public class ConfigManager {
     }
 
     public String getNoMoney() {
-        return noMoney;
+
+        return ChatColor.translateAlternateColorCodes('&', noMoney);
     }
 
     public String getNoShop() {
@@ -459,9 +460,9 @@ public class ConfigManager {
         return t;
     }
 
-    public String getPriceButtonTitle() {
+    public String getPriceButtonTitle(double price) {
 
-        return ChatColor.translateAlternateColorCodes('&', priceButtonTitle);
+        return ChatColor.translateAlternateColorCodes('&', priceButtonTitle.replace("<price-message>", RoadsideShops.CONFIGMANAGER.getPriceMessage(price)));
 
     }
 
@@ -534,7 +535,7 @@ public class ConfigManager {
         ArrayList<String> t = new ArrayList<>();
 
         for (String s : loreForNewspaper) {
-            t.add(ChatColor.translateAlternateColorCodes('&', s).replace("<price>", price + "").replace("<price-message>", getPriceMessage(price).replace("<ownerName>", ownerName)));
+            t.add(ChatColor.translateAlternateColorCodes('&', s).replace("<price>", price + "").replace("<price-message>", getPriceMessage(price)).replace("<ownerName>", ownerName));
 
         }
 

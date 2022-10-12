@@ -21,6 +21,7 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Objects;
@@ -31,9 +32,10 @@ public class RoadsideShops extends JavaPlugin implements Listener {
 
     public static ConfigManager CONFIGMANAGER;
 
-    public static ItemStack unlockedSlot = new ItemStack(Material.GRAY_STAINED_GLASS_PANE);
-    public static ItemStack not;
-    public static ItemStack log;
+    public static ItemStack UNLOCKEDSLOT = new ItemStack(Material.GRAY_STAINED_GLASS_PANE);
+    public static ItemStack LOCKEDSLOT;
+    public static ItemStack LOG;
+    public static ItemStack RIGHTARROW, LEFTARROW;
 
     public static RoadsideShops INSTANCE;
 
@@ -45,7 +47,7 @@ public class RoadsideShops extends JavaPlugin implements Listener {
 
     @Override
     public void onLoad() {
-        CommandAPI.onLoad(new CommandAPIConfig().verboseOutput(true)); //Load with verbose output
+        CommandAPI.onLoad(new CommandAPIConfig().verboseOutput(false));
 
         saveResource("config.yml", false);
 
@@ -66,6 +68,13 @@ public class RoadsideShops extends JavaPlugin implements Listener {
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {
         Player p = e.getPlayer();
+
+        if (!RoadsideShops.hasShop(p)) {
+
+            RoadsideShops.createShop(p, new Shop(p));
+
+        }
+
         Shop d = getShop(p);
 
         if (d != null) {
@@ -108,35 +117,49 @@ public class RoadsideShops extends JavaPlugin implements Listener {
 
         CONFIGMANAGER = new ConfigManager(this);
 
-        unlockedSlot = new ItemStack(Material.GRAY_STAINED_GLASS_PANE);
-        ItemMeta h = unlockedSlot.getItemMeta();
+        UNLOCKEDSLOT = new ItemStack(Material.GRAY_STAINED_GLASS_PANE);
+        ItemMeta h = UNLOCKEDSLOT.getItemMeta();
         Objects.requireNonNull(h).setDisplayName(CONFIGMANAGER.getUnlockedSlotPanelTitle()
         );
 
         h.setLore(CONFIGMANAGER.getUnlockedSlotPanelLore());
-        unlockedSlot.setItemMeta(h);
+        UNLOCKEDSLOT.setItemMeta(h);
 
-        not = new ItemStack(Material.BLACK_STAINED_GLASS_PANE);
-        ItemMeta w = not.getItemMeta();
+        LOCKEDSLOT = new ItemStack(Material.BLACK_STAINED_GLASS_PANE);
+        ItemMeta w = LOCKEDSLOT.getItemMeta();
         Objects.requireNonNull(w).setDisplayName(
                 CONFIGMANAGER.getLockedSlotPanelTitle());
 
         w.setLore(CONFIGMANAGER.getLockedSlotPanelLore());
-        not.setItemMeta(w);
+        LOCKEDSLOT.setItemMeta(w);
 
-        log = new ItemStack(Material.OAK_LOG);
-        ItemMeta ws = log.getItemMeta();
+        LOG = new ItemStack(Material.OAK_LOG);
+        ItemMeta ws = LOG.getItemMeta();
+        ws.setLore(Arrays.asList("§c§c§c§c§c§c§c§c§c§c§c§c"));
         Objects.requireNonNull(ws).setDisplayName(ChatColor.WHITE + "");
-        log.setItemMeta(ws);
+        LOG.setItemMeta(ws);
+
+        RIGHTARROW = new ItemStack(Material.ARROW);
+        ws = RIGHTARROW.getItemMeta();
+        Objects.requireNonNull(ws).setDisplayName(RoadsideShops.CONFIGMANAGER.getRightarrowTitle());
+        ws.setLore(RoadsideShops.CONFIGMANAGER.getRightarrowLore());
+        RIGHTARROW.setItemMeta(ws);
+
+        LEFTARROW = new ItemStack(Material.ARROW);
+        ws = LEFTARROW.getItemMeta();
+        Objects.requireNonNull(ws).setDisplayName(RoadsideShops.CONFIGMANAGER.getLeftarrowTitle());
+        ws.setLore(RoadsideShops.CONFIGMANAGER.getLeftarrowLore());
+        LEFTARROW.setItemMeta(ws);
 
         new ShopsManager();
         new Commands();
-        String s = "§7----§cRoadside §6Shops§7----§r\n§fby §cEscanorTargaryen§r\n§2Enabled version: " + this.getDescription().getVersion() + "§r\n§7------------------------§r";
+        new InternalUtil();
+        String s = "§7----§c§nRoadside§r §6§nShops§r§7----§r\n§fby §eEscanorTargaryen§r\n§2Enabled version: " + this.getDescription().getVersion() + "§r\n§7-----------------------§r";
         Bukkit.getConsoleSender().sendMessage(s);
 
     }
 
-    public static boolean hasShop(Player player) {
+    public static boolean hasShop(OfflinePlayer player) {
 
         for (Shop s : cachedShops.values()) {
 

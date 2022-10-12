@@ -16,6 +16,7 @@ TODO sistema il config, fai in modo che ci siano i metodi che danno già le stri
 TODO fare in modo che si apre l'inventario degli stand quando si chide uno di settings
 TODO fare in modo che si possa annullare l'inserimento del prezzo
 /TODO metti il tempo in secondi
+spostare qui le cose statiche interne
 TODO cose da sistemare in una classe:
 
         typo
@@ -27,6 +28,15 @@ TODO cose da sistemare in una classe:
         rimuovere import inutili
         no parole in italiano*/
 public class InternalUtil {
+
+    public static ItemStack BACKARROW;
+    InternalUtil(){
+        BACKARROW= new ItemStack(Material.ARROW);
+        ItemMeta ws = BACKARROW.getItemMeta();
+        Objects.requireNonNull(ws).setDisplayName(RoadsideShops.CONFIGMANAGER.getBackButtonTitle());
+        ws.setLore(RoadsideShops.CONFIGMANAGER.getBackButtonLore());
+        BACKARROW.setItemMeta(ws);
+    }
 
     public static ItemStack generateMapItem(Shop shop, boolean isSponsoring, SellingItem sellingItem) {
         ItemStack sponsor;

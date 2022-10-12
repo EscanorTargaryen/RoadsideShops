@@ -1,7 +1,6 @@
 package it.escanortargaryen.roadsideshop.inventory;
 
 import com.fren_gor.invManagementPlugin.api.SafeInventoryActions;
-import de.erethon.headlib.HeadLib;
 import it.escanortargaryen.roadsideshop.InternalUtil;
 import it.escanortargaryen.roadsideshop.RoadsideShops;
 import it.escanortargaryen.roadsideshop.classes.SellingItem;
@@ -56,7 +55,7 @@ public class RemoveOSponsorIH implements InventoryHolder, Listener {
 
         inv.setItem(4, t);
 
-        inv.setItem(20, HeadLib.WOODEN_ARROW_LEFT.toItemStack(RoadsideShops.CONFIGMANAGER.getBackButtonTitle(), RoadsideShops.CONFIGMANAGER.getBackButtonLore().toArray(new String[0])));
+        inv.setItem(20, InternalUtil.BACKARROW);
 
         inv.setItem(22, InternalUtil.generateMapItem(shop, isSponsoring, sellingItem));
 
@@ -101,7 +100,7 @@ public class RemoveOSponsorIH implements InventoryHolder, Listener {
         }
 
         if (e.getSlot() == 24) {
-            ItemStack here = RoadsideShops.unlockedSlot;
+            ItemStack here = RoadsideShops.UNLOCKEDSLOT;
 
             Player p = (Player) e.getWhoClicked();
 

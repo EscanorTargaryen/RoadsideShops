@@ -27,7 +27,8 @@ public class ItemSettingsIH implements InventoryHolder, Listener {
     private final Shop shop;
     private final ItemStack itemToSell;
     private final int slotNumber;
-    private boolean isPriceSet = false, isSponsoring = false, closeInv = false, exit = false;
+
+    private boolean isPriceSet = false, isSponsoring = false, settingPrice = false, exit = false;
 
     private double price = 0.0;
 
@@ -63,7 +64,7 @@ public class ItemSettingsIH implements InventoryHolder, Listener {
 
             prezzo = new ItemStack(Material.NAME_TAG);
             mw = prezzo.getItemMeta();
-            Objects.requireNonNull(mw).setDisplayName(RoadsideShops.CONFIGMANAGER.getPriceButtonTitle());
+            Objects.requireNonNull(mw).setDisplayName(RoadsideShops.CONFIGMANAGER.getPriceButtonTitle(price));
 
             mw.setLore(RoadsideShops.CONFIGMANAGER.getPriceButtonLore(price));
             prezzo.setItemMeta(mw);
@@ -107,18 +108,26 @@ public class ItemSettingsIH implements InventoryHolder, Listener {
             return;
 
         if (e.getSlot() == 6) {
-            closeInv = true;
+            settingPrice = true;
+            e.getWhoClicked().closeInventory();
 
             new AnvilGUI.Builder().onClose(player -> {
+                        settingPrice = false;
 
-                        isPriceSet = true;
-                        closeInv = false;
-                        player.openInventory(getInventory());
+                        new BukkitRunnable() {
+
+                            @Override
+                            public void run() {
+
+                                player.openInventory(getInventory());
+                            }
+                        }.runTask(RoadsideShops.INSTANCE);
 
                     }).onComplete((player, text) -> { // called when the inventory output slot is clicked
 
                         try {
                             price = Double.parseDouble(text);
+                            isPriceSet = true;
                             return AnvilGUI.Response.close();
 
                         } catch (NumberFormatException ff) {
@@ -126,9 +135,9 @@ public class ItemSettingsIH implements InventoryHolder, Listener {
 
                         }
 
-                    }).preventClose()// prevents the inventory from being close
+                    })
                     .itemLeft(new ItemStack(Material.GOLD_BLOCK)) // use a custom item for the first slot
-
+                    .text(".")
                     .title(RoadsideShops.CONFIGMANAGER.getAnvilTitle()) // set the title of the GUI (only works in 1.14+)
                     .plugin(RoadsideShops.INSTANCE) // set the plugin instance
                     .open((Player) e.getWhoClicked());
@@ -148,7 +157,6 @@ public class ItemSettingsIH implements InventoryHolder, Listener {
         if (e.getSlot() == 24) {
 
             if (isPriceSet) {
-                closeInv = true;
 
                 if (shop.getItems().size() == 0)
                     shop.getInvBuyer().setItem(1, new ItemStack(Material.AIR));
@@ -157,11 +165,9 @@ public class ItemSettingsIH implements InventoryHolder, Listener {
 
                 shop.getInvBuyer().setItem(sellingItem.getSlot(), sellingItem.getWithPriceBuyer());
                 shop.getInvSeller().setItem(sellingItem.getSlot(), sellingItem.getWithPriceSeller());
-
+                exit = true;
                 Player p = ((Player) e.getWhoClicked());
                 p.closeInventory();
-                Bukkit.dispatchCommand(p, ConfigManager.SHOPCOMMAND);
-                exit = true;
 
                 p.sendMessage(RoadsideShops.CONFIGMANAGER.getPutItem(sellingItem.getPrice(), sellingItem.getI().getType().toString(), sellingItem.getI().getAmount()));
 
@@ -172,6 +178,14 @@ public class ItemSettingsIH implements InventoryHolder, Listener {
                     InternalUtil.setSponsorItem(shop, sellingItem);
 
                 }
+                new BukkitRunnable() {
+
+                    @Override
+                    public void run() {
+
+                        Bukkit.dispatchCommand(p, ConfigManager.SHOPCOMMAND);
+                    }
+                }.runTask(RoadsideShops.INSTANCE);
 
             }
 
@@ -184,9 +198,7 @@ public class ItemSettingsIH implements InventoryHolder, Listener {
 
         if (e.getInventory().getHolder() == this) {
 
-            if (!closeInv) {
-                e.getPlayer().getInventory().addItem(itemToSell);
-
+            if (!settingPrice) {
                 InventoryClickEvent.getHandlerList().unregister(this);
                 InventoryCloseEvent.getHandlerList().unregister(this);
 
@@ -198,14 +210,16 @@ public class ItemSettingsIH implements InventoryHolder, Listener {
                         Bukkit.dispatchCommand(e.getPlayer(), ConfigManager.SHOPCOMMAND);
                     }
                 }.runTask(RoadsideShops.INSTANCE);
-
+            }
+            if(!exit && !settingPrice){
+                e.getPlayer().getInventory().addItem(itemToSell);
             }
             if (exit) {
-
                 InventoryClickEvent.getHandlerList().unregister(this);
                 InventoryCloseEvent.getHandlerList().unregister(this);
 
             }
+
 
         }
 

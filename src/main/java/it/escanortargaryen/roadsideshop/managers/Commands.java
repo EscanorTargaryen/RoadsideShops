@@ -20,7 +20,7 @@ public class Commands {
 
             if (!RoadsideShops.hasShop(p)) {
 
-                RoadsideShops.createShop(p, new Shop(p.getUniqueId(), p.getName()));
+                RoadsideShops.createShop(p, new Shop(p));
 
             }
             RoadsideShops.getShop(p).openInventory(p, "seller");
@@ -30,21 +30,24 @@ public class Commands {
         new CommandAPICommand(ConfigManager.SHOPCOMMAND).withArguments(new OfflinePlayerArgument("shopOwner")).executesPlayer((p, objects) -> {
 
             OfflinePlayer shopOwner = (OfflinePlayer) objects[0];
+            if (shopOwner != null) {
 
-            if (!RoadsideShops.hasShop(p)) {
+                if (!RoadsideShops.hasShop(shopOwner)) {
 
-                p.sendMessage(RoadsideShops.CONFIGMANAGER.getNoShop());
+                    p.sendMessage(RoadsideShops.CONFIGMANAGER.getNoShop());
 
-            } else {
+                } else {
 
-                if (p.getName().equals(shopOwner)) {
+                    if (p.getUniqueId().equals(shopOwner.getUniqueId())) {
 
-                    RoadsideShops.getShop(shopOwner).openInventory(p, "seller");
+                        RoadsideShops.getShop(shopOwner).openInventory(p, "seller");
 
-                } else
+                    } else {
+                        RoadsideShops.getShop(shopOwner).openInventory(p, "buyer");
 
-                    RoadsideShops.getShop(shopOwner).openInventory(p, "buyer");
+                    }
 
+                }
             }
 
         }).register();
