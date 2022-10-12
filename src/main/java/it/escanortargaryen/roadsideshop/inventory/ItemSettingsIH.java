@@ -6,7 +6,6 @@ import it.escanortargaryen.roadsideshop.classes.SellingItem;
 import it.escanortargaryen.roadsideshop.classes.Shop;
 import net.wesjd.anvilgui.AnvilGUI;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -20,8 +19,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Objects;
 
 public class ItemSettingsIH implements InventoryHolder, Listener {
@@ -124,14 +121,14 @@ public class ItemSettingsIH implements InventoryHolder, Listener {
                             return AnvilGUI.Response.close();
 
                         } catch (NumberFormatException ff) {
-                            return AnvilGUI.Response.text("Incorrect number");
+                            return AnvilGUI.Response.text(RoadsideShops.CONFIGMANAGER.getWrongPrice());
 
                         }
 
-                    }).preventClose().text("price") // prevents the inventory from being close
+                    }).preventClose()// prevents the inventory from being close
                     .itemLeft(new ItemStack(Material.GOLD_BLOCK)) // use a custom item for the first slot
 
-                    .title("Enter the price here") // set the title of the GUI (only works in 1.14+)
+                    .title(RoadsideShops.CONFIGMANAGER.getAnvilTitle()) // set the title of the GUI (only works in 1.14+)
                     .plugin(RoadsideShops.INSTANCE) // set the plugin instance
                     .open((Player) e.getWhoClicked());
 

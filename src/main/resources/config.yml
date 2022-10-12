@@ -163,12 +163,50 @@ item-settings:
     lore:
       - "&6Click to change the price"
 
+#The message of when you set an incorrect value instead of the price
+wrong-price: "Incorrect number"
+
+#The title of the inventory when you are setting the price of an item
+anvil-title: "Enter the price here"
+
+#Set the messages of the edit menu of an item
+item-modify:
+  title: "&4Item Settings"
+  full-inv: "&cYou can't remove item from the shop: inventory full"
+  back-button:
+    title: "&9Come back"
+    lore:
+      - ""
+      - "&7Click to exit settings"
+  remove-button:
+    title: "&cRemove Item"
+    lore:
+      - ""
+      - "&6Click to remove the item and get it back"
+
+#when the player enters the server he is notified of the changes inside his shop
+while-offline: "&6While you was offline..."
+
+#Message of when running the /roadsideshop <player> but the player is not found
+no-shop: "&cThe player does' t have a shop"
+
+#Error message of when you don't have enough money to buy
+no-money: "&cYou haven't enough money"
+
 #Change the button that sets whether an items can be sponsored or not
 #Placeholders:
 # <minutes> - How often can you put an object as sponsored
 sponsor-button:
   #Button title
   title: "&6Sponsor item"
+
+  #Description of the button when you are watching the sponsored item
+  sponsored:
+    - ""
+    - "&aThe item is just a sponsored item."
+    - ""
+    - "&7Sponsoring an item shows it on the newspaper."
+    - "&7You can sponsor an item every <minutes> minutes."
 
   #Description of the button when you set the item as sponsored (there was no item as sponsored precendently)
   sponsoring:

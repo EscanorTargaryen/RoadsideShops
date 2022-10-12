@@ -7,7 +7,6 @@ import it.escanortargaryen.roadsideshop.RoadsideShops;
 import it.escanortargaryen.roadsideshop.classes.SellingItem;
 import it.escanortargaryen.roadsideshop.classes.Shop;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -21,7 +20,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -45,7 +43,7 @@ public class RemoveOSponsorIH implements InventoryHolder, Listener {
     @Override
     public Inventory getInventory() {
 
-        Inventory inv = Bukkit.createInventory(this, 27, ChatColor.DARK_BLUE + "Item Settings");
+        Inventory inv = Bukkit.createInventory(this, 27, RoadsideShops.CONFIGMANAGER.getItemModify());
 
         ItemStack t = sellingItem.getWithPriceSeller().clone();
         ItemMeta tt = t.getItemMeta();
@@ -57,15 +55,14 @@ public class RemoveOSponsorIH implements InventoryHolder, Listener {
 
         inv.setItem(4, t);
 
-        inv.setItem(20, HeadLib.WOODEN_ARROW_LEFT.toItemStack(ChatColor.BLUE + "Come back", "",
-                ChatColor.GRAY + "Click to exit settings"));
+        inv.setItem(20, HeadLib.WOODEN_ARROW_LEFT.toItemStack(RoadsideShops.CONFIGMANAGER.getBackButtonTitle(), RoadsideShops.CONFIGMANAGER.getBackButtonLore().toArray(new String[0])));
 
         inv.setItem(22, InternalUtil.generateMapItem(shop, isSponsoring, sellingItem));
 
         ItemStack remove = new ItemStack(Material.RED_STAINED_GLASS);
         ItemMeta rem = remove.getItemMeta();
-        Objects.requireNonNull(rem).setDisplayName(ChatColor.RED + "Remove Item");
-        rem.setLore(Arrays.asList("", ChatColor.GOLD + "Click to remove the item and get it back"));
+        Objects.requireNonNull(rem).setDisplayName(RoadsideShops.CONFIGMANAGER.getRemoveButtonTitle());
+        rem.setLore(RoadsideShops.CONFIGMANAGER.getRemoveButtonLore());
         remove.setItemMeta(rem);
         inv.setItem(24, remove);
 
@@ -103,7 +100,7 @@ public class RemoveOSponsorIH implements InventoryHolder, Listener {
         }
 
         if (e.getSlot() == 24) {
-            ItemStack here = RoadsideShops.unlockedslot;
+            ItemStack here = RoadsideShops.unlockedSlot;
 
             Player p = (Player) e.getWhoClicked();
 
@@ -139,7 +136,7 @@ public class RemoveOSponsorIH implements InventoryHolder, Listener {
                 case NOT_ENOUGH_SPACE:
                 case NOT_MODIFIED: {
 
-                    p.sendMessage(ChatColor.RED + "You can't remove item from the shop: inventory full");
+                    p.sendMessage(RoadsideShops.CONFIGMANAGER.getFullInv());
 
                     break;
                 }

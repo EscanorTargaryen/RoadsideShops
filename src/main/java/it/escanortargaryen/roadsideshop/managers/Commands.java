@@ -33,7 +33,7 @@ public class Commands {
 
             if (!RoadsideShops.hasShop(p)) {
 
-                p.sendMessage(ChatColor.RED + "The player does' t have a shop");
+                p.sendMessage(RoadsideShops.CONFIGMANAGER.getNoShop());
 
             } else {
 

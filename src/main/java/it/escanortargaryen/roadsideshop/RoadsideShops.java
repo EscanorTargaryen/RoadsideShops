@@ -1,7 +1,6 @@
 package it.escanortargaryen.roadsideshop;
 
 import dev.jorel.commandapi.CommandAPI;
-import dev.jorel.commandapi.CommandAPICommand;
 import dev.jorel.commandapi.CommandAPIConfig;
 import it.escanortargaryen.roadsideshop.classes.Shop;
 import it.escanortargaryen.roadsideshop.managers.Commands;
@@ -32,7 +31,7 @@ public class RoadsideShops extends JavaPlugin implements Listener {
 
     public static ConfigManager CONFIGMANAGER;
 
-    public static ItemStack unlockedslot = new ItemStack(Material.GRAY_STAINED_GLASS_PANE);
+    public static ItemStack unlockedSlot = new ItemStack(Material.GRAY_STAINED_GLASS_PANE);
     public static ItemStack not;
     public static ItemStack log;
 
@@ -48,11 +47,6 @@ public class RoadsideShops extends JavaPlugin implements Listener {
     public void onLoad() {
         CommandAPI.onLoad(new CommandAPIConfig().verboseOutput(true)); //Load with verbose output
 
-        new CommandAPICommand("ping")
-                .executes((sender, args) -> {
-                    sender.sendMessage("pong!");
-                })
-                .register();
         saveResource("config.yml", false);
 
     }
@@ -77,7 +71,7 @@ public class RoadsideShops extends JavaPlugin implements Listener {
         if (d != null) {
 
             if (d.getOffMessages().size() > 0) {
-                p.sendMessage(ChatColor.AQUA + "While you was offline...");
+                p.sendMessage(RoadsideShops.CONFIGMANAGER.getWhileOffline());
                 for (String s : d.getOffMessages()) {
 
                     p.sendMessage(s);
@@ -115,13 +109,13 @@ public class RoadsideShops extends JavaPlugin implements Listener {
 
         CONFIGMANAGER = new ConfigManager(this);
 
-        unlockedslot = new ItemStack(Material.GRAY_STAINED_GLASS_PANE);
-        ItemMeta h = unlockedslot.getItemMeta();
+        unlockedSlot = new ItemStack(Material.GRAY_STAINED_GLASS_PANE);
+        ItemMeta h = unlockedSlot.getItemMeta();
         Objects.requireNonNull(h).setDisplayName(CONFIGMANAGER.getUnlockedSlotPanelTitle()
         );
 
         h.setLore(CONFIGMANAGER.getUnlockedSlotPanelLore());
-        unlockedslot.setItemMeta(h);
+        unlockedSlot.setItemMeta(h);
 
         not = new ItemStack(Material.BLACK_STAINED_GLASS_PANE);
         ItemMeta w = not.getItemMeta();

@@ -34,9 +34,9 @@ public class ConfigManager {
 
     private List<String> sponsoring, sponsoringChange, notSponsoring, notSponsoringChange, waitToSponsor;
 
-    private String leftarrowTitle, rightarrowTitle, newspaperTitle, shopTitle, itemSettingsTitle, sellButtonTitle, priceButtonTitle, sellButtonTitleNotSet, priceButtonTitleNotSet;
+    private String whileOffline,leftarrowTitle, rightarrowTitle, newspaperTitle, shopTitle, itemSettingsTitle, sellButtonTitle, priceButtonTitle, sellButtonTitleNotSet, priceButtonTitleNotSet, wrongPrice, anvilTitle, itemModify, backButtonTitle, removeButtonTitle, fullInv, noShop, noMoney;
 
-    private List<String> leftarrowLore, rightarrowLore, itemSaleSeller, itemSaleBuyer, itemSaleSellerSponsor, itemSaleBuyerSponsor, loreForNewspaper, sellButtonLore, priceButtonLore, sellButtonLoreNotSet, priceButtonLoreNotSet;
+    private List<String> sponsoredLore,leftarrowLore, rightarrowLore, itemSaleSeller, itemSaleBuyer, itemSaleSellerSponsor, itemSaleBuyerSponsor, loreForNewspaper, sellButtonLore, priceButtonLore, sellButtonLoreNotSet, priceButtonLoreNotSet, backButtonLore, removeButtonLore;
 
     public ConfigManager(Plugin pl) {
 
@@ -254,6 +254,142 @@ public class ConfigManager {
         }
         priceButtonLoreNotSet = config.getStringList("item-settings.price-button-not-set.lore");
 
+        if (!config.isSet("wrong-price")) {
+            throw new ConfigurationException("wrong-price " + notSet);
+        }
+        wrongPrice = config.getString("wrong-price");
+
+        if (!config.isSet("anvil-title")) {
+            throw new ConfigurationException("anvil-title " + notSet);
+        }
+        anvilTitle = config.getString("anvil-title");
+
+        if (!config.isSet("item-modify.title")) {
+            throw new ConfigurationException("item-modify.title " + notSet);
+        }
+        itemModify = config.getString("item-modify.title");
+
+        if (!config.isSet("item-modify.back-button.title")) {
+            throw new ConfigurationException("item-modify.back-button.title " + notSet);
+        }
+        backButtonTitle = config.getString("item-modify.back-button.title");
+
+        if (!config.isSet("item-modify.back-button.lore")) {
+            throw new ConfigurationException("item-modify.back-button.lore " + notSet);
+        }
+        backButtonLore = config.getStringList("item-modify.back-button.lore");
+
+        if (!config.isSet("item-modify.remove-button.title")) {
+            throw new ConfigurationException("item-modify.remove-button.title " + notSet);
+        }
+        removeButtonTitle = config.getString("item-modify.remove-button.title");
+
+        if (!config.isSet("item-modify.remove-button.lore")) {
+            throw new ConfigurationException("item-modify.remove-button.lore " + notSet);
+        }
+        removeButtonLore = config.getStringList("item-modify.remove-button.lore");
+
+        if (!config.isSet("item-modify.full-inv")) {
+            throw new ConfigurationException("item-modify.full-inv " + notSet);
+        }
+        fullInv = config.getString("item-modify.full-inv");
+
+        if (!config.isSet("no-shop")) {
+            throw new ConfigurationException("no-shop " + notSet);
+        }
+        noShop = config.getString("no-shop");
+
+        if (!config.isSet("no-money")) {
+            throw new ConfigurationException("no-money " + notSet);
+        }
+        noMoney = config.getString("no-money");
+
+        if (!config.isSet("sponsor-button.sponsored")) {
+            throw new ConfigurationException("sponsor-button.sponsored " + notSet);
+        }
+        sponsoredLore = config.getStringList("sponsor-button.sponsored");
+
+        if (!config.isSet("while-offline")) {
+            throw new ConfigurationException("while-offline " + notSet);
+        }
+        whileOffline = config.getString("while-offline");
+
+    }
+
+    public String getWhileOffline() {
+        return ChatColor.translateAlternateColorCodes('&', whileOffline);
+    }
+
+    public List<String> getSponsoredLore() {
+
+        List<String> ret = new ArrayList<>();
+
+        for (String i : sponsoredLore) {
+
+            ret.add(ChatColor.translateAlternateColorCodes('&', i.replace("<minutes>", ConfigManager.SPONSORTIME/60 +"")));
+        }
+
+        return ret;
+    }
+
+    public String getNoMoney() {
+        return noMoney;
+    }
+
+    public String getNoShop() {
+        return ChatColor.translateAlternateColorCodes('&', noShop);
+    }
+
+    public String getFullInv() {
+
+        return ChatColor.translateAlternateColorCodes('&', fullInv);
+    }
+
+    public String getRemoveButtonTitle() {
+
+        return ChatColor.translateAlternateColorCodes('&', removeButtonTitle);
+    }
+
+    public List<String> getRemoveButtonLore() {
+
+        ArrayList<String> t = new ArrayList<>();
+
+        for (String s : removeButtonLore) {
+            t.add(ChatColor.translateAlternateColorCodes('&', s));
+
+        }
+
+        return t;
+    }
+
+    public List<String> getBackButtonLore() {
+
+        ArrayList<String> t = new ArrayList<>();
+
+        for (String s : backButtonLore) {
+            t.add(ChatColor.translateAlternateColorCodes('&', s));
+
+        }
+
+        return t;
+    }
+
+    public String getBackButtonTitle() {
+
+        return ChatColor.translateAlternateColorCodes('&', backButtonTitle);
+    }
+
+    public String getItemModify() {
+
+        return ChatColor.translateAlternateColorCodes('&', itemModify);
+    }
+
+    public String getAnvilTitle() {
+        return anvilTitle;
+    }
+
+    public String getWrongPrice() {
+        return wrongPrice;
     }
 
     public String getSellButtonTitle() {
@@ -264,26 +400,26 @@ public class ConfigManager {
 
     public List<String> getPriceButtonLore(double price) {
 
-        ArrayList<String> ino = new ArrayList<>();
+        ArrayList<String> t = new ArrayList<>();
 
         for (String s : priceButtonLore) {
-            ino.add(ChatColor.translateAlternateColorCodes('&', s.replace("<price-message>", RoadsideShops.CONFIGMANAGER.getPriceMessage(price))));
+            t.add(ChatColor.translateAlternateColorCodes('&', s.replace("<price-message>", RoadsideShops.CONFIGMANAGER.getPriceMessage(price))));
 
         }
 
-        return ino;
+        return t;
     }
 
     public List<String> getSellButtonLore() {
 
-        ArrayList<String> ino = new ArrayList<>();
+        ArrayList<String> t = new ArrayList<>();
 
         for (String s : sellButtonLore) {
-            ino.add(ChatColor.translateAlternateColorCodes('&', s));
+            t.add(ChatColor.translateAlternateColorCodes('&', s));
 
         }
 
-        return ino;
+        return t;
     }
 
     public String getPriceButtonTitleNotSet() {
@@ -300,14 +436,14 @@ public class ConfigManager {
 
     public List<String> getPriceButtonLoreNotSet() {
 
-        ArrayList<String> ino = new ArrayList<>();
+        ArrayList<String> t = new ArrayList<>();
 
         for (String s : priceButtonLoreNotSet) {
-            ino.add(ChatColor.translateAlternateColorCodes('&', s));
+            t.add(ChatColor.translateAlternateColorCodes('&', s));
 
         }
 
-        return ino;
+        return t;
     }
 
     public String getPriceButtonTitle() {
@@ -318,14 +454,14 @@ public class ConfigManager {
 
     public List<String> getSellButtonLoreNotSet() {
 
-        ArrayList<String> ino = new ArrayList<>();
+        ArrayList<String> t = new ArrayList<>();
 
         for (String s : sellButtonLoreNotSet) {
-            ino.add(ChatColor.translateAlternateColorCodes('&', s));
+            t.add(ChatColor.translateAlternateColorCodes('&', s));
 
         }
 
-        return ino;
+        return t;
     }
 
     public int getUnlockedSlots() {
@@ -333,14 +469,14 @@ public class ConfigManager {
     }
 
     public List<String> getItemSaleBuyer(double price) {
-        ArrayList<String> ino = new ArrayList<>();
+        ArrayList<String> t = new ArrayList<>();
 
         for (String s : itemSaleBuyer) {
-            ino.add(ChatColor.translateAlternateColorCodes('&', s).replace("<price>", price + "").replace("<price-message>", getPriceMessage(price)));
+            t.add(ChatColor.translateAlternateColorCodes('&', s).replace("<price>", price + "").replace("<price-message>", getPriceMessage(price)));
 
         }
 
-        return ino;
+        return t;
     }
 
     public String getItemSettingsTitle() {
@@ -349,58 +485,58 @@ public class ConfigManager {
     }
 
     public List<String> getItemSaleBuyerSponsor(double price) {
-        ArrayList<String> ino = new ArrayList<>();
+        ArrayList<String> t = new ArrayList<>();
 
         for (String s : itemSaleBuyerSponsor) {
-            ino.add(ChatColor.translateAlternateColorCodes('&', s).replace("<price>", price + "").replace("<price-message>", getPriceMessage(price)));
+            t.add(ChatColor.translateAlternateColorCodes('&', s).replace("<price>", price + "").replace("<price-message>", getPriceMessage(price)));
 
         }
 
-        return ino;
+        return t;
     }
 
     public List<String> getItemSaleSellerSponsor(double price) {
-        ArrayList<String> ino = new ArrayList<>();
+        ArrayList<String> t = new ArrayList<>();
 
         for (String s : itemSaleSellerSponsor) {
-            ino.add(ChatColor.translateAlternateColorCodes('&', s).replace("<price>", price + "").replace("<price-message>", getPriceMessage(price)));
+            t.add(ChatColor.translateAlternateColorCodes('&', s).replace("<price>", price + "").replace("<price-message>", getPriceMessage(price)));
 
         }
 
-        return ino;
+        return t;
     }
 
     public List<String> getItemSaleSeller(double price) {
-        ArrayList<String> ino = new ArrayList<>();
+        ArrayList<String> t = new ArrayList<>();
 
         for (String s : itemSaleSeller) {
-            ino.add(ChatColor.translateAlternateColorCodes('&', s).replace("<price>", price + "").replace("<price-message>", getPriceMessage(price)));
+            t.add(ChatColor.translateAlternateColorCodes('&', s).replace("<price>", price + "").replace("<price-message>", getPriceMessage(price)));
 
         }
 
-        return ino;
+        return t;
     }
 
     public List<String> getLoreForNewspaper(double price, String ownerName) {
-        ArrayList<String> ino = new ArrayList<>();
+        ArrayList<String> t = new ArrayList<>();
 
         for (String s : loreForNewspaper) {
-            ino.add(ChatColor.translateAlternateColorCodes('&', s).replace("<price>", price + "").replace("<price-message>", getPriceMessage(price).replace("<ownerName>", ownerName)));
+            t.add(ChatColor.translateAlternateColorCodes('&', s).replace("<price>", price + "").replace("<price-message>", getPriceMessage(price).replace("<ownerName>", ownerName)));
 
         }
 
-        return ino;
+        return t;
     }
 
     public List<String> getLeftarrowLore() {
-        ArrayList<String> ino = new ArrayList<>();
+        ArrayList<String> t = new ArrayList<>();
 
         for (String s : leftarrowLore) {
-            ino.add(ChatColor.translateAlternateColorCodes('&', s));
+            t.add(ChatColor.translateAlternateColorCodes('&', s));
 
         }
 
-        return ino;
+        return t;
     }
 
     public String getLeftarrowTitle() {
@@ -412,14 +548,14 @@ public class ConfigManager {
     }
 
     public List<String> getRightarrowLore() {
-        ArrayList<String> ino = new ArrayList<>();
+        ArrayList<String> t = new ArrayList<>();
 
         for (String s : rightarrowLore) {
-            ino.add(ChatColor.translateAlternateColorCodes('&', s));
+            t.add(ChatColor.translateAlternateColorCodes('&', s));
 
         }
 
-        return ino;
+        return t;
     }
 
     public String getRightarrowTitle() {
@@ -437,14 +573,14 @@ public class ConfigManager {
 
     public List<String> getUnlockedSlotPanelLore() {
 
-        ArrayList<String> ino = new ArrayList<>();
+        ArrayList<String> t = new ArrayList<>();
 
         for (String s : unlockedSlotPanelLore) {
-            ino.add(ChatColor.translateAlternateColorCodes('&', s));
+            t.add(ChatColor.translateAlternateColorCodes('&', s));
 
         }
 
-        return ino;
+        return t;
     }
 
     public String getLockedSlotPanelTitle() {
@@ -454,13 +590,13 @@ public class ConfigManager {
 
     public List<String> getLockedSlotPanelLore() {
 
-        ArrayList<String> ino = new ArrayList<>();
+        ArrayList<String> t = new ArrayList<>();
 
         for (String s : lockedSlotPanelLore) {
-            ino.add(ChatColor.translateAlternateColorCodes('&', s));
+            t.add(ChatColor.translateAlternateColorCodes('&', s));
 
         }
-        return ino;
+        return t;
     }
 
     public String getPutItem(double price, String type, int amount) {
@@ -515,56 +651,56 @@ public class ConfigManager {
         return ChatColor.translateAlternateColorCodes('&', sponsorButtonTitle);
     }
 
-    public List<String> getNotSponsoring(long minutes) {
+    public List<String> getNotSponsoring() {
 
         List<String> ret = new ArrayList<>();
 
         for (String i : notSponsoring) {
 
-            ret.add(ChatColor.translateAlternateColorCodes('&', i.replace("<minutes>", minutes + "")));
+            ret.add(ChatColor.translateAlternateColorCodes('&', i.replace("<minutes>", ConfigManager.SPONSORTIME/60 + "")));
         }
 
         return ret;
     }
 
-    public List<String> getNotSponsoringChange(long minutes) {
+    public List<String> getNotSponsoringChange() {
         List<String> ret = new ArrayList<>();
 
         for (String i : notSponsoringChange) {
 
-            ret.add(ChatColor.translateAlternateColorCodes('&', i.replace("<minutes>", minutes + "")));
+            ret.add(ChatColor.translateAlternateColorCodes('&', i.replace("<minutes>", ConfigManager.SPONSORTIME/60 +"")));
         }
 
         return ret;
     }
 
-    public List<String> getSponsoring(long minutes) {
+    public List<String> getSponsoring() {
         List<String> ret = new ArrayList<>();
 
         for (String i : sponsoring) {
 
-            ret.add(ChatColor.translateAlternateColorCodes('&', i.replace("<minutes>", minutes + "")));
+            ret.add(ChatColor.translateAlternateColorCodes('&', i.replace("<minutes>", ConfigManager.SPONSORTIME/60 +"")));
         }
 
         return ret;
     }
 
-    public List<String> getSponsoringChange(long minutes) {
+    public List<String> getSponsoringChange() {
         List<String> ret = new ArrayList<>();
 
         for (String i : sponsoringChange) {
 
-            ret.add(ChatColor.translateAlternateColorCodes('&', i.replace("<minutes>", minutes + "")));
+            ret.add(ChatColor.translateAlternateColorCodes('&', i.replace("<minutes>", ConfigManager.SPONSORTIME/60 +"")));
         }
 
         return ret;
     }
 
-    public List<String> getWaitToSponsor(long minutes, long minuteToSponsor) {
+    public List<String> getWaitToSponsor( long minuteToSponsor) {
         List<String> ret = new ArrayList<>();
 
         for (String i : waitToSponsor) {
-            ret.add(ChatColor.translateAlternateColorCodes('&', i.replace("<minutes>", minutes + "").replace("<missToSponsor>", minuteToSponsor + "")));
+            ret.add(ChatColor.translateAlternateColorCodes('&', i.replace("<minutes>", ConfigManager.SPONSORTIME/60 +"").replace("<missToSponsor>", minuteToSponsor + "")));
 
         }
 

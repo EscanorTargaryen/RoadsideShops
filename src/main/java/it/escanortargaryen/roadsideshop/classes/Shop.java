@@ -145,7 +145,7 @@ public class Shop implements Cloneable, InventoryHolder {
 
         invSeller = Bukkit.createInventory(this, 18, RoadsideShops.CONFIGMANAGER.getShopTitle(playerName));
 
-        ItemStack here = RoadsideShops.unlockedslot;
+        ItemStack here = RoadsideShops.unlockedSlot;
 
         for (int i = 0; i < 18; i++) {
 

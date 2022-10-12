@@ -2,13 +2,10 @@ package it.escanortargaryen.roadsideshop;
 
 import it.escanortargaryen.roadsideshop.classes.SellingItem;
 import it.escanortargaryen.roadsideshop.classes.Shop;
-import it.escanortargaryen.roadsideshop.managers.ConfigManager;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.util.ArrayList;
 import java.util.Objects;
 
 /*
@@ -37,16 +34,8 @@ public class InternalUtil {
         if (shop.getSponsor() != null && shop.getSponsor().equals(sellingItem)) {
             sponsor = new ItemStack(Material.FILLED_MAP);
             ItemMeta m = sponsor.getItemMeta();
-            Objects.requireNonNull(m).setDisplayName(ChatColor.GOLD + "Sponsor item");
-            ArrayList<String> ene = new ArrayList<>();
-            ene.add("");
-            ene.add(ChatColor.DARK_RED + "The item is just a sponsored item.");
-            ene.add(ChatColor.DARK_RED + "Wait " + shop.getMissTimeinMins(System.currentTimeMillis())
-                    + " minutes to sponsor another item.");
-            ene.add("");
-            ene.add(ChatColor.GRAY + "Sponsoring an item shows it on the newspaper.");
-            ene.add(ChatColor.GRAY + "You can sponsor an item every " + (ConfigManager.SPONSORTIME / 60) + " minutes.");
-            m.setLore(ene);
+            Objects.requireNonNull(m).setDisplayName(RoadsideShops.CONFIGMANAGER.getSponsorButtonTitle());
+            m.setLore(RoadsideShops.CONFIGMANAGER.getSponsoredLore());
             sponsor.setItemMeta(m);
         } else if (shop.canSponsor(System.currentTimeMillis())) {
 
@@ -57,9 +46,9 @@ public class InternalUtil {
                 Objects.requireNonNull(m).setDisplayName(RoadsideShops.CONFIGMANAGER.getSponsorButtonTitle());
 
                 if (shop.getSponsor() != null) {
-                    m.setLore(RoadsideShops.CONFIGMANAGER.getSponsoringChange((ConfigManager.SPONSORTIME  / 60)));
+                    m.setLore(RoadsideShops.CONFIGMANAGER.getSponsoringChange());
                 } else {
-                    m.setLore(RoadsideShops.CONFIGMANAGER.getSponsoring((ConfigManager.SPONSORTIME  / 60)));
+                    m.setLore(RoadsideShops.CONFIGMANAGER.getSponsoring());
 
                 }
                 sponsor.setItemMeta(m);
@@ -71,9 +60,9 @@ public class InternalUtil {
                 Objects.requireNonNull(m).setDisplayName(RoadsideShops.CONFIGMANAGER.getSponsorButtonTitle());
 
                 if (shop.getSponsor() != null) {
-                    m.setLore(RoadsideShops.CONFIGMANAGER.getNotSponsoringChange((ConfigManager.SPONSORTIME  / 60)));
+                    m.setLore(RoadsideShops.CONFIGMANAGER.getNotSponsoringChange());
                 } else {
-                    m.setLore(RoadsideShops.CONFIGMANAGER.getNotSponsoring((ConfigManager.SPONSORTIME  / 60)));
+                    m.setLore(RoadsideShops.CONFIGMANAGER.getNotSponsoring());
 
                 }
                 sponsor.setItemMeta(m);
@@ -85,7 +74,7 @@ public class InternalUtil {
             ItemMeta m = sponsor.getItemMeta();
             Objects.requireNonNull(m).setDisplayName(RoadsideShops.CONFIGMANAGER.getSponsorButtonTitle());
 
-            m.setLore(RoadsideShops.CONFIGMANAGER.getWaitToSponsor((ConfigManager.SPONSORTIME  / 60), shop.getMissTimeinMins(System.currentTimeMillis())));
+            m.setLore(RoadsideShops.CONFIGMANAGER.getWaitToSponsor(shop.getMissTimeinMins(System.currentTimeMillis())));
 
             sponsor.setItemMeta(m);
 

@@ -1,14 +1,13 @@
 package it.escanortargaryen.roadsideshop.managers;
 
 import com.fren_gor.invManagementPlugin.api.SafeInventoryActions;
-import it.escanortargaryen.roadsideshop.inventory.ItemSettingsIH;
-import it.escanortargaryen.roadsideshop.inventory.RemoveOSponsorIH;
 import it.escanortargaryen.roadsideshop.RoadsideShops;
 import it.escanortargaryen.roadsideshop.classes.SellingItem;
 import it.escanortargaryen.roadsideshop.classes.Shop;
 import it.escanortargaryen.roadsideshop.events.PlayerBuyShopEvent;
+import it.escanortargaryen.roadsideshop.inventory.ItemSettingsIH;
+import it.escanortargaryen.roadsideshop.inventory.RemoveOSponsorIH;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -161,7 +160,7 @@ public class ShopsManager implements Listener {
                                             @Override
                                             public void run() {
 
-                                                shop.getInvSeller().setItem(c.getSlot(), new ItemStack(RoadsideShops.unlockedslot));
+                                                shop.getInvSeller().setItem(c.getSlot(), new ItemStack(RoadsideShops.unlockedSlot));
 
                                                 shop.getInvBuyer().setItem(c.getSlot(), new ItemStack(Material.AIR));
 
@@ -173,7 +172,7 @@ public class ShopsManager implements Listener {
                                     case NOT_MODIFIED:
                                     case NOT_ENOUGH_SPACE: {
 
-                                        p.sendMessage(ChatColor.RED + "Inventory full");
+                                        p.sendMessage(RoadsideShops.CONFIGMANAGER.getFullInv());
 
                                         break;
                                     }
@@ -184,7 +183,7 @@ public class ShopsManager implements Listener {
 
                         } else {
                             e.setCancelled(true);
-                            e.getWhoClicked().sendMessage(ChatColor.RED + "You haven't enough money");
+                            e.getWhoClicked().sendMessage(RoadsideShops.CONFIGMANAGER.getNoMoney());
                         }
 
                     }
