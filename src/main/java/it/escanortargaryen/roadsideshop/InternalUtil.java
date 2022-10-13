@@ -16,8 +16,8 @@ TODO metodo per sistemare i prezzi?
 TODO sistema il config, fai in modo che ci siano i metodi che danno già le strighe sistemate
 TODO fare in modo che si apre l'inventario degli stand quando si chide uno di settings
 TODO fare in modo che si possa annullare l'inserimento del prezzo
-/TODO metti il tempo in secondi
-spostare qui le cose statiche interne
+
+
 TODO cose da sistemare in una classe:
 
         typo
@@ -27,7 +27,8 @@ TODO cose da sistemare in una classe:
         mettere private gli attributi
         rimuovere codice inutile e commenti
         rimuovere import inutili
-        no parole in italiano*/
+        no parole in italiano
+        oBjects.requirenotnull*/
 public class InternalUtil {
 
     public static ConfigManager CONFIGMANAGER;

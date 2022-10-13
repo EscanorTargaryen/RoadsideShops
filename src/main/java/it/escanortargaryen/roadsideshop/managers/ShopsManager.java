@@ -1,13 +1,12 @@
 package it.escanortargaryen.roadsideshop.managers;
 
-import com.fren_gor.invManagementPlugin.api.SafeInventoryActions;
 import it.escanortargaryen.roadsideshop.InternalUtil;
 import it.escanortargaryen.roadsideshop.RoadsideShops;
 import it.escanortargaryen.roadsideshop.classes.SellingItem;
 import it.escanortargaryen.roadsideshop.classes.Shop;
 import it.escanortargaryen.roadsideshop.events.PlayerBuyShopEvent;
-import it.escanortargaryen.roadsideshop.inventory.SaleSettings;
 import it.escanortargaryen.roadsideshop.inventory.ItemSettings;
+import it.escanortargaryen.roadsideshop.inventory.SaleSettings;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
@@ -19,8 +18,8 @@ import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.scheduler.BukkitRunnable;
 
+import java.util.HashMap;
 import java.util.Objects;
 
 public class ShopsManager implements Listener {
@@ -45,7 +44,6 @@ public class ShopsManager implements Listener {
     @EventHandler
     private void onClick(InventoryClickEvent e) {
 
-        e.getView().getTopInventory();
         if (getShop(e.getView().getTopInventory().getHolder()) == null)
 
             return;
@@ -60,7 +58,7 @@ public class ShopsManager implements Listener {
             return;
 
         Shop shop = getShop(e.getView().getTopInventory().getHolder());
-
+        SellingItem sellingItem = shop.getItemAt(e.getSlot());
         if (e.getWhoClicked().getUniqueId().equals(shop.getPlayerUUID())) {
 
             if (e.getClickedInventory().getHolder() != (shop.getHolder())) {
@@ -74,129 +72,77 @@ public class ShopsManager implements Listener {
 
                 return;
             }
+            e.setCancelled(true);
 
-            if (shop.getItemAt(e.getSlot()) == null) {
-                e.setCancelled(true);
-
-                if (!shop.canSell(e.getSlot()))
-                    return;
+            if (sellingItem == null) {
 
                 if (e.getCursor() == null || e.getCursor().getType() == Material.AIR) {
 
                     return;
 
                 }
+                ItemStack i = e.getCursor().clone();
+                e.getView().setCursor(new ItemStack(Material.AIR));
 
-                new BukkitRunnable() {
-
-                    @Override
-                    public void run() {
-                        ItemStack i = e.getCursor().clone();
-                        e.getView().setCursor(new ItemStack(Material.AIR));
-
-                        new SaleSettings(shop, i.clone(), (Player) e.getWhoClicked(), e.getSlot());
-
-                    }
-                }.runTaskLater(RoadsideShops.INSTANCE, 2);
+                new SaleSettings(shop, i.clone(), (Player) e.getWhoClicked(), e.getSlot());
 
             } else {
 
-                e.setCancelled(true);
-                new ItemSettings(shop, shop.getItemAt(e.getSlot()), (Player) e.getWhoClicked());
+                new ItemSettings(shop, sellingItem, (Player) e.getWhoClicked());
 
             }
 
         } else {
             e.setCancelled(true);
 
-            SellingItem venduto = null;
-
             if (e.getCursor() == null || e.getCursor().getType() == Material.AIR) {
 
-                for (SellingItem c : shop.getItems()) {
+                if (sellingItem != null) {
+                    if (RoadsideShops.getEconomy().has((OfflinePlayer) e.getWhoClicked(), sellingItem.getPrice())) {
 
-                    if (c.getSlot() == e.getSlot()) {
+                        PlayerBuyShopEvent ev = new PlayerBuyShopEvent(shop, sellingItem, (Player) e.getWhoClicked());
 
-                        if (RoadsideShops.getEconomy().has((OfflinePlayer) e.getWhoClicked(), c.getPrice())) {
+                        Bukkit.getPluginManager().callEvent(ev);
 
-                            PlayerBuyShopEvent ev = new PlayerBuyShopEvent(shop, c, (Player) e.getWhoClicked());
+                        if (!ev.isCancelled()) {
+                            Player p = (Player) e.getWhoClicked();
 
-                            Bukkit.getPluginManager().callEvent(ev);
+                            HashMap<Integer, ItemStack> i = p.getInventory().addItem(sellingItem.getItem());
 
-                            if (!ev.isCancelled()) {
-                                Player p = (Player) e.getWhoClicked();
-                                switch (SafeInventoryActions.addItem(p.getInventory(), c.getItem())) {
+                            if (i.size() > 0) {
 
-                                    case MODIFIED: {
+                                p.sendMessage(InternalUtil.CONFIGMANAGER.getFullInv());
+                            } else {
 
-                                        RoadsideShops.getEconomy().withdrawPlayer((OfflinePlayer) e.getWhoClicked(), c.getPrice());
-                                        RoadsideShops.getEconomy().depositPlayer(Bukkit.getOfflinePlayer(shop.getPlayerUUID()), c.getPrice());
-                                        venduto = c;
-                                        e.setCancelled(true);
+                                RoadsideShops.getEconomy().withdrawPlayer((OfflinePlayer) e.getWhoClicked(), sellingItem.getPrice());
+                                RoadsideShops.getEconomy().depositPlayer(Bukkit.getOfflinePlayer(shop.getPlayerUUID()), sellingItem.getPrice());
 
-                                        if (c.equals(shop.getSponsor())) {
-                                            shop.getInvBuyer().setItem(shop.getSponsor().getSlot(),
-                                                    shop.getSponsor().getWithPriceBuyer());
-                                            shop.getInvSeller().setItem(shop.getSponsor().getSlot(),
-                                                    shop.getSponsor().getWithPriceSeller());
+                                e.setCancelled(true);
 
-                                            shop.setSponsor(null);
+                                shop.removeItem(sellingItem, false, false, null);
 
-                                        }
+                                e.getWhoClicked().sendMessage(InternalUtil.CONFIGMANAGER.getBoughtMessage(sellingItem.getPrice(), sellingItem.getItem().getType().toString(), sellingItem.getItem().getAmount(), shop.getPlayerName()));
 
-                                        e.getWhoClicked().sendMessage(InternalUtil.CONFIGMANAGER.getBoughtMessage(c.getPrice(), c.getItem().getType().toString(), c.getItem().getAmount(), shop.getPlayerName()));
+                                if (Bukkit.getPlayer(shop.getPlayerUUID()) != null) {
 
-                                        if (Bukkit.getPlayer(shop.getPlayerUUID()) != null) {
+                                    Objects.requireNonNull(Bukkit.getPlayer(shop.getPlayerUUID())).sendMessage(InternalUtil.CONFIGMANAGER.getSellerMessage(
+                                            sellingItem.getPrice(), sellingItem.getItem().getType().toString(), sellingItem.getItem().getAmount(), shop.getPlayerName()));
 
-                                            Objects.requireNonNull(Bukkit.getPlayer(shop.getPlayerUUID())).sendMessage(InternalUtil.CONFIGMANAGER.getSellerMessage(
-                                                    c.getPrice(), c.getItem().getType().toString(), c.getItem().getAmount(), shop.getPlayerName()));
-
-                                        } else {
-                                            shop.getOffMessages().add(InternalUtil.CONFIGMANAGER.getSellerMessage(
-                                                    c.getPrice(), c.getItem().getType().toString(), c.getItem().getAmount(), shop.getPlayerName()));
-
-                                        }
-                                        new BukkitRunnable() {
-
-                                            @Override
-                                            public void run() {
-
-                                                shop.getInvSeller().setItem(c.getSlot(), new ItemStack(InternalUtil.UNLOCKEDSLOT));
-
-                                                shop.getInvBuyer().setItem(c.getSlot(), new ItemStack(Material.AIR));
-
-                                            }
-                                        }.runTaskLater(RoadsideShops.INSTANCE, 2);
-                                        break;
-                                    }
-
-                                    case NOT_MODIFIED:
-                                    case NOT_ENOUGH_SPACE: {
-
-                                        p.sendMessage(InternalUtil.CONFIGMANAGER.getFullInv());
-
-                                        break;
-                                    }
+                                } else {
+                                    shop.getOffMessages().add(InternalUtil.CONFIGMANAGER.getSellerMessage(
+                                            sellingItem.getPrice(), sellingItem.getItem().getType().toString(), sellingItem.getItem().getAmount(), shop.getPlayerName()));
 
                                 }
-
                             }
 
-                        } else {
-                            e.setCancelled(true);
-                            e.getWhoClicked().sendMessage(InternalUtil.CONFIGMANAGER.getNoMoney());
                         }
 
+                    } else {
+                        e.setCancelled(true);
+                        e.getWhoClicked().sendMessage(InternalUtil.CONFIGMANAGER.getNoMoney());
                     }
-                }
-                if (venduto != null) {
-
-                    shop.getItems().remove(venduto);
 
                 }
-
-            } else {
-                e.setCancelled(true);
 
             }
 

@@ -1,6 +1,5 @@
 package it.escanortargaryen.roadsideshop.inventory;
 
-import com.fren_gor.invManagementPlugin.api.SafeInventoryActions;
 import it.escanortargaryen.roadsideshop.InternalUtil;
 import it.escanortargaryen.roadsideshop.RoadsideShops;
 import it.escanortargaryen.roadsideshop.classes.SellingItem;
@@ -57,7 +56,7 @@ public class ItemSettings implements InventoryHolder, Listener {
 
         inv.setItem(20, InternalUtil.BACKARROW);
 
-        inv.setItem(22, shop.generateMapItem( isSponsoring, sellingItem));
+        inv.setItem(22, shop.generateMapItem(isSponsoring, sellingItem));
 
         ItemStack remove = new ItemStack(Material.RED_STAINED_GLASS);
         ItemMeta rem = remove.getItemMeta();
@@ -100,54 +99,26 @@ public class ItemSettings implements InventoryHolder, Listener {
         }
 
         if (e.getSlot() == 24) {
-            ItemStack here = InternalUtil.UNLOCKEDSLOT;
 
             Player p = (Player) e.getWhoClicked();
 
-            switch (SafeInventoryActions.addItem(p.getInventory(), sellingItem.getItem())) {
+            shop.removeItem(sellingItem, p);
+            p.closeInventory();
 
-                case MODIFIED: {
+            new BukkitRunnable() {
 
-                    shop.getInvSeller().setItem(sellingItem.getSlot(), here);
-                    shop.getInvBuyer().setItem(sellingItem.getSlot(), new ItemStack(Material.AIR));
+                @Override
+                public void run() {
 
-                    shop.getItems().remove(sellingItem);
-
-                    e.getWhoClicked().closeInventory();
-                    if (shop.getSponsor() != null && shop.getSponsor().equals(sellingItem)) {
-                        shop.setSponsor(null);
-
-                    }
-
-                    e.getWhoClicked()
-                            .sendMessage(InternalUtil.CONFIGMANAGER.getRemoveItem(sellingItem.getPrice(), sellingItem.getItem().getType().toString(), sellingItem.getItem().getAmount()));
-
-                    new BukkitRunnable() {
-
-                        @Override
-                        public void run() {
-                            Bukkit.dispatchCommand(e.getWhoClicked(), ConfigManager.SHOPCOMMAND);
-
-                        }
-                    }.runTask(RoadsideShops.INSTANCE);
-                    break;
+                    Bukkit.dispatchCommand(p, ConfigManager.SHOPCOMMAND);
                 }
-
-                case NOT_ENOUGH_SPACE:
-                case NOT_MODIFIED: {
-
-                    p.sendMessage(InternalUtil.CONFIGMANAGER.getFullInv());
-
-                    break;
-                }
-
-            }
+            }.runTask(RoadsideShops.INSTANCE);
 
         }
 
         if (e.getSlot() == 22) {
             this.isSponsoring = !this.isSponsoring;
-            e.getInventory().setItem(22, shop.generateMapItem( isSponsoring, sellingItem));
+            e.getInventory().setItem(22, shop.generateMapItem(isSponsoring, sellingItem));
 
         }
 

@@ -188,7 +188,7 @@ public class SaleSettings implements InventoryHolder, Listener {
             if (!settingPrice) {
                 InventoryClickEvent.getHandlerList().unregister(this);
                 InventoryCloseEvent.getHandlerList().unregister(this);
-
+                p.closeInventory();
                 new BukkitRunnable() {
 
                     @Override
@@ -200,6 +200,11 @@ public class SaleSettings implements InventoryHolder, Listener {
             }
             if (!exit && !settingPrice) {
                 HashMap<Integer, ItemStack> i = p.getInventory().addItem(itemToSell);
+
+                if (i.size() > 0) {
+
+                    p.sendMessage(InternalUtil.CONFIGMANAGER.getFullInv());
+                }
 
                 for (ItemStack t : i.values()) {
                     p.getWorld().dropItemNaturally(p.getLocation(), t);

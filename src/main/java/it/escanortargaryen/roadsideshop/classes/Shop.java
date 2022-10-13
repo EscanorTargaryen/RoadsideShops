@@ -12,6 +12,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -86,19 +87,16 @@ public class Shop implements Cloneable, InventoryHolder {
 
     public void openInventory(Player p, ViewMode mode) {
 
-        if (mode == ViewMode.SELLER)
+        if (mode == ViewMode.SELLER) {
             if (invSeller == null) {
-                calculateSlots(p);
+
                 invSeller = getInventory();
 
-                p.openInventory(invSeller);
-
-            } else {
-
-                p.openInventory(invSeller);
-
             }
-        else {
+
+            p.openInventory(invSeller);
+
+        } else {
             if (invBuyer == null) {
 
                 invSeller = getInventory();
@@ -111,8 +109,8 @@ public class Shop implements Cloneable, InventoryHolder {
     }
 
     public void updateInventory() {
-
-        invSeller = getInventory();
+        updateInvSeller();
+        updateInvBuyer();
 
     }
 
@@ -162,111 +160,120 @@ public class Shop implements Cloneable, InventoryHolder {
 
         invSeller = Bukkit.createInventory(this, 18, InternalUtil.CONFIGMANAGER.getShopTitle(playerName));
 
-        ItemStack here = InternalUtil.UNLOCKEDSLOT;
-
-        for (int i = 0; i < 18; i++) {
-
-            invSeller.setItem(i, InternalUtil.LOCKEDSLOT);
-        }
-
-        for (int i = 1; i < unlockedSlotsNumber + 1; i++) {
-
-            if (i > 7) {
-
-                invSeller.setItem(i + 2, here);
-
-            } else {
-                invSeller.setItem(i, here);
-
-            }
-
-        }
-
-        invSeller.setItem(0, InternalUtil.LOG);
-        invSeller.setItem(8, InternalUtil.LOG);
-        invSeller.setItem(9, InternalUtil.LOG);
-        invSeller.setItem(17, InternalUtil.LOG);
-
-        if (items != null)
-            for (SellingItem s : items) {
-
-                if (s.equals(sponsor)) {
-
-                    invSeller.setItem(s.getSlot(), s.getWithPriceAndSponsorSeller());
-
-                } else {
-
-                    invSeller.setItem(s.getSlot(), s.getWithPriceSeller());
-
-                }
-
-            }
-
         invBuyer = Bukkit.createInventory(this, 18, InternalUtil.CONFIGMANAGER.getShopTitle(playerName));
 
-        invBuyer.setItem(0, InternalUtil.LOG);
-        invBuyer.setItem(8, InternalUtil.LOG);
-        invBuyer.setItem(9, InternalUtil.LOG);
-        invBuyer.setItem(17, InternalUtil.LOG);
-
-        if (items != null)
-            for (SellingItem s : items) {
-
-                if (s.equals(sponsor)) {
-
-                    invBuyer.setItem(s.getSlot(), s.getWithPriceAndSponsorBuyer());
-
-                } else {
-
-                    invBuyer.setItem(s.getSlot(), s.getWithPriceBuyer());
-
-                }
-
-            }
+        updateInventory();
 
         return invSeller;
     }
 
-    public void addItem(SellingItem sellingItem, boolean isSponsoring, boolean sendMessage, Player p) {
+    private void updateInvSeller() {
+        if (invSeller != null) {
 
-        if (p == null && sendMessage) {
+            ItemStack here = InternalUtil.UNLOCKEDSLOT;
+
+            for (int i = 0; i < 18; i++) {
+
+                invSeller.setItem(i, InternalUtil.LOCKEDSLOT);
+            }
+
+            for (int i = 1; i < unlockedSlotsNumber + 1; i++) {
+
+                if (i > 7) {
+
+                    invSeller.setItem(i + 2, here);
+
+                } else {
+                    invSeller.setItem(i, here);
+
+                }
+
+            }
+
+            invSeller.setItem(0, InternalUtil.LOG);
+            invSeller.setItem(8, InternalUtil.LOG);
+            invSeller.setItem(9, InternalUtil.LOG);
+            invSeller.setItem(17, InternalUtil.LOG);
+
+            if (items != null)
+                for (SellingItem s : items) {
+
+                    if (s.equals(sponsor)) {
+
+                        invSeller.setItem(s.getSlot(), s.getWithPriceAndSponsorSeller());
+
+                    } else {
+
+                        invSeller.setItem(s.getSlot(), s.getWithPriceSeller());
+
+                    }
+
+                }
+        }
+
+    }
+
+    private void updateInvBuyer() {
+
+        if (invBuyer != null) {
+
+            invBuyer.setItem(0, InternalUtil.LOG);
+            invBuyer.setItem(8, InternalUtil.LOG);
+            invBuyer.setItem(9, InternalUtil.LOG);
+            invBuyer.setItem(17, InternalUtil.LOG);
+
+            if (items != null)
+                for (SellingItem s : items) {
+
+                    if (s.equals(sponsor)) {
+
+                        invBuyer.setItem(s.getSlot(), s.getWithPriceAndSponsorBuyer());
+
+                    } else {
+
+                        invBuyer.setItem(s.getSlot(), s.getWithPriceBuyer());
+
+                    }
+
+                }
+        }
+
+    }
+
+    public void addItem(SellingItem sellingItem) {
+        addItem(sellingItem, false, false);
+
+    }
+
+    public void addItem(SellingItem sellingItem, boolean isSponsoring, boolean sendMessage) {
+        addItem(sellingItem, isSponsoring, sendMessage, null);
+
+    }
+
+    public void addItem(SellingItem sellingItem, boolean isSponsoring, boolean notifyPlayer, Player p) {
+
+        if (p == null && notifyPlayer) {
             p = Bukkit.getPlayer(sellingItem.getPlayerUUID());
 
         }
 
-        if (items.size() == 0)
-            invBuyer.setItem(1, new ItemStack(Material.AIR));//TODO questa cosa ha senso?
+       /* if (items.size() == 0)
+            invBuyer.setItem(1, new ItemStack(Material.AIR));*///TODO questa cosa ha senso?
         items.add(sellingItem);
 
-        invBuyer.setItem(sellingItem.getSlot(), sellingItem.getWithPriceBuyer());
-        invBuyer.setItem(sellingItem.getSlot(), sellingItem.getWithPriceSeller());
-        if (sendMessage && p != null)
+        updateInventory();
+
+        if (notifyPlayer && p != null)
             p.sendMessage(InternalUtil.CONFIGMANAGER.getPutItem(sellingItem.getPrice(), sellingItem.getItem().getType().toString(), sellingItem.getItem().getAmount()));
 
         if (isSponsoring) {
-            if (sendMessage && p != null)
+            if (notifyPlayer && p != null)
                 p.sendMessage(InternalUtil.CONFIGMANAGER.getSponsorSet(sellingItem.getPrice(), sellingItem.getItem().getType().toString(), sellingItem.getItem().getAmount()));
 
             setSponsorItem(sellingItem);
 
         }
 
-    }
-
-    public boolean canSell(int slot) {
-
-        if (slot > 0 && slot < 8) {
-
-            return slot <= unlockedSlotsNumber;
-
-        } else if (slot > 9 && slot < 17) {
-
-            int temp = slot - 2;
-
-            return temp <= unlockedSlotsNumber;
-        }
-
-        return false;
     }
 
     @Override
@@ -285,6 +292,83 @@ public class Shop implements Cloneable, InventoryHolder {
         result = prime * result + ((playerUUID == null) ? 0 : playerUUID.hashCode());
         result = prime * result + ((playerName == null) ? 0 : playerName.hashCode());
         return result;
+    }
+
+    public void removeItem(int slot) {
+
+        SellingItem i = getItemAt(slot);
+        if (i != null) {
+
+            removeItem(i, true, true, null);
+
+        }
+
+    }
+
+    public void removeItem(SellingItem sellingItem, Player p) {
+
+        Objects.requireNonNull(sellingItem);
+
+        removeItem(sellingItem, true, true, p);
+
+    }
+
+    public void removeItem(int slot, boolean notifyPlayer, boolean giveBack, Player p) {
+
+        SellingItem i = getItemAt(slot);
+        if (i != null) {
+
+            removeItem(i, notifyPlayer, giveBack, p);
+
+        }
+
+    }
+
+    public void removeItem(SellingItem sellingItem, boolean notifyPlayer, boolean giveBack, Player p) {
+
+        Objects.requireNonNull(sellingItem);
+        if (sellingItem != null) {
+            if (p == null && notifyPlayer) {
+                p = Bukkit.getPlayer(sellingItem.getPlayerUUID());
+
+            }
+
+            if (items.remove(sellingItem)) {
+
+                if (sellingItem.equals(sponsor)){
+
+                    sponsor = null;
+                }
+                updateInventory();
+
+                if (giveBack && p != null) {
+
+                    HashMap<Integer, ItemStack> r = p.getInventory().addItem(sellingItem.getItem());
+                    if (r.values().size() > 0) {
+                        if (notifyPlayer) {
+
+                            p.sendMessage(InternalUtil.CONFIGMANAGER.getFullInv());
+
+                        }
+                        for (ItemStack t : r.values()) {
+                            p.getWorld().dropItemNaturally(p.getLocation(), t);
+
+                        }
+                    } else {
+
+                        if (notifyPlayer) {
+
+                            p.sendMessage(InternalUtil.CONFIGMANAGER.getRemoveItem(sellingItem.getPrice(), sellingItem.getItem().getType().toString(), sellingItem.getItem().getAmount()));
+
+                        }
+
+                    }
+                }
+
+            }
+
+        }
+
     }
 
     @Override
@@ -363,17 +447,10 @@ public class Shop implements Cloneable, InventoryHolder {
     }
 
     public void setSponsorItem(SellingItem sellingItem) {
-        if (sponsor != null) {
 
-            invBuyer.setItem(sponsor.getSlot(), sponsor.getWithPriceBuyer());
-            invSeller.setItem(sponsor.getSlot(), sponsor.getWithPriceSeller());
-
-        }
         setTimeSponsor(System.currentTimeMillis());
         setSponsor(sellingItem);
-
-        invBuyer.setItem(sellingItem.getSlot(), sellingItem.getWithPriceAndSponsorBuyer());
-        invSeller.setItem(sellingItem.getSlot(), sellingItem.getWithPriceAndSponsorSeller());
+        updateInventory();
 
     }
 

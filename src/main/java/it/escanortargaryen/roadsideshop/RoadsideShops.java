@@ -2,24 +2,21 @@ package it.escanortargaryen.roadsideshop;
 
 import dev.jorel.commandapi.CommandAPI;
 import dev.jorel.commandapi.CommandAPIConfig;
-import it.escanortargaryen.roadsideshop.classes.SellingItem;
 import it.escanortargaryen.roadsideshop.classes.Shop;
 import it.escanortargaryen.roadsideshop.managers.Commands;
 import it.escanortargaryen.roadsideshop.managers.ShopsManager;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Objects;
 import java.util.UUID;
 
 import static it.escanortargaryen.roadsideshop.InternalUtil.CONFIGMANAGER;
@@ -96,10 +93,10 @@ public class RoadsideShops extends JavaPlugin implements Listener {
 
         Bukkit.getPluginManager().registerEvents(this, this);
         INSTANCE = this;
-
+        new InternalUtil();
         new ShopsManager();
         new Commands();
-        new InternalUtil();
+
         String s = "§7----§c§nRoadside§r §6§nShops§r§7----§r\n§fby §eEscanorTargaryen§r\n§2Enabled version: " + this.getDescription().getVersion() + "§r\n§7-----------------------§r";
         Bukkit.getConsoleSender().sendMessage(s);
 
@@ -133,64 +130,13 @@ public class RoadsideShops extends JavaPlugin implements Listener {
     }
 
     public static void removeShop(Player player) {
+        Objects.requireNonNull(player);
         cachedShops.remove(player.getUniqueId());
 
     }
 
     public static void removeShop(Shop shop) {
         removeShop(shop.getPlayerUUID());
-
-    }
-
-    public static void clearShop(UUID player) {
-
-        if (hasShop(player)) {
-            getShop(player).clear();
-
-        }
-
-    }
-
-    public static void removeItemShop() {
-        //TODO
-
-    }
-
-    public static void addItem(Player player, SellingItem sellingItem, boolean isSponsoring, boolean sendMessage) {
-
-       addItem(player.getUniqueId(), sellingItem, isSponsoring, sendMessage);
-
-    }
-    public static void addItem(Player player, SellingItem sellingItem) {
-
-        addItem(player.getUniqueId(), sellingItem);
-
-    }
-
-    public static void addItem(UUID player, SellingItem sellingItem, boolean isSponsoring, boolean sendMessage) {
-
-        if (hasShop(player)) {
-
-            Shop s = getShop(player);
-            addItem(s, sellingItem, isSponsoring, sendMessage);
-
-        }
-
-    }
-
-    public static void addItem(UUID player, SellingItem sellingItem) {
-
-        addItem(player, sellingItem);
-
-    }
-
-    public static void addItem(Shop shop, SellingItem sellingItem) {
-        addItem(shop, sellingItem, false, false);
-
-    }
-
-    public static void addItem(Shop shop, SellingItem sellingItem, boolean isSponsoring, boolean sendMessage) {
-        shop.addItem(sellingItem, isSponsoring, sendMessage, null);
 
     }
 
