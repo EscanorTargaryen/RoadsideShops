@@ -2,6 +2,8 @@ package it.escanortargaryen.roadsideshop;
 
 import dev.jorel.commandapi.CommandAPI;
 import dev.jorel.commandapi.CommandAPIConfig;
+import it.escanortargaryen.roadsideshop.classes.LockedSlot;
+import it.escanortargaryen.roadsideshop.classes.LockedSlotCheck;
 import it.escanortargaryen.roadsideshop.classes.Shop;
 import it.escanortargaryen.roadsideshop.managers.Commands;
 import it.escanortargaryen.roadsideshop.managers.ShopsManager;
@@ -11,9 +13,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Objects;
@@ -33,8 +37,11 @@ public class RoadsideShops extends JavaPlugin implements Listener {
         return econ;
     }
 
+    private final ArrayList<LockedSlot> lockedSlots = new ArrayList<>();
+
     @Override
     public void onLoad() {
+        INSTANCE = this;
         CommandAPI.onLoad(new CommandAPIConfig().verboseOutput(false));
 
         saveResource("config.yml", false);
@@ -92,7 +99,7 @@ public class RoadsideShops extends JavaPlugin implements Listener {
         CommandAPI.onEnable(this);
 
         Bukkit.getPluginManager().registerEvents(this, this);
-        INSTANCE = this;
+
         new InternalUtil();
         new ShopsManager();
         new Commands();
@@ -100,6 +107,16 @@ public class RoadsideShops extends JavaPlugin implements Listener {
         String s = "§7----§c§nRoadside§r §6§nShops§r§7----§r\n§fby §eEscanorTargaryen§r\n§2Enabled version: " + this.getDescription().getVersion() + "§r\n§7-----------------------§r";
         Bukkit.getConsoleSender().sendMessage(s);
 
+    }
+
+    public static void registerCustomLockedSlot(ItemStack itemStack, LockedSlotCheck lockedSlotCheck) {
+
+        INSTANCE.lockedSlots.add(new LockedSlot(itemStack, lockedSlotCheck));
+
+    }
+
+    public ArrayList<LockedSlot> getLockedSlots() {
+        return new ArrayList<>(lockedSlots);
     }
 
     public static boolean hasShop(Player player) {

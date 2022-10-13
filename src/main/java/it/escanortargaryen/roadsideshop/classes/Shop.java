@@ -1,6 +1,7 @@
 package it.escanortargaryen.roadsideshop.classes;
 
 import it.escanortargaryen.roadsideshop.InternalUtil;
+import it.escanortargaryen.roadsideshop.RoadsideShops;
 import it.escanortargaryen.roadsideshop.managers.ConfigManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -28,14 +29,9 @@ public class Shop implements Cloneable, InventoryHolder {
 
     private SellingItem sponsor = null;
 
-    public final int maxSlots = 14;
+    private final int unlockedSlotsNumber = InternalUtil.CONFIGMANAGER.getUnlockedSlots();
 
-//	private final int autoSlotsMax = 2;
-    // private int autoSlots = 0;
-
-    private int unlockedSlotsNumber = InternalUtil.CONFIGMANAGER.getUnlockedSlots();
-
-    private ArrayList<SellingItem> items = new ArrayList<>();
+    private final ArrayList<SellingItem> items = new ArrayList<>();
 
     private final ArrayList<String> offMessages = new ArrayList<>();
 
@@ -43,18 +39,11 @@ public class Shop implements Cloneable, InventoryHolder {
 
     private long lastSponsor = 0L;
 
-    public Shop(UUID playerUUID, String name, ArrayList<SellingItem> m, SellingItem sponsor) {
-
-        this.playerUUID = playerUUID;
-        playerName = name;
-        items = m;
-        this.sponsor = sponsor;
-    }
-
     public Shop(Player player) {
 
         this.playerUUID = player.getUniqueId();
         playerName = player.getName();
+
     }
 
     public boolean canSponsor(long time) {
@@ -114,10 +103,6 @@ public class Shop implements Cloneable, InventoryHolder {
 
     }
 
-    public void calculateSlots(Player p) {
-
-    }
-
     public SellingItem getItemAt(int slot) {
 
         for (SellingItem s : items) {
@@ -169,20 +154,44 @@ public class Shop implements Cloneable, InventoryHolder {
             invSeller.setItem(9, InternalUtil.LOG);
             invSeller.setItem(17, InternalUtil.LOG);
 
-            if (items != null)
-                for (SellingItem s : items) {
+            for (SellingItem s : items) {
 
-                    if (s.equals(sponsor)) {
+                if (s.equals(sponsor)) {
 
-                        invSeller.setItem(s.getSlot(), s.getWithPriceAndSponsorSeller());
+                    invSeller.setItem(s.getSlot(), s.getWithPriceAndSponsorSeller());
 
-                    } else {
+                } else {
 
-                        invSeller.setItem(s.getSlot(), s.getWithPriceSeller());
+                    invSeller.setItem(s.getSlot(), s.getWithPriceSeller());
+
+                }
+
+            }
+
+            ArrayList<LockedSlot> lo = RoadsideShops.INSTANCE.getLockedSlots();
+
+            Player p = Bukkit.getPlayer(playerUUID);
+            if (p != null) {
+                int y = 14;
+
+                for (LockedSlot l : lo) {
+                    if (l.isLocked(p)) {
+                        if (y > 7) {
+
+                            invSeller.setItem(y + 2, l.getItemStack());
+
+                        } else {
+                            invSeller.setItem(y, l.getItemStack());
+
+                        }
+                        y--;
 
                     }
 
                 }
+
+            }
+
         }
 
     }
@@ -202,20 +211,19 @@ public class Shop implements Cloneable, InventoryHolder {
             invBuyer.setItem(9, InternalUtil.LOG);
             invBuyer.setItem(17, InternalUtil.LOG);
 
-            if (items != null)
-                for (SellingItem s : items) {
+            for (SellingItem s : items) {
 
-                    if (s.equals(sponsor)) {
+                if (s.equals(sponsor)) {
 
-                        invBuyer.setItem(s.getSlot(), s.getWithPriceAndSponsorBuyer());
+                    invBuyer.setItem(s.getSlot(), s.getWithPriceAndSponsorBuyer());
 
-                    } else {
+                } else {
 
-                        invBuyer.setItem(s.getSlot(), s.getWithPriceBuyer());
-
-                    }
+                    invBuyer.setItem(s.getSlot(), s.getWithPriceBuyer());
 
                 }
+
+            }
         }
 
     }
@@ -307,44 +315,41 @@ public class Shop implements Cloneable, InventoryHolder {
     public void removeItem(SellingItem sellingItem, boolean notifyPlayer, boolean giveBack, Player p) {
 
         Objects.requireNonNull(sellingItem);
-        if (sellingItem != null) {
-            if (p == null && notifyPlayer) {
-                p = Bukkit.getPlayer(sellingItem.getPlayerUUID());
+        if (p == null && notifyPlayer) {
+            p = Bukkit.getPlayer(sellingItem.getPlayerUUID());
 
+        }
+
+        if (items.remove(sellingItem)) {
+
+            if (sellingItem.equals(sponsor)) {
+
+                sponsor = null;
             }
+            updateInventory();
 
-            if (items.remove(sellingItem)) {
+            if (giveBack && p != null) {
 
-                if (sellingItem.equals(sponsor)) {
+                HashMap<Integer, ItemStack> r = p.getInventory().addItem(sellingItem.getItem());
+                if (r.values().size() > 0) {
+                    if (notifyPlayer) {
 
-                    sponsor = null;
-                }
-                updateInventory();
-
-                if (giveBack && p != null) {
-
-                    HashMap<Integer, ItemStack> r = p.getInventory().addItem(sellingItem.getItem());
-                    if (r.values().size() > 0) {
-                        if (notifyPlayer) {
-
-                            p.sendMessage(InternalUtil.CONFIGMANAGER.getFullInvDrop());
-
-                        }
-                        for (ItemStack t : r.values()) {
-                            p.getWorld().dropItemNaturally(p.getLocation(), t);
-
-                        }
-                    } else {
-
-                        if (notifyPlayer) {
-
-                            p.sendMessage(InternalUtil.CONFIGMANAGER.getRemoveItem(sellingItem.getPrice(), sellingItem.getItem().getType().toString(), sellingItem.getItem().getAmount()));
-
-                        }
+                        p.sendMessage(InternalUtil.CONFIGMANAGER.getFullInvDrop());
 
                     }
-                }
+                    for (ItemStack t : r.values()) {
+                        p.getWorld().dropItemNaturally(p.getLocation(), t);
 
+                    }
+                } else {
+
+                    if (notifyPlayer) {
+
+                        p.sendMessage(InternalUtil.CONFIGMANAGER.getRemoveItem(sellingItem.getPrice(), sellingItem.getItem().getType().toString(), sellingItem.getItem().getAmount()));
+
+                    }
+
+                }
             }
 
         }

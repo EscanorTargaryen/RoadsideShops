@@ -11,15 +11,13 @@ import java.util.Objects;
 
 /*
 
-TODO capire se serve il metodo calculate slots
-
 TODO cose da sistemare in una classe:
 
         typo
         warnings
         spazi
         documentazione
-        mettere private gli attributi
+        mettere private e protected gli attributi
         rimuovere codice inutile e commenti
         rimuovere import inutili
         no parole in italiano

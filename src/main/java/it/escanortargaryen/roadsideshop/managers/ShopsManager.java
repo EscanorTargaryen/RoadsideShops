@@ -76,15 +76,19 @@ public class ShopsManager implements Listener {
 
             if (sellingItem == null) {
 
-                if (e.getCursor() == null || e.getCursor().getType() == Material.AIR) {
+                if (e.getCurrentItem().equals(InternalUtil.UNLOCKEDSLOT)) {
 
-                    return;
+                    if (e.getCursor() == null || e.getCursor().getType() == Material.AIR) {
+
+                        return;
+
+                    }
+                    ItemStack i = e.getCursor().clone();
+                    e.getView().setCursor(new ItemStack(Material.AIR));
+
+                    new SaleSettings(shop, i.clone(), (Player) e.getWhoClicked(), e.getSlot());
 
                 }
-                ItemStack i = e.getCursor().clone();
-                e.getView().setCursor(new ItemStack(Material.AIR));
-
-                new SaleSettings(shop, i.clone(), (Player) e.getWhoClicked(), e.getSlot());
 
             } else {
 
