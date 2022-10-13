@@ -43,7 +43,7 @@ public class RemoveOSponsorIH implements InventoryHolder, Listener {
     @Override
     public Inventory getInventory() {
 
-        Inventory inv = Bukkit.createInventory(this, 27, RoadsideShops.CONFIGMANAGER.getItemModify());
+        Inventory inv = Bukkit.createInventory(this, 27, InternalUtil.CONFIGMANAGER.getItemModify());
 
         ItemStack t = sellingItem.getWithPriceSeller().clone();
         ItemMeta tt = t.getItemMeta();
@@ -61,8 +61,8 @@ public class RemoveOSponsorIH implements InventoryHolder, Listener {
 
         ItemStack remove = new ItemStack(Material.RED_STAINED_GLASS);
         ItemMeta rem = remove.getItemMeta();
-        Objects.requireNonNull(rem).setDisplayName(RoadsideShops.CONFIGMANAGER.getRemoveButtonTitle());
-        rem.setLore(RoadsideShops.CONFIGMANAGER.getRemoveButtonLore());
+        Objects.requireNonNull(rem).setDisplayName(InternalUtil.CONFIGMANAGER.getRemoveButtonTitle());
+        rem.setLore(InternalUtil.CONFIGMANAGER.getRemoveButtonLore());
         remove.setItemMeta(rem);
         inv.setItem(24, remove);
 
@@ -100,7 +100,7 @@ public class RemoveOSponsorIH implements InventoryHolder, Listener {
         }
 
         if (e.getSlot() == 24) {
-            ItemStack here = RoadsideShops.UNLOCKEDSLOT;
+            ItemStack here = InternalUtil.UNLOCKEDSLOT;
 
             Player p = (Player) e.getWhoClicked();
 
@@ -120,7 +120,7 @@ public class RemoveOSponsorIH implements InventoryHolder, Listener {
                     }
 
                     e.getWhoClicked()
-                            .sendMessage(RoadsideShops.CONFIGMANAGER.getRemoveItem(sellingItem.getPrice(), sellingItem.getI().getType().toString(), sellingItem.getI().getAmount()));
+                            .sendMessage(InternalUtil.CONFIGMANAGER.getRemoveItem(sellingItem.getPrice(), sellingItem.getI().getType().toString(), sellingItem.getI().getAmount()));
 
                     new BukkitRunnable() {
 
@@ -136,7 +136,7 @@ public class RemoveOSponsorIH implements InventoryHolder, Listener {
                 case NOT_ENOUGH_SPACE:
                 case NOT_MODIFIED: {
 
-                    p.sendMessage(RoadsideShops.CONFIGMANAGER.getFullInv());
+                    p.sendMessage(InternalUtil.CONFIGMANAGER.getFullInv());
 
                     break;
                 }
@@ -163,7 +163,7 @@ public class RemoveOSponsorIH implements InventoryHolder, Listener {
             if (isSponsoring) {
 
                 e.getPlayer()
-                        .sendMessage(RoadsideShops.CONFIGMANAGER.getSponsorSet(sellingItem.getPrice(), sellingItem.getI().getType().toString(), sellingItem.getI().getAmount()));
+                        .sendMessage(InternalUtil.CONFIGMANAGER.getSponsorSet(sellingItem.getPrice(), sellingItem.getI().getType().toString(), sellingItem.getI().getAmount()));
 
                 InternalUtil.setSponsorItem(shop, sellingItem);
             }

@@ -1,5 +1,6 @@
 package it.escanortargaryen.roadsideshop.classes;
 
+import it.escanortargaryen.roadsideshop.InternalUtil;
 import it.escanortargaryen.roadsideshop.RoadsideShops;
 import org.bukkit.Bukkit;
 import org.bukkit.inventory.ItemStack;
@@ -58,7 +59,7 @@ public class SellingItem implements Cloneable {
             p.addAll(m.getLore());
 
         }
-        p.addAll(RoadsideShops.CONFIGMANAGER.getItemSaleSeller(price));
+        p.addAll(InternalUtil.CONFIGMANAGER.getItemSaleSeller(price));
         m.setLore(p);
         ItemStack h = i.clone();
         h.setItemMeta(m);
@@ -70,7 +71,7 @@ public class SellingItem implements Cloneable {
             p.addAll(m.getLore());
 
         }
-        p.addAll(RoadsideShops.CONFIGMANAGER.getItemSaleSellerSponsor(price));
+        p.addAll(InternalUtil.CONFIGMANAGER.getItemSaleSellerSponsor(price));
         m.setLore(p);
         h = i.clone();
         h.setItemMeta(m);
@@ -82,7 +83,7 @@ public class SellingItem implements Cloneable {
             p.addAll(m.getLore());
 
         }
-        p.addAll(RoadsideShops.CONFIGMANAGER.getItemSaleBuyer(price));
+        p.addAll(InternalUtil.CONFIGMANAGER.getItemSaleBuyer(price));
         m.setLore(p);
         h = i.clone();
         h.setItemMeta(m);
@@ -94,7 +95,7 @@ public class SellingItem implements Cloneable {
             p.addAll(m.getLore());
 
         }
-        p.addAll(RoadsideShops.CONFIGMANAGER.getItemSaleBuyerSponsor(price));
+        p.addAll(InternalUtil.CONFIGMANAGER.getItemSaleBuyerSponsor(price));
         m.setLore(p);
         h = i.clone();
         h.setItemMeta(m);
@@ -108,7 +109,7 @@ public class SellingItem implements Cloneable {
             p.addAll(m.getLore());
 
         }
-        p.addAll(RoadsideShops.CONFIGMANAGER.getLoreForNewspaper(price, name));
+        p.addAll(InternalUtil.CONFIGMANAGER.getLoreForNewspaper(price, name));
         m.setLore(p);
         h = i.clone();
         h.setItemMeta(m);

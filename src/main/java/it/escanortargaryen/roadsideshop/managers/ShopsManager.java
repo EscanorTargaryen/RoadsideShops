@@ -1,6 +1,7 @@
 package it.escanortargaryen.roadsideshop.managers;
 
 import com.fren_gor.invManagementPlugin.api.SafeInventoryActions;
+import it.escanortargaryen.roadsideshop.InternalUtil;
 import it.escanortargaryen.roadsideshop.RoadsideShops;
 import it.escanortargaryen.roadsideshop.classes.SellingItem;
 import it.escanortargaryen.roadsideshop.classes.Shop;
@@ -143,15 +144,15 @@ public class ShopsManager implements Listener {
 
                                         }
 
-                                        e.getWhoClicked().sendMessage(RoadsideShops.CONFIGMANAGER.getBoughtMessage(c.getPrice(), c.getI().getType().toString(), c.getI().getAmount(), shop.getPlayerName()));
+                                        e.getWhoClicked().sendMessage(InternalUtil.CONFIGMANAGER.getBoughtMessage(c.getPrice(), c.getI().getType().toString(), c.getI().getAmount(), shop.getPlayerName()));
 
                                         if (Bukkit.getPlayer(shop.getPlayerUUID()) != null) {
 
-                                            Objects.requireNonNull(Bukkit.getPlayer(shop.getPlayerUUID())).sendMessage(RoadsideShops.CONFIGMANAGER.getSellerMessage(
+                                            Objects.requireNonNull(Bukkit.getPlayer(shop.getPlayerUUID())).sendMessage(InternalUtil.CONFIGMANAGER.getSellerMessage(
                                                     c.getPrice(), c.getI().getType().toString(), c.getI().getAmount(), shop.getPlayerName()));
 
                                         } else {
-                                            shop.getOffMessages().add(RoadsideShops.CONFIGMANAGER.getSellerMessage(
+                                            shop.getOffMessages().add(InternalUtil.CONFIGMANAGER.getSellerMessage(
                                                     c.getPrice(), c.getI().getType().toString(), c.getI().getAmount(), shop.getPlayerName()));
 
                                         }
@@ -160,7 +161,7 @@ public class ShopsManager implements Listener {
                                             @Override
                                             public void run() {
 
-                                                shop.getInvSeller().setItem(c.getSlot(), new ItemStack(RoadsideShops.UNLOCKEDSLOT));
+                                                shop.getInvSeller().setItem(c.getSlot(), new ItemStack(InternalUtil.UNLOCKEDSLOT));
 
                                                 shop.getInvBuyer().setItem(c.getSlot(), new ItemStack(Material.AIR));
 
@@ -172,7 +173,7 @@ public class ShopsManager implements Listener {
                                     case NOT_MODIFIED:
                                     case NOT_ENOUGH_SPACE: {
 
-                                        p.sendMessage(RoadsideShops.CONFIGMANAGER.getFullInv());
+                                        p.sendMessage(InternalUtil.CONFIGMANAGER.getFullInv());
 
                                         break;
                                     }
@@ -183,7 +184,7 @@ public class ShopsManager implements Listener {
 
                         } else {
                             e.setCancelled(true);
-                            e.getWhoClicked().sendMessage(RoadsideShops.CONFIGMANAGER.getNoMoney());
+                            e.getWhoClicked().sendMessage(InternalUtil.CONFIGMANAGER.getNoMoney());
                         }
 
                     }

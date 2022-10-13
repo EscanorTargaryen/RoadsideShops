@@ -1,5 +1,6 @@
 package it.escanortargaryen.roadsideshop.classes;
 
+import it.escanortargaryen.roadsideshop.InternalUtil;
 import it.escanortargaryen.roadsideshop.RoadsideShops;
 import it.escanortargaryen.roadsideshop.managers.ConfigManager;
 import org.bukkit.Bukkit;
@@ -29,7 +30,7 @@ public class Shop implements Cloneable, InventoryHolder {
 //	private final int autoSlotsMax = 2;
     // private int autoSlots = 0;
 
-    private int unlockedSlotsNumber = RoadsideShops.CONFIGMANAGER.getUnlockedSlots();
+    private int unlockedSlotsNumber = InternalUtil.CONFIGMANAGER.getUnlockedSlots();
 
     private ArrayList<SellingItem> items = new ArrayList<>();
 
@@ -143,13 +144,13 @@ public class Shop implements Cloneable, InventoryHolder {
     @Override
     public @NotNull Inventory getInventory() {
 
-        invSeller = Bukkit.createInventory(this, 18, RoadsideShops.CONFIGMANAGER.getShopTitle(playerName));
+        invSeller = Bukkit.createInventory(this, 18, InternalUtil.CONFIGMANAGER.getShopTitle(playerName));
 
-        ItemStack here = RoadsideShops.UNLOCKEDSLOT;
+        ItemStack here = InternalUtil.UNLOCKEDSLOT;
 
         for (int i = 0; i < 18; i++) {
 
-            invSeller.setItem(i, RoadsideShops.LOCKEDSLOT);
+            invSeller.setItem(i, InternalUtil.LOCKEDSLOT);
         }
 
         for (int i = 1; i < unlockedSlotsNumber + 1; i++) {
@@ -165,10 +166,10 @@ public class Shop implements Cloneable, InventoryHolder {
 
         }
 
-        invSeller.setItem(0, RoadsideShops.LOG);
-        invSeller.setItem(8, RoadsideShops.LOG);
-        invSeller.setItem(9, RoadsideShops.LOG);
-        invSeller.setItem(17, RoadsideShops.LOG);
+        invSeller.setItem(0, InternalUtil.LOG);
+        invSeller.setItem(8, InternalUtil.LOG);
+        invSeller.setItem(9, InternalUtil.LOG);
+        invSeller.setItem(17, InternalUtil.LOG);
 
         if (items != null)
             for (SellingItem s : items) {
@@ -185,12 +186,12 @@ public class Shop implements Cloneable, InventoryHolder {
 
             }
 
-        invBuyer = Bukkit.createInventory(this, 18, RoadsideShops.CONFIGMANAGER.getShopTitle(playerName));
+        invBuyer = Bukkit.createInventory(this, 18, InternalUtil.CONFIGMANAGER.getShopTitle(playerName));
 
-        invBuyer.setItem(0, RoadsideShops.LOG);
-        invBuyer.setItem(8, RoadsideShops.LOG);
-        invBuyer.setItem(9, RoadsideShops.LOG);
-        invBuyer.setItem(17, RoadsideShops.LOG);
+        invBuyer.setItem(0, InternalUtil.LOG);
+        invBuyer.setItem(8, InternalUtil.LOG);
+        invBuyer.setItem(9, InternalUtil.LOG);
+        invBuyer.setItem(17, InternalUtil.LOG);
 
         if (items != null)
             for (SellingItem s : items) {

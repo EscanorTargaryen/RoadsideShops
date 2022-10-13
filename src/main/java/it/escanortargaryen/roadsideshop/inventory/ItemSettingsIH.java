@@ -45,7 +45,7 @@ public class ItemSettingsIH implements InventoryHolder, Listener {
     @Override
     public Inventory getInventory() {
 
-        Inventory inv = Bukkit.createInventory(this, 27, RoadsideShops.CONFIGMANAGER.getItemSettingsTitle());
+        Inventory inv = Bukkit.createInventory(this, 27, InternalUtil.CONFIGMANAGER.getItemSettingsTitle());
 
         ItemStack item = itemToSell.clone();
 
@@ -58,29 +58,29 @@ public class ItemSettingsIH implements InventoryHolder, Listener {
 
             wool = new ItemStack(Material.GREEN_WOOL);
             ItemMeta mw = wool.getItemMeta();
-            Objects.requireNonNull(mw).setDisplayName(RoadsideShops.CONFIGMANAGER.getSellButtonTitle());
-            mw.setLore(RoadsideShops.CONFIGMANAGER.getSellButtonLore());
+            Objects.requireNonNull(mw).setDisplayName(InternalUtil.CONFIGMANAGER.getSellButtonTitle());
+            mw.setLore(InternalUtil.CONFIGMANAGER.getSellButtonLore());
             wool.setItemMeta(mw);
 
             prezzo = new ItemStack(Material.NAME_TAG);
             mw = prezzo.getItemMeta();
-            Objects.requireNonNull(mw).setDisplayName(RoadsideShops.CONFIGMANAGER.getPriceButtonTitle(price));
+            Objects.requireNonNull(mw).setDisplayName(InternalUtil.CONFIGMANAGER.getPriceButtonTitle(price));
 
-            mw.setLore(RoadsideShops.CONFIGMANAGER.getPriceButtonLore(price));
+            mw.setLore(InternalUtil.CONFIGMANAGER.getPriceButtonLore(price));
             prezzo.setItemMeta(mw);
 
         } else {
 
             wool = new ItemStack(Material.RED_WOOL);
             ItemMeta mw = wool.getItemMeta();
-            Objects.requireNonNull(mw).setDisplayName(RoadsideShops.CONFIGMANAGER.getSellButtonTitleNotSet());
-            mw.setLore(RoadsideShops.CONFIGMANAGER.getSellButtonLoreNotSet());
+            Objects.requireNonNull(mw).setDisplayName(InternalUtil.CONFIGMANAGER.getSellButtonTitleNotSet());
+            mw.setLore(InternalUtil.CONFIGMANAGER.getSellButtonLoreNotSet());
             wool.setItemMeta(mw);
 
             prezzo = new ItemStack(Material.NAME_TAG);
             mw = prezzo.getItemMeta();
-            Objects.requireNonNull(mw).setDisplayName(RoadsideShops.CONFIGMANAGER.getPriceButtonTitleNotSet());
-            mw.setLore(RoadsideShops.CONFIGMANAGER.getPriceButtonLoreNotSet());
+            Objects.requireNonNull(mw).setDisplayName(InternalUtil.CONFIGMANAGER.getPriceButtonTitleNotSet());
+            mw.setLore(InternalUtil.CONFIGMANAGER.getPriceButtonLoreNotSet());
             prezzo.setItemMeta(mw);
 
         }
@@ -131,14 +131,14 @@ public class ItemSettingsIH implements InventoryHolder, Listener {
                             return AnvilGUI.Response.close();
 
                         } catch (NumberFormatException ff) {
-                            return AnvilGUI.Response.text(RoadsideShops.CONFIGMANAGER.getWrongPrice());
+                            return AnvilGUI.Response.text(InternalUtil.CONFIGMANAGER.getWrongPrice());
 
                         }
 
                     })
                     .itemLeft(new ItemStack(Material.GOLD_BLOCK)) // use a custom item for the first slot
                     .text(".")
-                    .title(RoadsideShops.CONFIGMANAGER.getAnvilTitle()) // set the title of the GUI (only works in 1.14+)
+                    .title(InternalUtil.CONFIGMANAGER.getAnvilTitle()) // set the title of the GUI (only works in 1.14+)
                     .plugin(RoadsideShops.INSTANCE) // set the plugin instance
                     .open((Player) e.getWhoClicked());
 
@@ -169,11 +169,11 @@ public class ItemSettingsIH implements InventoryHolder, Listener {
                 Player p = ((Player) e.getWhoClicked());
                 p.closeInventory();
 
-                p.sendMessage(RoadsideShops.CONFIGMANAGER.getPutItem(sellingItem.getPrice(), sellingItem.getI().getType().toString(), sellingItem.getI().getAmount()));
+                p.sendMessage(InternalUtil.CONFIGMANAGER.getPutItem(sellingItem.getPrice(), sellingItem.getI().getType().toString(), sellingItem.getI().getAmount()));
 
                 if (isSponsoring) {
 
-                    e.getWhoClicked().sendMessage(RoadsideShops.CONFIGMANAGER.getSponsorSet(price, sellingItem.getI().getType().toString(), sellingItem.getI().getAmount()));
+                    e.getWhoClicked().sendMessage(InternalUtil.CONFIGMANAGER.getSponsorSet(price, sellingItem.getI().getType().toString(), sellingItem.getI().getAmount()));
 
                     InternalUtil.setSponsorItem(shop, sellingItem);
 

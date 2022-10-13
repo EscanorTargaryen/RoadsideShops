@@ -2,6 +2,7 @@ package it.escanortargaryen.roadsideshop.managers;
 
 import dev.jorel.commandapi.CommandAPICommand;
 import dev.jorel.commandapi.arguments.OfflinePlayerArgument;
+import it.escanortargaryen.roadsideshop.InternalUtil;
 import it.escanortargaryen.roadsideshop.RoadsideShops;
 import it.escanortargaryen.roadsideshop.classes.Newspaper;
 import it.escanortargaryen.roadsideshop.classes.Shop;
@@ -20,7 +21,7 @@ public class Commands {
 
             if (!RoadsideShops.hasShop(p)) {
 
-                RoadsideShops.createShop(p, new Shop(p));
+                RoadsideShops.createShop(p);
 
             }
             RoadsideShops.getShop(p).openInventory(p, "seller");
@@ -34,7 +35,7 @@ public class Commands {
 
                 if (!RoadsideShops.hasShop(shopOwner)) {
 
-                    p.sendMessage(RoadsideShops.CONFIGMANAGER.getNoShop());
+                    p.sendMessage(InternalUtil.CONFIGMANAGER.getNoShop());
 
                 } else {
 

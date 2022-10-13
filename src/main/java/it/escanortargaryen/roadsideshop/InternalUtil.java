@@ -2,10 +2,13 @@ package it.escanortargaryen.roadsideshop;
 
 import it.escanortargaryen.roadsideshop.classes.SellingItem;
 import it.escanortargaryen.roadsideshop.classes.Shop;
+import it.escanortargaryen.roadsideshop.managers.ConfigManager;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import java.util.List;
 import java.util.Objects;
 
 /*
@@ -29,13 +32,57 @@ TODO cose da sistemare in una classe:
         no parole in italiano*/
 public class InternalUtil {
 
+    public static ConfigManager CONFIGMANAGER;
     public static ItemStack BACKARROW;
-    InternalUtil(){
-        BACKARROW= new ItemStack(Material.ARROW);
+
+    public static ItemStack UNLOCKEDSLOT = new ItemStack(Material.GRAY_STAINED_GLASS_PANE);
+    public static ItemStack LOCKEDSLOT;
+    public static ItemStack LOG;
+    public static ItemStack RIGHTARROW, LEFTARROW;
+
+    InternalUtil() {
+        CONFIGMANAGER = new ConfigManager(RoadsideShops.INSTANCE);
+
+        BACKARROW = new ItemStack(Material.ARROW);
         ItemMeta ws = BACKARROW.getItemMeta();
-        Objects.requireNonNull(ws).setDisplayName(RoadsideShops.CONFIGMANAGER.getBackButtonTitle());
-        ws.setLore(RoadsideShops.CONFIGMANAGER.getBackButtonLore());
+        Objects.requireNonNull(ws).setDisplayName(InternalUtil.CONFIGMANAGER.getBackButtonTitle());
+        ws.setLore(InternalUtil.CONFIGMANAGER.getBackButtonLore());
         BACKARROW.setItemMeta(ws);
+
+        UNLOCKEDSLOT = new ItemStack(Material.GRAY_STAINED_GLASS_PANE);
+        ItemMeta h = UNLOCKEDSLOT.getItemMeta();
+        Objects.requireNonNull(h).setDisplayName(CONFIGMANAGER.getUnlockedSlotPanelTitle()
+        );
+
+        h.setLore(CONFIGMANAGER.getUnlockedSlotPanelLore());
+        UNLOCKEDSLOT.setItemMeta(h);
+
+        LOCKEDSLOT = new ItemStack(Material.BLACK_STAINED_GLASS_PANE);
+        ItemMeta w = LOCKEDSLOT.getItemMeta();
+        Objects.requireNonNull(w).setDisplayName(
+                CONFIGMANAGER.getLockedSlotPanelTitle());
+
+        w.setLore(CONFIGMANAGER.getLockedSlotPanelLore());
+        LOCKEDSLOT.setItemMeta(w);
+
+        LOG = new ItemStack(Material.OAK_LOG);
+        ws = LOG.getItemMeta();
+        Objects.requireNonNull(ws).setLore(List.of("§c§c§c§c§c§c§c§c§c§c§c§c"));
+        Objects.requireNonNull(ws).setDisplayName(ChatColor.WHITE + "");
+        LOG.setItemMeta(ws);
+
+        RIGHTARROW = new ItemStack(Material.ARROW);
+        ws = RIGHTARROW.getItemMeta();
+        Objects.requireNonNull(ws).setDisplayName(CONFIGMANAGER.getRightarrowTitle());
+        ws.setLore(CONFIGMANAGER.getRightarrowLore());
+        RIGHTARROW.setItemMeta(ws);
+
+        LEFTARROW = new ItemStack(Material.ARROW);
+        ws = LEFTARROW.getItemMeta();
+        Objects.requireNonNull(ws).setDisplayName(CONFIGMANAGER.getLeftarrowTitle());
+        ws.setLore(CONFIGMANAGER.getLeftarrowLore());
+        LEFTARROW.setItemMeta(ws);
+
     }
 
     public static ItemStack generateMapItem(Shop shop, boolean isSponsoring, SellingItem sellingItem) {
@@ -44,8 +91,8 @@ public class InternalUtil {
         if (shop.getSponsor() != null && shop.getSponsor().equals(sellingItem)) {
             sponsor = new ItemStack(Material.FILLED_MAP);
             ItemMeta m = sponsor.getItemMeta();
-            Objects.requireNonNull(m).setDisplayName(RoadsideShops.CONFIGMANAGER.getSponsorButtonTitle());
-            m.setLore(RoadsideShops.CONFIGMANAGER.getSponsoredLore());
+            Objects.requireNonNull(m).setDisplayName(InternalUtil.CONFIGMANAGER.getSponsorButtonTitle());
+            m.setLore(InternalUtil.CONFIGMANAGER.getSponsoredLore());
             sponsor.setItemMeta(m);
         } else if (shop.canSponsor(System.currentTimeMillis())) {
 
@@ -53,12 +100,12 @@ public class InternalUtil {
 
                 sponsor = new ItemStack(Material.FILLED_MAP);
                 ItemMeta m = sponsor.getItemMeta();
-                Objects.requireNonNull(m).setDisplayName(RoadsideShops.CONFIGMANAGER.getSponsorButtonTitle());
+                Objects.requireNonNull(m).setDisplayName(InternalUtil.CONFIGMANAGER.getSponsorButtonTitle());
 
                 if (shop.getSponsor() != null) {
-                    m.setLore(RoadsideShops.CONFIGMANAGER.getSponsoringChange());
+                    m.setLore(InternalUtil.CONFIGMANAGER.getSponsoringChange());
                 } else {
-                    m.setLore(RoadsideShops.CONFIGMANAGER.getSponsoring());
+                    m.setLore(InternalUtil.CONFIGMANAGER.getSponsoring());
 
                 }
                 sponsor.setItemMeta(m);
@@ -67,12 +114,12 @@ public class InternalUtil {
 
                 sponsor = new ItemStack(Material.PAPER);
                 ItemMeta m = sponsor.getItemMeta();
-                Objects.requireNonNull(m).setDisplayName(RoadsideShops.CONFIGMANAGER.getSponsorButtonTitle());
+                Objects.requireNonNull(m).setDisplayName(InternalUtil.CONFIGMANAGER.getSponsorButtonTitle());
 
                 if (shop.getSponsor() != null) {
-                    m.setLore(RoadsideShops.CONFIGMANAGER.getNotSponsoringChange());
+                    m.setLore(InternalUtil.CONFIGMANAGER.getNotSponsoringChange());
                 } else {
-                    m.setLore(RoadsideShops.CONFIGMANAGER.getNotSponsoring());
+                    m.setLore(InternalUtil.CONFIGMANAGER.getNotSponsoring());
 
                 }
                 sponsor.setItemMeta(m);
@@ -82,9 +129,9 @@ public class InternalUtil {
         } else {
             sponsor = new ItemStack(Material.FILLED_MAP);
             ItemMeta m = sponsor.getItemMeta();
-            Objects.requireNonNull(m).setDisplayName(RoadsideShops.CONFIGMANAGER.getSponsorButtonTitle());
+            Objects.requireNonNull(m).setDisplayName(InternalUtil.CONFIGMANAGER.getSponsorButtonTitle());
 
-            m.setLore(RoadsideShops.CONFIGMANAGER.getWaitToSponsor(shop.getMissTimeinMins(System.currentTimeMillis())));
+            m.setLore(InternalUtil.CONFIGMANAGER.getWaitToSponsor(shop.getMissTimeinMins(System.currentTimeMillis())));
 
             sponsor.setItemMeta(m);
 

@@ -4,38 +4,26 @@ import dev.jorel.commandapi.CommandAPI;
 import dev.jorel.commandapi.CommandAPIConfig;
 import it.escanortargaryen.roadsideshop.classes.Shop;
 import it.escanortargaryen.roadsideshop.managers.Commands;
-import it.escanortargaryen.roadsideshop.managers.ConfigManager;
 import it.escanortargaryen.roadsideshop.managers.ShopsManager;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Objects;
+
+import static it.escanortargaryen.roadsideshop.InternalUtil.CONFIGMANAGER;
 
 public class RoadsideShops extends JavaPlugin implements Listener {
 
     private static final HashMap<String, Shop> cachedShops = new HashMap<>();
-
-    public static ConfigManager CONFIGMANAGER;
-
-    public static ItemStack UNLOCKEDSLOT = new ItemStack(Material.GRAY_STAINED_GLASS_PANE);
-    public static ItemStack LOCKEDSLOT;
-    public static ItemStack LOG;
-    public static ItemStack RIGHTARROW, LEFTARROW;
 
     public static RoadsideShops INSTANCE;
 
@@ -71,7 +59,7 @@ public class RoadsideShops extends JavaPlugin implements Listener {
 
         if (!RoadsideShops.hasShop(p)) {
 
-            RoadsideShops.createShop(p, new Shop(p));
+            RoadsideShops.createShop(p);
 
         }
 
@@ -80,7 +68,7 @@ public class RoadsideShops extends JavaPlugin implements Listener {
         if (d != null) {
 
             if (d.getOffMessages().size() > 0) {
-                p.sendMessage(RoadsideShops.CONFIGMANAGER.getWhileOffline());
+                p.sendMessage(CONFIGMANAGER.getWhileOffline());
                 for (String s : d.getOffMessages()) {
 
                     p.sendMessage(s);
@@ -114,42 +102,6 @@ public class RoadsideShops extends JavaPlugin implements Listener {
 
         Bukkit.getPluginManager().registerEvents(this, this);
         INSTANCE = this;
-
-        CONFIGMANAGER = new ConfigManager(this);
-
-        UNLOCKEDSLOT = new ItemStack(Material.GRAY_STAINED_GLASS_PANE);
-        ItemMeta h = UNLOCKEDSLOT.getItemMeta();
-        Objects.requireNonNull(h).setDisplayName(CONFIGMANAGER.getUnlockedSlotPanelTitle()
-        );
-
-        h.setLore(CONFIGMANAGER.getUnlockedSlotPanelLore());
-        UNLOCKEDSLOT.setItemMeta(h);
-
-        LOCKEDSLOT = new ItemStack(Material.BLACK_STAINED_GLASS_PANE);
-        ItemMeta w = LOCKEDSLOT.getItemMeta();
-        Objects.requireNonNull(w).setDisplayName(
-                CONFIGMANAGER.getLockedSlotPanelTitle());
-
-        w.setLore(CONFIGMANAGER.getLockedSlotPanelLore());
-        LOCKEDSLOT.setItemMeta(w);
-
-        LOG = new ItemStack(Material.OAK_LOG);
-        ItemMeta ws = LOG.getItemMeta();
-        ws.setLore(Arrays.asList("§c§c§c§c§c§c§c§c§c§c§c§c"));
-        Objects.requireNonNull(ws).setDisplayName(ChatColor.WHITE + "");
-        LOG.setItemMeta(ws);
-
-        RIGHTARROW = new ItemStack(Material.ARROW);
-        ws = RIGHTARROW.getItemMeta();
-        Objects.requireNonNull(ws).setDisplayName(RoadsideShops.CONFIGMANAGER.getRightarrowTitle());
-        ws.setLore(RoadsideShops.CONFIGMANAGER.getRightarrowLore());
-        RIGHTARROW.setItemMeta(ws);
-
-        LEFTARROW = new ItemStack(Material.ARROW);
-        ws = LEFTARROW.getItemMeta();
-        Objects.requireNonNull(ws).setDisplayName(RoadsideShops.CONFIGMANAGER.getLeftarrowTitle());
-        ws.setLore(RoadsideShops.CONFIGMANAGER.getLeftarrowLore());
-        LEFTARROW.setItemMeta(ws);
 
         new ShopsManager();
         new Commands();
@@ -186,9 +138,9 @@ public class RoadsideShops extends JavaPlugin implements Listener {
         return cachedShops.values();
     }
 
-    public static void createShop(Player player, Shop shop) {
+    public static void createShop(Player player) {
 
-        cachedShops.put(player.getUniqueId().toString(), shop);
+        cachedShops.put(player.getUniqueId().toString(), new Shop(player));
 
     }
 }

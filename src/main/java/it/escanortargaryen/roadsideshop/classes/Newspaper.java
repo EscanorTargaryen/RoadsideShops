@@ -1,5 +1,6 @@
 package it.escanortargaryen.roadsideshop.classes;
 
+import it.escanortargaryen.roadsideshop.InternalUtil;
 import it.escanortargaryen.roadsideshop.RoadsideShops;
 import it.escanortargaryen.roadsideshop.managers.ConfigManager;
 import org.bukkit.Bukkit;
@@ -69,7 +70,7 @@ public class Newspaper implements Listener, InventoryHolder {
         }
 
         if (list.size() == 0) {
-            p.sendMessage(RoadsideShops.CONFIGMANAGER.getNoAdv());
+            p.sendMessage(InternalUtil.CONFIGMANAGER.getNoAdv());
 
         } else {
 
@@ -82,7 +83,7 @@ public class Newspaper implements Listener, InventoryHolder {
     @NotNull
     @Override
     public Inventory getInventory() {
-        Inventory inv = Bukkit.createInventory(this, 45, RoadsideShops.CONFIGMANAGER.getNewspaperTitle());
+        Inventory inv = Bukkit.createInventory(this, 45, InternalUtil.CONFIGMANAGER.getNewspaperTitle());
 
         ItemStack paper = new ItemStack(Material.PAPER);
 
@@ -93,7 +94,7 @@ public class Newspaper implements Listener, InventoryHolder {
         }
 
         if (pagina == 1) {
-            inv.setItem(26, RoadsideShops.RIGHTARROW);
+            inv.setItem(26, InternalUtil.RIGHTARROW);
 
             inv.setItem(11, list.get(0).getForNewspaper());
             if (list.size() > 1)
@@ -124,8 +125,8 @@ public class Newspaper implements Listener, InventoryHolder {
         }
         if (pagina == 2) {
 
-            inv.setItem(26, RoadsideShops.RIGHTARROW);
-            inv.setItem(18, RoadsideShops.LEFTARROW);
+            inv.setItem(26, InternalUtil.RIGHTARROW);
+            inv.setItem(18, InternalUtil.LEFTARROW);
             if (list.size() > 6)
 
                 inv.setItem(11, list.get(6).getForNewspaper());
@@ -161,7 +162,7 @@ public class Newspaper implements Listener, InventoryHolder {
 
         if (pagina == 3) {
 
-            inv.setItem(18, RoadsideShops.LEFTARROW);
+            inv.setItem(18, InternalUtil.LEFTARROW);
             if (list.size() > 12)
 
                 inv.setItem(11, list.get(12).getForNewspaper());

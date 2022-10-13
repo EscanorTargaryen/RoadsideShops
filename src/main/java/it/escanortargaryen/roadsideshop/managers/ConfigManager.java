@@ -1,5 +1,6 @@
 package it.escanortargaryen.roadsideshop.managers;
 
+import it.escanortargaryen.roadsideshop.InternalUtil;
 import it.escanortargaryen.roadsideshop.RoadsideShops;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -417,7 +418,7 @@ public class ConfigManager {
         ArrayList<String> t = new ArrayList<>();
 
         for (String s : priceButtonLore) {
-            t.add(ChatColor.translateAlternateColorCodes('&', s.replace("<price-message>", RoadsideShops.CONFIGMANAGER.getPriceMessage(price))));
+            t.add(ChatColor.translateAlternateColorCodes('&', s.replace("<price-message>", InternalUtil.CONFIGMANAGER.getPriceMessage(price))));
 
         }
 
@@ -462,7 +463,7 @@ public class ConfigManager {
 
     public String getPriceButtonTitle(double price) {
 
-        return ChatColor.translateAlternateColorCodes('&', priceButtonTitle.replace("<price-message>", RoadsideShops.CONFIGMANAGER.getPriceMessage(price)));
+        return ChatColor.translateAlternateColorCodes('&', priceButtonTitle.replace("<price-message>", InternalUtil.CONFIGMANAGER.getPriceMessage(price)));
 
     }
 
