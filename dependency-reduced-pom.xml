@@ -42,10 +42,6 @@
                   <pattern>dev.jorel.commandapi</pattern>
                   <shadedPattern>it.escanortargaryen.roadsideshop.commandapi</shadedPattern>
                 </relocation>
-                <relocation>
-                  <pattern>com.fren_gor</pattern>
-                  <shadedPattern>it.escanortargaryen.roadsideshop.inventorymanagementplugin</shadedPattern>
-                </relocation>
               </relocations>
               <minimizeJar>false</minimizeJar>
             </configuration>
@@ -62,14 +58,6 @@
     <repository>
       <id>spigot-repo</id>
       <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
-    </repository>
-    <repository>
-      <id>dre-repo</id>
-      <url>https://erethon.de/repo/</url>
-    </repository>
-    <repository>
-      <id>fren_gor</id>
-      <url>https://nexus.frengor.com/repository/public/</url>
     </repository>
     <repository>
       <id>codemc-snapshots</id>
