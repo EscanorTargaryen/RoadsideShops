@@ -23,14 +23,14 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 import java.util.Objects;
 
-public class RemoveOSponsorIH implements InventoryHolder, Listener {
+public class ItemSettings implements InventoryHolder, Listener {
 
     private final Shop shop;
     private final SellingItem sellingItem;
 
     private boolean isSponsoring = false;
 
-    public RemoveOSponsorIH(Shop shop, SellingItem sellingItem, Player p) {
+    public ItemSettings(Shop shop, SellingItem sellingItem, Player p) {
 
         Bukkit.getPluginManager().registerEvents(this, RoadsideShops.INSTANCE);
 
@@ -146,10 +146,8 @@ public class RemoveOSponsorIH implements InventoryHolder, Listener {
         }
 
         if (e.getSlot() == 22) {
-
-            e.getInventory().setItem(22, InternalUtil.generateMapItem(shop, isSponsoring, sellingItem));
-
             this.isSponsoring = !this.isSponsoring;
+            e.getInventory().setItem(22, InternalUtil.generateMapItem(shop, isSponsoring, sellingItem));
 
         }
 

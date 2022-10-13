@@ -6,8 +6,8 @@ import it.escanortargaryen.roadsideshop.RoadsideShops;
 import it.escanortargaryen.roadsideshop.classes.SellingItem;
 import it.escanortargaryen.roadsideshop.classes.Shop;
 import it.escanortargaryen.roadsideshop.events.PlayerBuyShopEvent;
-import it.escanortargaryen.roadsideshop.inventory.ItemSettingsIH;
-import it.escanortargaryen.roadsideshop.inventory.RemoveOSponsorIH;
+import it.escanortargaryen.roadsideshop.inventory.SaleSettings;
+import it.escanortargaryen.roadsideshop.inventory.ItemSettings;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
@@ -94,7 +94,7 @@ public class ShopsManager implements Listener {
                         ItemStack i = e.getCursor().clone();
                         e.getView().setCursor(new ItemStack(Material.AIR));
 
-                        new ItemSettingsIH(shop, i.clone(), (Player) e.getWhoClicked(), e.getSlot());
+                        new SaleSettings(shop, i.clone(), (Player) e.getWhoClicked(), e.getSlot());
 
                     }
                 }.runTaskLater(RoadsideShops.INSTANCE, 2);
@@ -102,7 +102,7 @@ public class ShopsManager implements Listener {
             } else {
 
                 e.setCancelled(true);
-                new RemoveOSponsorIH(shop, shop.getItemAt(e.getSlot()), (Player) e.getWhoClicked());
+                new ItemSettings(shop, shop.getItemAt(e.getSlot()), (Player) e.getWhoClicked());
 
             }
 

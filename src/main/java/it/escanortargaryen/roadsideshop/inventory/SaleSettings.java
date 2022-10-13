@@ -23,7 +23,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.HashMap;
 import java.util.Objects;
 
-public class ItemSettingsIH implements InventoryHolder, Listener {
+public class SaleSettings implements InventoryHolder, Listener {
 
     private final Shop shop;
     private final ItemStack itemToSell;
@@ -33,7 +33,7 @@ public class ItemSettingsIH implements InventoryHolder, Listener {
 
     private double price = 0.0;
 
-    public ItemSettingsIH(Shop shop, ItemStack itemToSell, Player p, int slotNumber) {
+    public SaleSettings(Shop shop, ItemStack itemToSell, Player p, int slotNumber) {
         Bukkit.getPluginManager().registerEvents(this, RoadsideShops.INSTANCE);
 
         this.shop = shop;
