@@ -125,7 +125,7 @@ public class ShopsManager implements Listener {
 
                             if (!ev.isCancelled()) {
                                 Player p = (Player) e.getWhoClicked();
-                                switch (SafeInventoryActions.addItem(p.getInventory(), c.getI())) {
+                                switch (SafeInventoryActions.addItem(p.getInventory(), c.getItem())) {
 
                                     case MODIFIED: {
 
@@ -144,16 +144,16 @@ public class ShopsManager implements Listener {
 
                                         }
 
-                                        e.getWhoClicked().sendMessage(InternalUtil.CONFIGMANAGER.getBoughtMessage(c.getPrice(), c.getI().getType().toString(), c.getI().getAmount(), shop.getPlayerName()));
+                                        e.getWhoClicked().sendMessage(InternalUtil.CONFIGMANAGER.getBoughtMessage(c.getPrice(), c.getItem().getType().toString(), c.getItem().getAmount(), shop.getPlayerName()));
 
                                         if (Bukkit.getPlayer(shop.getPlayerUUID()) != null) {
 
                                             Objects.requireNonNull(Bukkit.getPlayer(shop.getPlayerUUID())).sendMessage(InternalUtil.CONFIGMANAGER.getSellerMessage(
-                                                    c.getPrice(), c.getI().getType().toString(), c.getI().getAmount(), shop.getPlayerName()));
+                                                    c.getPrice(), c.getItem().getType().toString(), c.getItem().getAmount(), shop.getPlayerName()));
 
                                         } else {
                                             shop.getOffMessages().add(InternalUtil.CONFIGMANAGER.getSellerMessage(
-                                                    c.getPrice(), c.getI().getType().toString(), c.getI().getAmount(), shop.getPlayerName()));
+                                                    c.getPrice(), c.getItem().getType().toString(), c.getItem().getAmount(), shop.getPlayerName()));
 
                                         }
                                         new BukkitRunnable() {

@@ -11,7 +11,7 @@ import java.util.UUID;
 
 public class SellingItem implements Cloneable {
 
-    private final ItemStack i;
+    private final ItemStack item;
 
     private final ItemStack withPriceSeller;
 
@@ -44,14 +44,14 @@ public class SellingItem implements Cloneable {
         return withPriceSeller.clone();
     }
 
-    public SellingItem(ItemStack i, int slot, double price, UUID pl) {
+    public SellingItem(ItemStack item, int slot, double price, UUID owner) {
 
-        this.i = i;
+        this.item = item;
         this.slot = slot;
         this.price = price;
-        this.playerUUID = pl;
+        this.playerUUID = owner;
 
-        ItemMeta m = i.getItemMeta();
+        ItemMeta m = item.getItemMeta();
         Objects.requireNonNull(m);
         ArrayList<String> p = new ArrayList<>();
         if (m.getLore() != null) {
@@ -60,11 +60,11 @@ public class SellingItem implements Cloneable {
         }
         p.addAll(InternalUtil.CONFIGMANAGER.getItemSaleSeller(price));
         m.setLore(p);
-        ItemStack h = i.clone();
+        ItemStack h = item.clone();
         h.setItemMeta(m);
         withPriceSeller = h;
 
-        m = i.getItemMeta();
+        m = item.getItemMeta();
         p = new ArrayList<>();
         if (m.getLore() != null) {
             p.addAll(m.getLore());
@@ -72,11 +72,11 @@ public class SellingItem implements Cloneable {
         }
         p.addAll(InternalUtil.CONFIGMANAGER.getItemSaleSellerSponsor(price));
         m.setLore(p);
-        h = i.clone();
+        h = item.clone();
         h.setItemMeta(m);
         withPriceAndSponsorSeller = h;
 
-        m = i.getItemMeta();
+        m = item.getItemMeta();
         p = new ArrayList<>();
         if (m.getLore() != null) {
             p.addAll(m.getLore());
@@ -84,11 +84,11 @@ public class SellingItem implements Cloneable {
         }
         p.addAll(InternalUtil.CONFIGMANAGER.getItemSaleBuyer(price));
         m.setLore(p);
-        h = i.clone();
+        h = item.clone();
         h.setItemMeta(m);
         withPriceBuyer = h;
 
-        m = i.getItemMeta();
+        m = item.getItemMeta();
         p = new ArrayList<>();
         if (m.getLore() != null) {
             p.addAll(m.getLore());
@@ -96,13 +96,13 @@ public class SellingItem implements Cloneable {
         }
         p.addAll(InternalUtil.CONFIGMANAGER.getItemSaleBuyerSponsor(price));
         m.setLore(p);
-        h = i.clone();
+        h = item.clone();
         h.setItemMeta(m);
         withPriceAndSponsorBuyer = h;
 
         String name = Bukkit.getOfflinePlayer(this.playerUUID).getName();
 
-        m = i.getItemMeta();
+        m = item.getItemMeta();
         p = new ArrayList<>();
         if (m.getLore() != null) {
             p.addAll(m.getLore());
@@ -110,7 +110,7 @@ public class SellingItem implements Cloneable {
         }
         p.addAll(InternalUtil.CONFIGMANAGER.getLoreForNewspaper(price, name));
         m.setLore(p);
-        h = i.clone();
+        h = item.clone();
         h.setItemMeta(m);
         forNewspaper = h;
 
@@ -121,7 +121,7 @@ public class SellingItem implements Cloneable {
         final int prime = 31;
         int result = 1;
         result = prime * result + ((forNewspaper == null) ? 0 : forNewspaper.hashCode());
-        result = prime * result + ((i == null) ? 0 : i.hashCode());
+        result = prime * result + ((item == null) ? 0 : item.hashCode());
         result = prime * result + ((playerUUID == null) ? 0 : playerUUID.hashCode());
         long temp;
         temp = Double.doubleToLongBits(price);
@@ -150,11 +150,11 @@ public class SellingItem implements Cloneable {
         } else if (!forNewspaper.equals(other.forNewspaper)) {
             return false;
         }
-        if (i == null) {
-            if (other.i != null) {
+        if (item == null) {
+            if (other.item != null) {
                 return false;
             }
-        } else if (!i.equals(other.i)) {
+        } else if (!item.equals(other.item)) {
             return false;
         }
         if (playerUUID == null) {
@@ -196,8 +196,8 @@ public class SellingItem implements Cloneable {
         } else return withPriceSeller.equals(other.withPriceSeller);
     }
 
-    public ItemStack getI() {
-        return i;
+    public ItemStack getItem() {
+        return item;
     }
 
     public ItemStack getForNewspaper() {

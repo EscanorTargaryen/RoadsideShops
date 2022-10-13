@@ -33,7 +33,7 @@ public class Commands {
             OfflinePlayer shopOwner = (OfflinePlayer) objects[0];
             if (shopOwner != null) {
 
-                if (!RoadsideShops.hasShop(shopOwner)) {
+                if (!RoadsideShops.hasShop(shopOwner.getUniqueId())) {
 
                     p.sendMessage(InternalUtil.CONFIGMANAGER.getNoShop());
 
@@ -41,10 +41,10 @@ public class Commands {
 
                     if (p.getUniqueId().equals(shopOwner.getUniqueId())) {
 
-                        RoadsideShops.getShop(shopOwner).openInventory(p, ViewMode.SELLER);
+                        RoadsideShops.getShop(shopOwner.getUniqueId()).openInventory(p, ViewMode.SELLER);
 
                     } else {
-                        RoadsideShops.getShop(shopOwner).openInventory(p, ViewMode.BUYER);
+                        RoadsideShops.getShop(shopOwner.getUniqueId()).openInventory(p, ViewMode.BUYER);
 
                     }
 

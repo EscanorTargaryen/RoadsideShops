@@ -52,7 +52,7 @@ public class SaleSettings implements InventoryHolder, Listener {
 
         inv.setItem(10, item);
 
-        inv.setItem(15, InternalUtil.generateMapItem(shop, isSponsoring, null));
+        inv.setItem(15, shop.generateMapItem(isSponsoring, null));
         ItemStack wool, prezzo;
 
         if (isPriceSet) {
@@ -152,33 +152,19 @@ public class SaleSettings implements InventoryHolder, Listener {
                 this.isSponsoring = !this.isSponsoring;
 
             }
-            e.getInventory().setItem(15, InternalUtil.generateMapItem(shop, isSponsoring, null));
+            e.getInventory().setItem(15, shop.generateMapItem(isSponsoring, null));
 
         }
         if (e.getSlot() == 24) {
 
             if (isPriceSet) {
-
-                if (shop.getItems().size() == 0)
-                    shop.getInvBuyer().setItem(1, new ItemStack(Material.AIR));
-                SellingItem sellingItem = new SellingItem(itemToSell, slotNumber, price, shop.getPlayerUUID());
-                shop.getItems().add(sellingItem);
-
-                shop.getInvBuyer().setItem(sellingItem.getSlot(), sellingItem.getWithPriceBuyer());
-                shop.getInvSeller().setItem(sellingItem.getSlot(), sellingItem.getWithPriceSeller());
-                exit = true;
                 Player p = ((Player) e.getWhoClicked());
+                SellingItem sellingItem = new SellingItem(itemToSell, slotNumber, price, shop.getPlayerUUID());
+
+                shop.addItem(sellingItem, isSponsoring, true, p);
+
+                exit = true;
                 p.closeInventory();
-
-                p.sendMessage(InternalUtil.CONFIGMANAGER.getPutItem(sellingItem.getPrice(), sellingItem.getI().getType().toString(), sellingItem.getI().getAmount()));
-
-                if (isSponsoring) {
-
-                    e.getWhoClicked().sendMessage(InternalUtil.CONFIGMANAGER.getSponsorSet(price, sellingItem.getI().getType().toString(), sellingItem.getI().getAmount()));
-
-                    InternalUtil.setSponsorItem(shop, sellingItem);
-
-                }
                 new BukkitRunnable() {
 
                     @Override

@@ -2,28 +2,31 @@ package it.escanortargaryen.roadsideshop;
 
 import dev.jorel.commandapi.CommandAPI;
 import dev.jorel.commandapi.CommandAPIConfig;
+import it.escanortargaryen.roadsideshop.classes.SellingItem;
 import it.escanortargaryen.roadsideshop.classes.Shop;
 import it.escanortargaryen.roadsideshop.managers.Commands;
 import it.escanortargaryen.roadsideshop.managers.ShopsManager;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.UUID;
 
 import static it.escanortargaryen.roadsideshop.InternalUtil.CONFIGMANAGER;
 
 public class RoadsideShops extends JavaPlugin implements Listener {
 
-    private static final HashMap<String, Shop> cachedShops = new HashMap<>();
+    private static final HashMap<UUID, Shop> cachedShops = new HashMap<>();
 
     public static RoadsideShops INSTANCE;
 
@@ -80,15 +83,6 @@ public class RoadsideShops extends JavaPlugin implements Listener {
 
         }
 
-        new BukkitRunnable() {
-
-            @Override
-            public void run() {
-                if (d != null)
-                    d.calculateSlots(p);
-            }
-        }.runTaskLater(this, 2);
-
     }
 
     @Override
@@ -111,27 +105,93 @@ public class RoadsideShops extends JavaPlugin implements Listener {
 
     }
 
-    public static boolean hasShop(OfflinePlayer player) {
+    public static boolean hasShop(Player player) {
 
-        for (Shop s : cachedShops.values()) {
+        return hasShop(player.getUniqueId());
 
-            if (s.getPlayerUUID().equals(player.getUniqueId()))
+    }
 
-                return true;
+    public static boolean hasShop(UUID player) {
 
-        }
-        return false;
+        return cachedShops.containsKey(player);
 
     }
 
     public static Shop getShop(Player p) {
 
-        return getShop((OfflinePlayer) p);
+        return getShop(p.getUniqueId());
     }
 
-    public static Shop getShop(OfflinePlayer p) {
+    public static Shop getShop(UUID p) {
 
-        return cachedShops.get(p.getUniqueId().toString());
+        return cachedShops.get(p);
+    }
+
+    public static void removeShop(UUID player) {
+        cachedShops.remove(player);
+
+    }
+
+    public static void removeShop(Player player) {
+        cachedShops.remove(player.getUniqueId());
+
+    }
+
+    public static void removeShop(Shop shop) {
+        removeShop(shop.getPlayerUUID());
+
+    }
+
+    public static void clearShop(UUID player) {
+
+        if (hasShop(player)) {
+            getShop(player).clear();
+
+        }
+
+    }
+
+    public static void removeItemShop() {
+        //TODO
+
+    }
+
+    public static void addItem(Player player, SellingItem sellingItem, boolean isSponsoring, boolean sendMessage) {
+
+       addItem(player.getUniqueId(), sellingItem, isSponsoring, sendMessage);
+
+    }
+    public static void addItem(Player player, SellingItem sellingItem) {
+
+        addItem(player.getUniqueId(), sellingItem);
+
+    }
+
+    public static void addItem(UUID player, SellingItem sellingItem, boolean isSponsoring, boolean sendMessage) {
+
+        if (hasShop(player)) {
+
+            Shop s = getShop(player);
+            addItem(s, sellingItem, isSponsoring, sendMessage);
+
+        }
+
+    }
+
+    public static void addItem(UUID player, SellingItem sellingItem) {
+
+        addItem(player, sellingItem);
+
+    }
+
+    public static void addItem(Shop shop, SellingItem sellingItem) {
+        addItem(shop, sellingItem, false, false);
+
+    }
+
+    public static void addItem(Shop shop, SellingItem sellingItem, boolean isSponsoring, boolean sendMessage) {
+        shop.addItem(sellingItem, isSponsoring, sendMessage, null);
+
     }
 
     public static Collection<Shop> getCachedShops() {
@@ -140,7 +200,7 @@ public class RoadsideShops extends JavaPlugin implements Listener {
 
     public static void createShop(Player player) {
 
-        cachedShops.put(player.getUniqueId().toString(), new Shop(player));
+        cachedShops.put(player.getUniqueId(), new Shop(player));
 
     }
 }

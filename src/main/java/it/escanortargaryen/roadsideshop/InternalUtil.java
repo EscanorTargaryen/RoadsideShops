@@ -1,7 +1,5 @@
 package it.escanortargaryen.roadsideshop;
 
-import it.escanortargaryen.roadsideshop.classes.SellingItem;
-import it.escanortargaryen.roadsideshop.classes.Shop;
 import it.escanortargaryen.roadsideshop.managers.ConfigManager;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -82,75 +80,6 @@ public class InternalUtil {
         Objects.requireNonNull(ws).setDisplayName(CONFIGMANAGER.getLeftarrowTitle());
         ws.setLore(CONFIGMANAGER.getLeftarrowLore());
         LEFTARROW.setItemMeta(ws);
-
-    }
-
-    public static ItemStack generateMapItem(Shop shop, boolean isSponsoring, SellingItem sellingItem) {
-        ItemStack sponsor;
-
-        if (shop.getSponsor() != null && shop.getSponsor().equals(sellingItem)) {
-            sponsor = new ItemStack(Material.FILLED_MAP);
-            ItemMeta m = sponsor.getItemMeta();
-            Objects.requireNonNull(m).setDisplayName(InternalUtil.CONFIGMANAGER.getSponsorButtonTitle());
-            m.setLore(InternalUtil.CONFIGMANAGER.getSponsoredLore());
-            sponsor.setItemMeta(m);
-        } else if (shop.canSponsor(System.currentTimeMillis())) {
-
-            if (isSponsoring) {
-
-                sponsor = new ItemStack(Material.FILLED_MAP);
-                ItemMeta m = sponsor.getItemMeta();
-                Objects.requireNonNull(m).setDisplayName(InternalUtil.CONFIGMANAGER.getSponsorButtonTitle());
-
-                if (shop.getSponsor() != null) {
-                    m.setLore(InternalUtil.CONFIGMANAGER.getSponsoringChange());
-                } else {
-                    m.setLore(InternalUtil.CONFIGMANAGER.getSponsoring());
-
-                }
-                sponsor.setItemMeta(m);
-
-            } else {
-
-                sponsor = new ItemStack(Material.PAPER);
-                ItemMeta m = sponsor.getItemMeta();
-                Objects.requireNonNull(m).setDisplayName(InternalUtil.CONFIGMANAGER.getSponsorButtonTitle());
-
-                if (shop.getSponsor() != null) {
-                    m.setLore(InternalUtil.CONFIGMANAGER.getNotSponsoringChange());
-                } else {
-                    m.setLore(InternalUtil.CONFIGMANAGER.getNotSponsoring());
-
-                }
-                sponsor.setItemMeta(m);
-
-            }
-
-        } else {
-            sponsor = new ItemStack(Material.FILLED_MAP);
-            ItemMeta m = sponsor.getItemMeta();
-            Objects.requireNonNull(m).setDisplayName(InternalUtil.CONFIGMANAGER.getSponsorButtonTitle());
-
-            m.setLore(InternalUtil.CONFIGMANAGER.getWaitToSponsor(shop.getMissTimeinMins(System.currentTimeMillis())));
-
-            sponsor.setItemMeta(m);
-
-        }
-        return sponsor.clone();
-    }
-
-    public static void setSponsorItem(Shop shop, SellingItem sellingItem) {
-        if (shop.getSponsor() != null) {
-
-            shop.getInvBuyer().setItem(shop.getSponsor().getSlot(), shop.getSponsor().getWithPriceBuyer());
-            shop.getInvSeller().setItem(shop.getSponsor().getSlot(), shop.getSponsor().getWithPriceSeller());
-
-        }
-        shop.setTimeSponsor(System.currentTimeMillis());
-        shop.setSponsor(sellingItem);
-
-        shop.getInvBuyer().setItem(sellingItem.getSlot(), sellingItem.getWithPriceAndSponsorBuyer());
-        shop.getInvSeller().setItem(sellingItem.getSlot(), sellingItem.getWithPriceAndSponsorSeller());
 
     }
 

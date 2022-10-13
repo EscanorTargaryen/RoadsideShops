@@ -3,13 +3,16 @@ package it.escanortargaryen.roadsideshop.classes;
 import it.escanortargaryen.roadsideshop.InternalUtil;
 import it.escanortargaryen.roadsideshop.managers.ConfigManager;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.UUID;
 
 public class Shop implements Cloneable, InventoryHolder {
@@ -224,6 +227,32 @@ public class Shop implements Cloneable, InventoryHolder {
         return invSeller;
     }
 
+    public void addItem(SellingItem sellingItem, boolean isSponsoring, boolean sendMessage, Player p) {
+
+        if (p == null && sendMessage) {
+            p = Bukkit.getPlayer(sellingItem.getPlayerUUID());
+
+        }
+
+        if (items.size() == 0)
+            invBuyer.setItem(1, new ItemStack(Material.AIR));//TODO questa cosa ha senso?
+        items.add(sellingItem);
+
+        invBuyer.setItem(sellingItem.getSlot(), sellingItem.getWithPriceBuyer());
+        invBuyer.setItem(sellingItem.getSlot(), sellingItem.getWithPriceSeller());
+        if (sendMessage && p != null)
+            p.sendMessage(InternalUtil.CONFIGMANAGER.getPutItem(sellingItem.getPrice(), sellingItem.getItem().getType().toString(), sellingItem.getItem().getAmount()));
+
+        if (isSponsoring) {
+            if (sendMessage && p != null)
+                p.sendMessage(InternalUtil.CONFIGMANAGER.getSponsorSet(sellingItem.getPrice(), sellingItem.getItem().getType().toString(), sellingItem.getItem().getAmount()));
+
+            setSponsorItem(sellingItem);
+
+        }
+
+    }
+
     public boolean canSell(int slot) {
 
         if (slot > 0 && slot < 8) {
@@ -279,8 +308,82 @@ public class Shop implements Cloneable, InventoryHolder {
         } else return playerName.equals(other.playerName);
     }
 
+    public ItemStack generateMapItem(boolean isSponsoring, SellingItem sellingItem) {
+        ItemStack s;
+
+        if (sponsor != null && sponsor.equals(sellingItem)) {
+            s = new ItemStack(Material.FILLED_MAP);
+            ItemMeta m = s.getItemMeta();
+            Objects.requireNonNull(m).setDisplayName(InternalUtil.CONFIGMANAGER.getSponsorButtonTitle());
+            m.setLore(InternalUtil.CONFIGMANAGER.getSponsoredLore());
+            s.setItemMeta(m);
+        } else if (canSponsor(System.currentTimeMillis())) {
+
+            if (isSponsoring) {
+
+                s = new ItemStack(Material.FILLED_MAP);
+                ItemMeta m = s.getItemMeta();
+                Objects.requireNonNull(m).setDisplayName(InternalUtil.CONFIGMANAGER.getSponsorButtonTitle());
+
+                if (sponsor != null) {
+                    m.setLore(InternalUtil.CONFIGMANAGER.getSponsoringChange());
+                } else {
+                    m.setLore(InternalUtil.CONFIGMANAGER.getSponsoring());
+
+                }
+                s.setItemMeta(m);
+
+            } else {
+
+                s = new ItemStack(Material.PAPER);
+                ItemMeta m = s.getItemMeta();
+                Objects.requireNonNull(m).setDisplayName(InternalUtil.CONFIGMANAGER.getSponsorButtonTitle());
+
+                if (sponsor != null) {
+                    m.setLore(InternalUtil.CONFIGMANAGER.getNotSponsoringChange());
+                } else {
+                    m.setLore(InternalUtil.CONFIGMANAGER.getNotSponsoring());
+
+                }
+                s.setItemMeta(m);
+
+            }
+
+        } else {
+            s = new ItemStack(Material.FILLED_MAP);
+            ItemMeta m = s.getItemMeta();
+            Objects.requireNonNull(m).setDisplayName(InternalUtil.CONFIGMANAGER.getSponsorButtonTitle());
+
+            m.setLore(InternalUtil.CONFIGMANAGER.getWaitToSponsor(getMissTimeinMins(System.currentTimeMillis())));
+
+            s.setItemMeta(m);
+
+        }
+        return s.clone();
+    }
+
+    public void setSponsorItem(SellingItem sellingItem) {
+        if (sponsor != null) {
+
+            invBuyer.setItem(sponsor.getSlot(), sponsor.getWithPriceBuyer());
+            invSeller.setItem(sponsor.getSlot(), sponsor.getWithPriceSeller());
+
+        }
+        setTimeSponsor(System.currentTimeMillis());
+        setSponsor(sellingItem);
+
+        invBuyer.setItem(sellingItem.getSlot(), sellingItem.getWithPriceAndSponsorBuyer());
+        invSeller.setItem(sellingItem.getSlot(), sellingItem.getWithPriceAndSponsorSeller());
+
+    }
+
     public UUID getPlayerUUID() {
         return playerUUID;
+    }
+
+    public void clear() {
+
+        items.clear();
     }
 
     public Inventory getInvSeller() {

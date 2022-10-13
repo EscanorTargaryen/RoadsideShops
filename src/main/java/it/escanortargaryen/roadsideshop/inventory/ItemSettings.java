@@ -57,7 +57,7 @@ public class ItemSettings implements InventoryHolder, Listener {
 
         inv.setItem(20, InternalUtil.BACKARROW);
 
-        inv.setItem(22, InternalUtil.generateMapItem(shop, isSponsoring, sellingItem));
+        inv.setItem(22, shop.generateMapItem( isSponsoring, sellingItem));
 
         ItemStack remove = new ItemStack(Material.RED_STAINED_GLASS);
         ItemMeta rem = remove.getItemMeta();
@@ -104,7 +104,7 @@ public class ItemSettings implements InventoryHolder, Listener {
 
             Player p = (Player) e.getWhoClicked();
 
-            switch (SafeInventoryActions.addItem(p.getInventory(), sellingItem.getI())) {
+            switch (SafeInventoryActions.addItem(p.getInventory(), sellingItem.getItem())) {
 
                 case MODIFIED: {
 
@@ -120,7 +120,7 @@ public class ItemSettings implements InventoryHolder, Listener {
                     }
 
                     e.getWhoClicked()
-                            .sendMessage(InternalUtil.CONFIGMANAGER.getRemoveItem(sellingItem.getPrice(), sellingItem.getI().getType().toString(), sellingItem.getI().getAmount()));
+                            .sendMessage(InternalUtil.CONFIGMANAGER.getRemoveItem(sellingItem.getPrice(), sellingItem.getItem().getType().toString(), sellingItem.getItem().getAmount()));
 
                     new BukkitRunnable() {
 
@@ -147,7 +147,7 @@ public class ItemSettings implements InventoryHolder, Listener {
 
         if (e.getSlot() == 22) {
             this.isSponsoring = !this.isSponsoring;
-            e.getInventory().setItem(22, InternalUtil.generateMapItem(shop, isSponsoring, sellingItem));
+            e.getInventory().setItem(22, shop.generateMapItem( isSponsoring, sellingItem));
 
         }
 
@@ -161,9 +161,9 @@ public class ItemSettings implements InventoryHolder, Listener {
             if (isSponsoring) {
 
                 e.getPlayer()
-                        .sendMessage(InternalUtil.CONFIGMANAGER.getSponsorSet(sellingItem.getPrice(), sellingItem.getI().getType().toString(), sellingItem.getI().getAmount()));
+                        .sendMessage(InternalUtil.CONFIGMANAGER.getSponsorSet(sellingItem.getPrice(), sellingItem.getItem().getType().toString(), sellingItem.getItem().getAmount()));
 
-                InternalUtil.setSponsorItem(shop, sellingItem);
+                shop.setSponsorItem(sellingItem);
             }
 
             InventoryClickEvent.getHandlerList().unregister(this);
