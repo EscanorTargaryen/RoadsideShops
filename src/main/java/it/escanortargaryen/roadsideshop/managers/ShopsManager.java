@@ -111,7 +111,7 @@ public class ShopsManager implements Listener {
 
                             if (i.size() > 0) {
 
-                                p.sendMessage(InternalUtil.CONFIGMANAGER.getFullInv());
+                                p.sendMessage(InternalUtil.CONFIGMANAGER.getFullInvNoDrop());
                             } else {
 
                                 RoadsideShops.getEconomy().withdrawPlayer((OfflinePlayer) e.getWhoClicked(), sellingItem.getPrice());

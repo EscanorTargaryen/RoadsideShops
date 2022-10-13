@@ -38,7 +38,7 @@ public class ConfigManager {
 
     private List<String> sponsoring, sponsoringChange, notSponsoring, notSponsoringChange, waitToSponsor;
 
-    private String whileOffline, leftarrowTitle, rightarrowTitle, newspaperTitle, shopTitle, itemSettingsTitle, sellButtonTitle, priceButtonTitle, sellButtonTitleNotSet, priceButtonTitleNotSet, wrongPrice, anvilTitle, itemModify, backButtonTitle, removeButtonTitle, fullInv, noShop, noMoney;
+    private String whileOffline, leftarrowTitle, rightarrowTitle, newspaperTitle, shopTitle, itemSettingsTitle, sellButtonTitle, priceButtonTitle, sellButtonTitleNotSet, priceButtonTitleNotSet, wrongPrice, anvilTitle, itemModify, backButtonTitle, removeButtonTitle, fullInvDrop, fullInvNoDrop, noShop, noMoney;
 
     private List<String> sponsoredLore, leftarrowLore, rightarrowLore, itemSaleSeller, itemSaleBuyer, itemSaleSellerSponsor, itemSaleBuyerSponsor, loreForNewspaper, sellButtonLore, priceButtonLore, sellButtonLoreNotSet, priceButtonLoreNotSet, backButtonLore, removeButtonLore;
 
@@ -303,10 +303,15 @@ public class ConfigManager {
         }
         removeButtonLore = config.getStringList("item-modify.remove-button.lore");
 
-        if (!config.isSet("item-modify.full-inv")) {
-            throw new ConfigurationException("item-modify.full-inv " + notSet);
+        if (!config.isSet("item-modify.full-inv-drop")) {
+            throw new ConfigurationException("item-modify.full-inv-drop " + notSet);
         }
-        fullInv = config.getString("item-modify.full-inv");
+        fullInvDrop = config.getString("item-modify.full-inv-drop");
+
+        if (!config.isSet("item-modify.full-inv-no-drop")) {
+            throw new ConfigurationException("item-modify.full-inv-no-drop " + notSet);
+        }
+        fullInvNoDrop = config.getString("item-modify.full-inv-no-drop");
 
         if (!config.isSet("no-shop")) {
             throw new ConfigurationException("no-shop " + notSet);
@@ -355,9 +360,14 @@ public class ConfigManager {
         return ChatColor.translateAlternateColorCodes('&', noShop);
     }
 
-    public String getFullInv() {
+    public String getFullInvDrop() {
 
-        return ChatColor.translateAlternateColorCodes('&', fullInv);
+        return ChatColor.translateAlternateColorCodes('&', fullInvDrop);
+    }
+
+    public String getFullInvNoDrop() {
+
+        return ChatColor.translateAlternateColorCodes('&', fullInvNoDrop);
     }
 
     public String getRemoveButtonTitle() {

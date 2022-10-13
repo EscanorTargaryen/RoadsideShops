@@ -116,32 +116,6 @@ public class Shop implements Cloneable, InventoryHolder {
 
     public void calculateSlots(Player p) {
 
-       /*  int slot = defaultSlot;
-
-       for (Entry<String, Integer> s : StandManager.getAdvancementSlot().entrySet()) {
-
-            if (AdvancementAddOnUtils.isAchievementGranted(p, s.getKey())) {
-
-                slot += s.getValue();
-
-            }
-
-        }
-
-        for (Entry<String, Integer> s : StandManager.getAdvancementPerms().entrySet()) {
-
-            if (p.hasPermission(s.getKey())) {
-
-                slot += s.getValue();
-
-            }
-
-        }
-
-        normalSlots = Math.min(slot, normalSlotsMax);
-
-        updateInventory();*/
-
     }
 
     public SellingItem getItemAt(int slot) {
@@ -216,6 +190,12 @@ public class Shop implements Cloneable, InventoryHolder {
     private void updateInvBuyer() {
 
         if (invBuyer != null) {
+            ItemStack n = new ItemStack(Material.AIR);
+
+            for (int i = 0; i < 18; i++) {
+
+                invBuyer.setItem(i, n.clone());
+            }
 
             invBuyer.setItem(0, InternalUtil.LOG);
             invBuyer.setItem(8, InternalUtil.LOG);
@@ -335,7 +315,7 @@ public class Shop implements Cloneable, InventoryHolder {
 
             if (items.remove(sellingItem)) {
 
-                if (sellingItem.equals(sponsor)){
+                if (sellingItem.equals(sponsor)) {
 
                     sponsor = null;
                 }
@@ -347,7 +327,7 @@ public class Shop implements Cloneable, InventoryHolder {
                     if (r.values().size() > 0) {
                         if (notifyPlayer) {
 
-                            p.sendMessage(InternalUtil.CONFIGMANAGER.getFullInv());
+                            p.sendMessage(InternalUtil.CONFIGMANAGER.getFullInvDrop());
 
                         }
                         for (ItemStack t : r.values()) {

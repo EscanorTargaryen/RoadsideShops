@@ -12,11 +12,6 @@ import java.util.Objects;
 /*
 
 TODO capire se serve il metodo calculate slots
-TODO metodo per sistemare i prezzi?
-TODO sistema il config, fai in modo che ci siano i metodi che danno già le strighe sistemate
-TODO fare in modo che si apre l'inventario degli stand quando si chide uno di settings
-TODO fare in modo che si possa annullare l'inserimento del prezzo
-
 
 TODO cose da sistemare in una classe:
 

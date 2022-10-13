@@ -176,7 +176,8 @@ anvil-title: "Enter the price here"
 #Set the messages of the edit menu of an item
 item-modify:
   title: "&4Item Settings"
-  full-inv: "&cYou can't remove item from the shop: inventory full"
+  full-inv-drop: "&cInventory full: the item was dropped on the ground"
+  full-inv-no-drop: "&cInventory full: action denied"
   back-button:
     title: "&9Come back"
     lore:

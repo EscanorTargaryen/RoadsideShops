@@ -203,7 +203,7 @@ public class SaleSettings implements InventoryHolder, Listener {
 
                 if (i.size() > 0) {
 
-                    p.sendMessage(InternalUtil.CONFIGMANAGER.getFullInv());
+                    p.sendMessage(InternalUtil.CONFIGMANAGER.getFullInvDrop());
                 }
 
                 for (ItemStack t : i.values()) {
