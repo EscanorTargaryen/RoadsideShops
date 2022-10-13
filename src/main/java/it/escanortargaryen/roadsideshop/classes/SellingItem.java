@@ -1,7 +1,6 @@
 package it.escanortargaryen.roadsideshop.classes;
 
 import it.escanortargaryen.roadsideshop.InternalUtil;
-import it.escanortargaryen.roadsideshop.RoadsideShops;
 import org.bukkit.Bukkit;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;

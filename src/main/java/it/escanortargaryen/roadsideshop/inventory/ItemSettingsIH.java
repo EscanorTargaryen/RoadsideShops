@@ -20,6 +20,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.HashMap;
 import java.util.Objects;
 
 public class ItemSettingsIH implements InventoryHolder, Listener {
@@ -197,7 +198,7 @@ public class ItemSettingsIH implements InventoryHolder, Listener {
     private void onClose(InventoryCloseEvent e) {
 
         if (e.getInventory().getHolder() == this) {
-
+            Player p = (Player) e.getPlayer();
             if (!settingPrice) {
                 InventoryClickEvent.getHandlerList().unregister(this);
                 InventoryCloseEvent.getHandlerList().unregister(this);
@@ -207,19 +208,24 @@ public class ItemSettingsIH implements InventoryHolder, Listener {
                     @Override
                     public void run() {
 
-                        Bukkit.dispatchCommand(e.getPlayer(), ConfigManager.SHOPCOMMAND);
+                        Bukkit.dispatchCommand(p, ConfigManager.SHOPCOMMAND);
                     }
                 }.runTask(RoadsideShops.INSTANCE);
             }
-            if(!exit && !settingPrice){
-                e.getPlayer().getInventory().addItem(itemToSell);
+            if (!exit && !settingPrice) {
+                HashMap<Integer, ItemStack> i = p.getInventory().addItem(itemToSell);
+
+                for (ItemStack t : i.values()) {
+                    p.getWorld().dropItemNaturally(p.getLocation(), t);
+
+                }
+
             }
             if (exit) {
                 InventoryClickEvent.getHandlerList().unregister(this);
                 InventoryCloseEvent.getHandlerList().unregister(this);
 
             }
-
 
         }
 

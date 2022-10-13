@@ -5,7 +5,7 @@ import dev.jorel.commandapi.arguments.OfflinePlayerArgument;
 import it.escanortargaryen.roadsideshop.InternalUtil;
 import it.escanortargaryen.roadsideshop.RoadsideShops;
 import it.escanortargaryen.roadsideshop.classes.Newspaper;
-import it.escanortargaryen.roadsideshop.classes.Shop;
+import it.escanortargaryen.roadsideshop.classes.ViewMode;
 import org.bukkit.OfflinePlayer;
 
 public class Commands {
@@ -24,7 +24,7 @@ public class Commands {
                 RoadsideShops.createShop(p);
 
             }
-            RoadsideShops.getShop(p).openInventory(p, "seller");
+            RoadsideShops.getShop(p).openInventory(p, ViewMode.SELLER);
 
         }).register();
 
@@ -41,10 +41,10 @@ public class Commands {
 
                     if (p.getUniqueId().equals(shopOwner.getUniqueId())) {
 
-                        RoadsideShops.getShop(shopOwner).openInventory(p, "seller");
+                        RoadsideShops.getShop(shopOwner).openInventory(p, ViewMode.SELLER);
 
                     } else {
-                        RoadsideShops.getShop(shopOwner).openInventory(p, "buyer");
+                        RoadsideShops.getShop(shopOwner).openInventory(p, ViewMode.BUYER);
 
                     }
 

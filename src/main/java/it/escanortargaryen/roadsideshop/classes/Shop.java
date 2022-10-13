@@ -1,7 +1,6 @@
 package it.escanortargaryen.roadsideshop.classes;
 
 import it.escanortargaryen.roadsideshop.InternalUtil;
-import it.escanortargaryen.roadsideshop.RoadsideShops;
 import it.escanortargaryen.roadsideshop.managers.ConfigManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -40,6 +39,20 @@ public class Shop implements Cloneable, InventoryHolder {
 
     private long lastSponsor = 0L;
 
+    public Shop(UUID playerUUID, String name, ArrayList<SellingItem> m, SellingItem sponsor) {
+
+        this.playerUUID = playerUUID;
+        playerName = name;
+        items = m;
+        this.sponsor = sponsor;
+    }
+
+    public Shop(Player player) {
+
+        this.playerUUID = player.getUniqueId();
+        playerName = player.getName();
+    }
+
     public boolean canSponsor(long time) {
         Player pl = Bukkit.getPlayer(playerUUID);
         if (pl != null && pl.hasPermission("shop.bypass.sponsortime")) {
@@ -68,9 +81,9 @@ public class Shop implements Cloneable, InventoryHolder {
 
     }
 
-    public void openInventory(Player p, String mode) {
+    public void openInventory(Player p, ViewMode mode) {
 
-        if (mode.equals("seller"))
+        if (mode == ViewMode.SELLER)
             if (invSeller == null) {
                 calculateSlots(p);
                 invSeller = getInventory();
@@ -225,20 +238,6 @@ public class Shop implements Cloneable, InventoryHolder {
         }
 
         return false;
-    }
-
-    public Shop(UUID playerUUID, String name, ArrayList<SellingItem> m, SellingItem sponsor) {
-
-        this.playerUUID = playerUUID;
-        playerName = name;
-        items = m;
-        this.sponsor = sponsor;
-    }
-
-    public Shop(Player player) {
-
-        this.playerUUID = player.getUniqueId();
-        playerName = player.getName();
     }
 
     @Override
