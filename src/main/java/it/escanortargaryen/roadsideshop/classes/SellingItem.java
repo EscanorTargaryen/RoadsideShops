@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.Objects;
 import java.util.UUID;
 
-public class SellingItem implements Cloneable {
+public class SellingItem {
 
     private final ItemStack item;
 
@@ -116,86 +116,6 @@ public class SellingItem implements Cloneable {
 
     }
 
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((forNewspaper == null) ? 0 : forNewspaper.hashCode());
-        result = prime * result + ((item == null) ? 0 : item.hashCode());
-        result = prime * result + ((playerUUID == null) ? 0 : playerUUID.hashCode());
-        long temp;
-        temp = Double.doubleToLongBits(price);
-        result = prime * result + (int) (temp ^ (temp >>> 32));
-        result = prime * result + slot;
-        result = prime * result + ((withPriceBuyer == null) ? 0 : withPriceBuyer.hashCode());
-        result = prime * result + ((withPriceAndSponsorBuyer == null) ? 0 : withPriceAndSponsorBuyer.hashCode());
-        result = prime * result + ((withPriceAndSponsorSeller == null) ? 0 : withPriceAndSponsorSeller.hashCode());
-        result = prime * result + ((withPriceSeller == null) ? 0 : withPriceSeller.hashCode());
-        return result;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (!(obj instanceof SellingItem)) {
-            return false;
-        }
-        SellingItem other = (SellingItem) obj;
-        if (forNewspaper == null) {
-            if (other.forNewspaper != null) {
-                return false;
-            }
-        } else if (!forNewspaper.equals(other.forNewspaper)) {
-            return false;
-        }
-        if (item == null) {
-            if (other.item != null) {
-                return false;
-            }
-        } else if (!item.equals(other.item)) {
-            return false;
-        }
-        if (playerUUID == null) {
-            if (other.playerUUID != null) {
-                return false;
-            }
-        } else if (!playerUUID.equals(other.playerUUID)) {
-            return false;
-        }
-        if (Double.doubleToLongBits(price) != Double.doubleToLongBits(other.price)) {
-            return false;
-        }
-        if (slot != other.slot) {
-            return false;
-        }
-        if (withPriceBuyer == null) {
-            if (other.withPriceBuyer != null) {
-                return false;
-            }
-        } else if (!withPriceBuyer.equals(other.withPriceBuyer)) {
-            return false;
-        }
-        if (withPriceAndSponsorBuyer == null) {
-            if (other.withPriceAndSponsorBuyer != null) {
-                return false;
-            }
-        } else if (!withPriceAndSponsorBuyer.equals(other.withPriceAndSponsorBuyer)) {
-            return false;
-        }
-        if (withPriceAndSponsorSeller == null) {
-            if (other.withPriceAndSponsorSeller != null) {
-                return false;
-            }
-        } else if (!withPriceAndSponsorSeller.equals(other.withPriceAndSponsorSeller)) {
-            return false;
-        }
-        if (withPriceSeller == null) {
-            return other.withPriceSeller == null;
-        } else return withPriceSeller.equals(other.withPriceSeller);
-    }
-
     public ItemStack getItem() {
         return item;
     }
@@ -216,13 +136,4 @@ public class SellingItem implements Cloneable {
         return playerUUID;
     }
 
-    @Override
-    public SellingItem clone() {
-        try {
-            //copy mutable state here, so the clone can't change the internals of the original
-            return (SellingItem) super.clone();
-        } catch (CloneNotSupportedException e) {
-            throw new AssertionError();
-        }
-    }
 }

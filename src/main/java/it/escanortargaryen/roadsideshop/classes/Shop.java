@@ -17,7 +17,7 @@ import java.util.HashMap;
 import java.util.Objects;
 import java.util.UUID;
 
-public class Shop implements Cloneable, InventoryHolder {
+public class Shop implements InventoryHolder {
 
     private final UUID playerUUID;
 
@@ -168,7 +168,7 @@ public class Shop implements Cloneable, InventoryHolder {
 
             }
 
-            ArrayList<LockedSlot> lo = RoadsideShops.INSTANCE.getLockedSlots();
+            ArrayList<LockedSlot> lo = RoadsideShops.INSTANCE.getCustomLockedSlots();
 
             Player p = Bukkit.getPlayer(playerUUID);
             if (p != null) {
@@ -245,8 +245,6 @@ public class Shop implements Cloneable, InventoryHolder {
 
         }
 
-       /* if (items.size() == 0)
-            invBuyer.setItem(1, new ItemStack(Material.AIR));*///TODO questa cosa ha senso?
         items.add(sellingItem);
 
         updateInventory();
@@ -262,24 +260,6 @@ public class Shop implements Cloneable, InventoryHolder {
 
         }
 
-    }
-
-    @Override
-    public Shop clone() {
-        try {
-            return (Shop) super.clone();
-        } catch (CloneNotSupportedException e) {
-            return null;
-        }
-    }
-
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((playerUUID == null) ? 0 : playerUUID.hashCode());
-        result = prime * result + ((playerName == null) ? 0 : playerName.hashCode());
-        return result;
     }
 
     public void removeItem(int slot) {
@@ -354,27 +334,6 @@ public class Shop implements Cloneable, InventoryHolder {
 
         }
 
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (!(obj instanceof Shop)) {
-            return false;
-        }
-        Shop other = (Shop) obj;
-        if (playerUUID == null) {
-            if (other.playerUUID != null) {
-                return false;
-            }
-        } else if (!playerUUID.equals(other.playerUUID)) {
-            return false;
-        }
-        if (playerName == null) {
-            return other.playerName == null;
-        } else return playerName.equals(other.playerName);
     }
 
     public ItemStack generateMapItem(boolean isSponsoring, SellingItem sellingItem) {

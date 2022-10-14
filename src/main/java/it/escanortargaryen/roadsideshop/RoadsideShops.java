@@ -115,7 +115,7 @@ public class RoadsideShops extends JavaPlugin implements Listener {
 
     }
 
-    public ArrayList<LockedSlot> getLockedSlots() {
+    public ArrayList<LockedSlot> getCustomLockedSlots() {
         return new ArrayList<>(lockedSlots);
     }
 
