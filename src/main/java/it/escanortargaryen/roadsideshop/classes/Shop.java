@@ -31,18 +31,35 @@ public class Shop implements InventoryHolder {
 
     private final int unlockedSlotsNumber = InternalUtil.CONFIGMANAGER.getUnlockedSlots();
 
-    private final ArrayList<SellingItem> items = new ArrayList<>();
+    private ArrayList<SellingItem> items = new ArrayList<>();
 
-    private final ArrayList<String> offMessages = new ArrayList<>();
+    private ArrayList<String> offMessages = new ArrayList<>();
 
     private final InventoryHolder holder = this;
 
     private long lastSponsor = 0L;
 
+    public Shop(UUID player, String playerName, ArrayList<String> offMessages, SellingItem sponsor, ArrayList<SellingItem> items) {
+
+        this.playerUUID = player;
+        this.playerName = playerName;
+        this.offMessages = offMessages;
+        this.sponsor = sponsor;
+        this.items = items;
+
+    }
+
     public Shop(Player player) {
 
         this.playerUUID = player.getUniqueId();
         playerName = player.getName();
+
+    }
+
+    public Shop(UUID player, String playerName) {
+
+        this.playerUUID = player;
+        this.playerName = playerName;
 
     }
 

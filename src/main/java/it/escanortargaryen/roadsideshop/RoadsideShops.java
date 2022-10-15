@@ -5,6 +5,7 @@ import dev.jorel.commandapi.CommandAPIConfig;
 import it.escanortargaryen.roadsideshop.classes.LockedSlot;
 import it.escanortargaryen.roadsideshop.classes.LockedSlotCheck;
 import it.escanortargaryen.roadsideshop.classes.Shop;
+import it.escanortargaryen.roadsideshop.db.DatabaseManager;
 import it.escanortargaryen.roadsideshop.managers.Commands;
 import it.escanortargaryen.roadsideshop.managers.ShopsManager;
 import net.milkbowl.vault.economy.Economy;
@@ -17,7 +18,9 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Objects;
@@ -32,6 +35,7 @@ public class RoadsideShops extends JavaPlugin implements Listener {
     public static RoadsideShops INSTANCE;
 
     private static Economy econ = null;
+    private static DatabaseManager databaseManager = null;
 
     public static Economy getEconomy() {
         return econ;
@@ -63,6 +67,8 @@ public class RoadsideShops extends JavaPlugin implements Listener {
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {
         Player p = e.getPlayer();
+
+        databaseManager.addPlayer(p);
 
         if (!RoadsideShops.hasShop(p)) {
 
@@ -103,7 +109,12 @@ public class RoadsideShops extends JavaPlugin implements Listener {
         new InternalUtil();
         new ShopsManager();
         new Commands();
-
+        try {
+            databaseManager = new DatabaseManager(new File(getDataFolder() + "/database.db"));
+        } catch (Exception e) {
+            System.out.println(Arrays.toString(e.getStackTrace()));
+            getServer().getPluginManager().disablePlugin(RoadsideShops.INSTANCE);
+        }
         String s = "§7----§c§nRoadside§r §6§nShops§r§7----§r\n§fby §eEscanorTargaryen§r\n§2Enabled version: " + this.getDescription().getVersion() + "§r\n§7-----------------------§r";
         Bukkit.getConsoleSender().sendMessage(s);
 
