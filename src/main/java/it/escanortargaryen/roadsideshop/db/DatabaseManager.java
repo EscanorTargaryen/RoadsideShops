@@ -25,6 +25,8 @@ public class DatabaseManager {
 
     private final Connection connection;
 
+    private static ArrayList<Shop> cachedShops = new ArrayList<>();
+
     public DatabaseManager(@NotNull File dbFile) throws Exception {
         Preconditions.checkNotNull(dbFile, "Database file is null.");
 
@@ -51,7 +53,16 @@ public class DatabaseManager {
         }
     }
 
-    public Shop getShop(UUID player) {
+    public Shop getShop(UUID player, boolean saveInCache) {
+
+        for (Shop sh : cachedShops) {
+
+            if (sh.getPlayerUUID().equals(player)) {
+
+                return sh;
+
+            }
+        }
 
         try (PreparedStatement ps = connection.prepareStatement("SELECT * FROM `Shop` WHERE `UUID`=?;")) {
             ps.setString(1, player.toString());
@@ -77,17 +88,27 @@ public class DatabaseManager {
 
                 }
 
-                return new Shop(player, getPlayerName(player), getOffMessage(player), sponsor, i, r.getLong("LastSponsor"));
+                Shop shop = new Shop(player, getPlayerName(player), getOffMessage(player), sponsor, i, r.getLong("LastSponsor"));
+                if (saveInCache)
+                    cachedShops.add(shop);
+                return shop;
 
             } else {
                 createShop(player);
-                return new Shop(player, getPlayerName(player));
+                Shop shop = new Shop(player, getPlayerName(player));
+                if (saveInCache)
+                    cachedShops.add(shop);
+                return shop;
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return null;
 
+    }
+
+    public static ArrayList<Shop> getCachedShops() {
+        return new ArrayList<>(cachedShops);
     }
 
     public boolean hasShop(UUID player) {
@@ -117,7 +138,7 @@ public class DatabaseManager {
             ResultSet r = ps.executeQuery();
             while (r.next()) {
 
-                ret.add(getShop(UUID.fromString(r.getString("UUID"))));
+                ret.add(getShop(UUID.fromString(r.getString("UUID")),false));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -260,7 +281,7 @@ public class DatabaseManager {
         Objects.requireNonNull(text);
 
         try {
-            PreparedStatement psInsert = connection.prepareStatement("INSERT INTO `Shop`(`UUID`, `Text`) VALUES(?,?);");
+            PreparedStatement psInsert = connection.prepareStatement("INSERT INTO `Messages`(`UUID`, `Text`) VALUES(?,?);");
             psInsert.setString(1, p.toString());
             psInsert.setString(2, text);
             psInsert.executeUpdate();

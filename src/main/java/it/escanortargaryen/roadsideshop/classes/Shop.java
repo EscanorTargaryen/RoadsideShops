@@ -37,6 +37,8 @@ public class Shop implements InventoryHolder {
 
     private long lastSponsor = 0L;
 
+    private final InventoryHolder inventoryHolder;
+
     public Shop(UUID player, String playerName, ArrayList<String> offMessages, SellingItem sponsor, ArrayList<SellingItem> items, long lastSponsor) {
         InternalUtil.INVENTORYHOLDERS.add(this);
         this.playerUUID = player;
@@ -45,7 +47,7 @@ public class Shop implements InventoryHolder {
         this.sponsor = sponsor;
         this.items = items;
         this.lastSponsor = lastSponsor;
-
+        inventoryHolder = this;
     }
 
     public Shop(UUID player, String playerName) {
@@ -54,6 +56,7 @@ public class Shop implements InventoryHolder {
 
         this.playerUUID = player;
         this.playerName = playerName;
+        inventoryHolder = this;
 
     }
 
@@ -87,6 +90,10 @@ public class Shop implements InventoryHolder {
 
         lastSponsor = time;
 
+    }
+
+    public InventoryHolder getInventoryHolder() {
+        return inventoryHolder;
     }
 
     public void openInventory(Player p, ViewMode mode) {
@@ -454,6 +461,11 @@ public class Shop implements InventoryHolder {
 
     public ArrayList<String> getOffMessages() {
         return new ArrayList(offMessages);
+    }
+
+    public void addMessage(String s) {
+        offMessages.add(s);
+        save();
     }
 
     public void clearMessages() {

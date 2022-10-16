@@ -78,7 +78,7 @@ public class RoadsideShops extends JavaPlugin implements Listener {
 
         databaseManager.addPlayer(p);
 
-        Shop shop = getShop(p);
+        Shop shop = getShop(p, true);
 
         if (shop != null) {
 
@@ -135,12 +135,22 @@ public class RoadsideShops extends JavaPlugin implements Listener {
 
     public static Shop getShop(Player p) {
 
-        return getShop(p.getUniqueId());
+        return getShop(p.getUniqueId(), true);
+    }
+
+    public static Shop getShop(Player p, boolean saveInCache) {
+
+        return getShop(p.getUniqueId(), saveInCache);
+    }
+
+    public static Shop getShop(UUID p, boolean saveInCache) {
+
+        return databaseManager.getShop(p, saveInCache);
     }
 
     public static Shop getShop(UUID p) {
 
-        return databaseManager.getShop(p);
+        return databaseManager.getShop(p, true);
     }
 
 }
