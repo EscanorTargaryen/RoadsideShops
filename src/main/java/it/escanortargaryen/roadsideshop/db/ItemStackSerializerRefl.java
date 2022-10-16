@@ -51,7 +51,7 @@ import java.util.List;
  *
  * @author MIOR, fren_gor
  */
-public final class ItemStackSerializer {
+public final class ItemStackSerializerRefl {
 
     public static final String completeVersion = Bukkit.getServer().getClass().getName().split("\\.")[3];
     public static final int version = Integer.valueOf(completeVersion.split("_")[1]);
@@ -278,20 +278,20 @@ public final class ItemStackSerializer {
      * get an {@link ItemStack} out of it.
      * <p>
      * The object must be an ItemStack or the result of
-     * {@link ItemStackSerializer#serializeItemStack(ItemStack)}.
+     * {@link ItemStackSerializerRefl#serializeItemStack(ItemStack)}.
      *
      * @param obj Object to be transformed to an {@link ItemStack}
      * @return An {@link ItemStack} if the deserialization was successful, otherwise
      * null.
      * @throws DeserializationException If the object is not an ItemStack or the
      *                                  result of
-     *                                  {@link ItemStackSerializer#serializeItemStack(ItemStack)}.
+     *                                  {@link ItemStackSerializerRefl#serializeItemStack(ItemStack)}.
      */
     public static ItemStack deserializeObject(Object obj) throws DeserializationException {
         if (obj instanceof ItemStack) {
             return (ItemStack) obj;
         } else if (obj instanceof String) {
-            return ItemStackSerializer.deserializeItemStack((String) obj);
+            return ItemStackSerializerRefl.deserializeItemStack((String) obj);
         } else
             throw new DeserializationException("Couldn't deserialize object");
     }

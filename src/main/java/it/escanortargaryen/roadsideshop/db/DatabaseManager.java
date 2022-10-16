@@ -115,7 +115,7 @@ public class DatabaseManager {
 
         try (PreparedStatement ps = connection.prepareStatement("SELECT * FROM `Shop`;")) {
             ResultSet r = ps.executeQuery();
-            if (r.next()) {
+            while (r.next()) {
 
                 ret.add(getShop(UUID.fromString(r.getString("UUID"))));
             }
@@ -176,8 +176,8 @@ public class DatabaseManager {
         try (PreparedStatement ps = connection.prepareStatement("SELECT * FROM `Items` WHERE `Shop`=?;")) {
             ps.setString(1, p.toString());
             ResultSet r = ps.executeQuery();
-            if (r.next()) {
-                ret.add(new SellingItem(ItemStackSerializer.deserializeItemStack(r.getString("Item")), r.getInt("Slot"), r.getDouble("Price"), p));
+            while (r.next()) {
+                ret.add(new SellingItem(ItemSerializer.read(r.getString("Item"))[0], r.getInt("Slot"), r.getDouble("Price"), p));
             }
 
         } catch (SQLException e) {
@@ -215,7 +215,7 @@ public class DatabaseManager {
         try (PreparedStatement ps = connection.prepareStatement("SELECT * FROM `Messages` WHERE `UUID`=?;")) {
             ps.setString(1, p.toString());
             ResultSet r = ps.executeQuery();
-            if (r.next()) {
+            while (r.next()) {
                 ret.add(r.getString("Text"));
 
             }
@@ -244,7 +244,7 @@ public class DatabaseManager {
         try {
             PreparedStatement psInsert = connection.prepareStatement("INSERT INTO `Items`(`Shop`, `Item`,`Slot`,`Price`) VALUES(?,?,?,?);");
             psInsert.setString(1, p.toString());
-            psInsert.setString(2, ItemStackSerializer.serializeItemStack(sellingItem.getItem()));
+            psInsert.setString(2, ItemSerializer.write(sellingItem.getItem()));
             psInsert.setInt(3, sellingItem.getSlot());
             psInsert.setDouble(4, sellingItem.getPrice());
             psInsert.executeUpdate();

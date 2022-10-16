@@ -453,7 +453,11 @@ public class Shop implements InventoryHolder {
     }
 
     public ArrayList<String> getOffMessages() {
-        return offMessages;
+        return new ArrayList(offMessages);
+    }
+
+    public void clearMessages() {
+        offMessages.clear();
     }
 
     public void save() {

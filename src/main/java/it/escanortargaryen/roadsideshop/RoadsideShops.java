@@ -20,7 +20,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.UUID;
 
 import static it.escanortargaryen.roadsideshop.InternalUtil.CONFIGMANAGER;
@@ -79,18 +78,18 @@ public class RoadsideShops extends JavaPlugin implements Listener {
 
         databaseManager.addPlayer(p);
 
-        Shop d = getShop(p);
+        Shop shop = getShop(p);
 
-        if (d != null) {
+        if (shop != null) {
 
-            if (d.getOffMessages().size() > 0) {
+            if (shop.getOffMessages().size() > 0) {
                 p.sendMessage(CONFIGMANAGER.getWhileOffline());
-                for (String s : d.getOffMessages()) {
+                for (String s : shop.getOffMessages()) {
 
                     p.sendMessage(s);
                 }
 
-                d.getOffMessages().clear();
+                shop.clearMessages();
 
             }
 
