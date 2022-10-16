@@ -21,16 +21,11 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Objects;
 import java.util.UUID;
 
 import static it.escanortargaryen.roadsideshop.InternalUtil.CONFIGMANAGER;
 
 public class RoadsideShops extends JavaPlugin implements Listener {
-
-    private static final HashMap<UUID, Shop> cachedShops = new HashMap<>();
 
     public static RoadsideShops INSTANCE;
 
@@ -42,6 +37,16 @@ public class RoadsideShops extends JavaPlugin implements Listener {
     }
 
     private final ArrayList<LockedSlot> lockedSlots = new ArrayList<>();
+
+    public static boolean hasShop(UUID player) {
+        return databaseManager.hasShop(player);
+
+    }
+
+    public static void saveShop(Shop p) {
+        databaseManager.updateShop(p);
+
+    }
 
     @Override
     public void onLoad() {
@@ -64,17 +69,15 @@ public class RoadsideShops extends JavaPlugin implements Listener {
         return true;
     }
 
+    public static ArrayList<Shop> getAlloShops() {
+        return databaseManager.getAlloShops();
+    }
+
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {
         Player p = e.getPlayer();
 
         databaseManager.addPlayer(p);
-
-        if (!RoadsideShops.hasShop(p)) {
-
-            RoadsideShops.createShop(p);
-
-        }
 
         Shop d = getShop(p);
 
@@ -112,8 +115,9 @@ public class RoadsideShops extends JavaPlugin implements Listener {
         try {
             databaseManager = new DatabaseManager(new File(getDataFolder() + "/database.db"));
         } catch (Exception e) {
-            System.out.println(Arrays.toString(e.getStackTrace()));
+            e.printStackTrace();
             getServer().getPluginManager().disablePlugin(RoadsideShops.INSTANCE);
+            return;
         }
         String s = "§7----§c§nRoadside§r §6§nShops§r§7----§r\n§fby §eEscanorTargaryen§r\n§2Enabled version: " + this.getDescription().getVersion() + "§r\n§7-----------------------§r";
         Bukkit.getConsoleSender().sendMessage(s);
@@ -130,18 +134,6 @@ public class RoadsideShops extends JavaPlugin implements Listener {
         return new ArrayList<>(lockedSlots);
     }
 
-    public static boolean hasShop(Player player) {
-
-        return hasShop(player.getUniqueId());
-
-    }
-
-    public static boolean hasShop(UUID player) {
-
-        return cachedShops.containsKey(player);
-
-    }
-
     public static Shop getShop(Player p) {
 
         return getShop(p.getUniqueId());
@@ -149,32 +141,7 @@ public class RoadsideShops extends JavaPlugin implements Listener {
 
     public static Shop getShop(UUID p) {
 
-        return cachedShops.get(p);
+        return databaseManager.getShop(p);
     }
 
-    public static void removeShop(UUID player) {
-        cachedShops.remove(player);
-
-    }
-
-    public static void removeShop(Player player) {
-        Objects.requireNonNull(player);
-        cachedShops.remove(player.getUniqueId());
-
-    }
-
-    public static void removeShop(Shop shop) {
-        removeShop(shop.getPlayerUUID());
-
-    }
-
-    public static Collection<Shop> getCachedShops() {
-        return cachedShops.values();
-    }
-
-    public static void createShop(Player player) {
-
-        cachedShops.put(player.getUniqueId(), new Shop(player));
-
-    }
 }

@@ -19,9 +19,9 @@ public class Commands {
 
         new CommandAPICommand(ConfigManager.SHOPCOMMAND).executesPlayer((p, objects) -> {
 
-            if (!RoadsideShops.hasShop(p)) {
+            if (!RoadsideShops.hasShop(p.getUniqueId())) {
 
-                RoadsideShops.createShop(p);
+                RoadsideShops.getShop(p);
 
             }
             RoadsideShops.getShop(p).openInventory(p, ViewMode.SELLER);
@@ -58,7 +58,7 @@ public class Commands {
 
         new CommandAPICommand(ConfigManager.NEWSPAPERCOMMAND).executesPlayer((player, objects) -> {
 
-            new Newspaper(RoadsideShops.getCachedShops(), player);
+            new Newspaper(RoadsideShops.getAlloShops(), player);
         }).register();
 
     }

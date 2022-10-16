@@ -35,28 +35,22 @@ public class Shop implements InventoryHolder {
 
     private ArrayList<String> offMessages = new ArrayList<>();
 
-    private final InventoryHolder holder = this;
-
     private long lastSponsor = 0L;
 
-    public Shop(UUID player, String playerName, ArrayList<String> offMessages, SellingItem sponsor, ArrayList<SellingItem> items) {
-
+    public Shop(UUID player, String playerName, ArrayList<String> offMessages, SellingItem sponsor, ArrayList<SellingItem> items, long lastSponsor) {
+        InternalUtil.INVENTORYHOLDERS.add(this);
         this.playerUUID = player;
         this.playerName = playerName;
         this.offMessages = offMessages;
         this.sponsor = sponsor;
         this.items = items;
-
-    }
-
-    public Shop(Player player) {
-
-        this.playerUUID = player.getUniqueId();
-        playerName = player.getName();
+        this.lastSponsor = lastSponsor;
 
     }
 
     public Shop(UUID player, String playerName) {
+
+        InternalUtil.INVENTORYHOLDERS.add(this);
 
         this.playerUUID = player;
         this.playerName = playerName;
@@ -72,6 +66,10 @@ public class Shop implements InventoryHolder {
 
         return (time - lastSponsor) / 60000 > ConfigManager.SPONSORTIME;
 
+    }
+
+    public long getLastSponsor() {
+        return lastSponsor;
     }
 
     public long getMissTimeinMins(long time) {
@@ -276,7 +274,7 @@ public class Shop implements InventoryHolder {
             setSponsorItem(sellingItem);
 
         }
-
+        save();
     }
 
     public void removeItem(int slot) {
@@ -350,7 +348,7 @@ public class Shop implements InventoryHolder {
             }
 
         }
-
+        save();
     }
 
     public ItemStack generateMapItem(boolean isSponsoring, SellingItem sellingItem) {
@@ -412,6 +410,7 @@ public class Shop implements InventoryHolder {
         setTimeSponsor(System.currentTimeMillis());
         setSponsor(sellingItem);
         updateInventory();
+        save();
 
     }
 
@@ -422,6 +421,7 @@ public class Shop implements InventoryHolder {
     public void clear() {
 
         items.clear();
+        save();
     }
 
     public Inventory getInvSeller() {
@@ -456,7 +456,9 @@ public class Shop implements InventoryHolder {
         return offMessages;
     }
 
-    public InventoryHolder getHolder() {
-        return holder;
+    public void save() {
+        RoadsideShops.saveShop(this);
+
     }
+
 }

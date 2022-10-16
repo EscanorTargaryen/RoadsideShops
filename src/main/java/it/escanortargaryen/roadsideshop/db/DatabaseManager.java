@@ -18,7 +18,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -38,15 +37,15 @@ public class DatabaseManager {
         config.setEncoding(Encoding.UTF8);
         config.setSynchronous(SynchronousMode.FULL);
         this.connection = DriverManager.getConnection("jdbc:sqlite:" + dbFile, config.toProperties());
-
+        setUp();
     }
 
     public void setUp() throws SQLException {
         try (Statement statement = connection.createStatement()) {
 
-            statement.addBatch("CREATE TABLE IF NOT EXISTS `Players` (`UUID` TEXT NOT NULL PRIMARY KEY , `Name` TEXT NOT NULL ON DELETE CASCADE ON UPDATE CASCADE);");
-            statement.addBatch("CREATE TABLE IF NOT EXISTS `Messages` (`Text` TEXT NOT NULL, `Key` INT NOT NULL AUTOINCREMENT, `UUID` TEXT NOT NULL, PRIMARY KEY(`Key`,`UUID`), FOREIGN KEY(`UUID`) REFERENCES `Players`(`UUID`) ON DELETE CASCADE ON UPDATE CASCADE);");
-            statement.addBatch("CREATE TABLE IF NOT EXISTS `Shop` (`UUID` TEXT PRIMARY KEY NOT NULL,`Sponsor` TEXT, FOREIGN KEY(`UUID`) REFERENCES `Players`(`UUID`) ON DELETE CASCADE ON UPDATE CASCADE);");
+            statement.addBatch("CREATE TABLE IF NOT EXISTS `Players` (`UUID` TEXT NOT NULL PRIMARY KEY , `Name` TEXT NOT NULL);");
+            statement.addBatch("CREATE TABLE IF NOT EXISTS `Messages` (`Text` TEXT NOT NULL, `Key` INTEGER PRIMARY KEY AUTOINCREMENT, `UUID` TEXT NOT NULL, FOREIGN KEY(`UUID`) REFERENCES `Players`(`UUID`) ON DELETE CASCADE ON UPDATE CASCADE);");
+            statement.addBatch("CREATE TABLE IF NOT EXISTS `Shop` (`UUID` TEXT PRIMARY KEY NOT NULL,`Sponsor` TEXT,`LastSponsor` INT DEFAULT 0 NOT NULL, FOREIGN KEY(`UUID`) REFERENCES `Players`(`UUID`) ON DELETE CASCADE ON UPDATE CASCADE);");
             statement.addBatch("CREATE TABLE IF NOT EXISTS `Items` (`Item` TEXT NOT NULL,`Slot` INT NOT NULL,`Price` REAL NOT NULL,`Shop` INT NOT NULL, PRIMARY KEY(`Shop`,`Slot`), FOREIGN KEY(`Shop`) REFERENCES `Shop`(`UUID`) ON DELETE CASCADE ON UPDATE CASCADE);");
             statement.executeBatch();
         }
@@ -78,57 +77,103 @@ public class DatabaseManager {
 
                 }
 
-                return new Shop(player, getPlayerName(player), getOffMessage(player), sponsor, i);
+                return new Shop(player, getPlayerName(player), getOffMessage(player), sponsor, i, r.getLong("LastSponsor"));
 
             } else {
                 createShop(player);
                 return new Shop(player, getPlayerName(player));
             }
         } catch (SQLException e) {
-            System.out.println(Arrays.toString(e.getStackTrace()));
+            e.printStackTrace();
         }
         return null;
 
     }
 
-    public void updateShop(Shop p) {
+    public boolean hasShop(UUID player) {
 
-        Objects.requireNonNull(p);
+        Objects.requireNonNull(player);
+
+        try (PreparedStatement ps = connection.prepareStatement("SELECT * FROM `Players` WHERE `UUID`=?;")) {
+            ps.setString(1, player.toString());
+            ResultSet r = ps.executeQuery();
+            if (r.next()) {
+
+                return true;
+            } else {
+                return false;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+
+    }
+
+    public ArrayList<Shop> getAlloShops() {
+        ArrayList<Shop> ret = new ArrayList<>();
+
+        try (PreparedStatement ps = connection.prepareStatement("SELECT * FROM `Shop`;")) {
+            ResultSet r = ps.executeQuery();
+            if (r.next()) {
+
+                ret.add(getShop(UUID.fromString(r.getString("UUID"))));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return ret;
+    }
+
+    public void updateShop(Shop shop) {
+
+        Objects.requireNonNull(shop);
 
         try (PreparedStatement ps = connection.prepareStatement("SELECT * FROM `Shop` WHERE `UUID`=?;")) {
-            ps.setString(1, p.getPlayerUUID().toString());
+            ps.setString(1, shop.getPlayerUUID().toString());
             ResultSet r = ps.executeQuery();
             if (r.next()) {
                 String sponsor = null;
 
-                if (p.getSponsor() != null) {
+                if (shop.getSponsor() != null) {
 
-                    sponsor = p.getSponsor().getSlot() + "";
-
-                }
-
-                r.updateString("Sponsor", sponsor);
-                deleteAllMessages(p.getPlayerUUID());
-                for (String s : p.getOffMessages()) {
-                    addOffMessage(p.getPlayerUUID(), s);
+                    sponsor = shop.getSponsor().getSlot() + "";
 
                 }
-                deleteAllItems(p.getPlayerUUID());
-                for (SellingItem s : p.getItems()) {
-                    addItem(p.getPlayerUUID(), s);
+
+                PreparedStatement psInsert = connection.prepareStatement("DELETE FROM `Shop` WHERE `UUID`=?;");
+                psInsert.setString(1, shop.getPlayerUUID().toString());
+
+                psInsert.executeUpdate();
+
+                psInsert = connection.prepareStatement("INSERT INTO `Shop`(`UUID`, `Sponsor`, `LastSponsor`) VALUES(?,?,?);");
+                psInsert.setString(1, shop.getPlayerUUID().toString());
+                psInsert.setString(2, sponsor);
+                psInsert.setLong(3, shop.getLastSponsor());
+                psInsert.executeUpdate();
+
+                deleteAllMessages(shop.getPlayerUUID());
+                for (String s : shop.getOffMessages()) {
+                    addOffMessage(shop.getPlayerUUID(), s);
+
+                }
+                deleteAllItems(shop.getPlayerUUID());
+                for (SellingItem s : shop.getItems()) {
+                    addItem(shop.getPlayerUUID(), s);
 
                 }
 
             }
         } catch (SQLException e) {
-            System.out.println(Arrays.toString(e.getStackTrace()));
+            e.printStackTrace();
         }
 
     }
 
     public ArrayList<SellingItem> getItems(UUID p) {
         ArrayList<SellingItem> ret = new ArrayList<>();
-        try (PreparedStatement ps = connection.prepareStatement("SELECT * FROM `Items` WHERE `UUID`=?;")) {
+        try (PreparedStatement ps = connection.prepareStatement("SELECT * FROM `Items` WHERE `Shop`=?;")) {
             ps.setString(1, p.toString());
             ResultSet r = ps.executeQuery();
             if (r.next()) {
@@ -136,37 +181,31 @@ public class DatabaseManager {
             }
 
         } catch (SQLException e) {
-            System.out.println(Arrays.toString(e.getStackTrace()));
+            e.printStackTrace();
         }
         return ret;
     }
 
     public void deleteAllItems(UUID p) {
 
-        try (PreparedStatement ps = connection.prepareStatement("SELECT * FROM `Items` WHERE `UUID`=?;")) {
+        try (PreparedStatement ps = connection.prepareStatement("DELETE FROM `Items` WHERE `Shop`=?;")) {
             ps.setString(1, p.toString());
-            ResultSet r = ps.executeQuery();
-            if (r.next()) {
-                r.deleteRow();
-            }
+            ps.executeUpdate();
 
         } catch (SQLException e) {
-            System.out.println(Arrays.toString(e.getStackTrace()));
+            e.printStackTrace();
         }
 
     }
 
     public void deleteAllMessages(UUID p) {
 
-        try (PreparedStatement ps = connection.prepareStatement("SELECT * FROM `Messages` WHERE `UUID`=?;")) {
+        try (PreparedStatement ps = connection.prepareStatement("DELETE FROM `Messages` WHERE `UUID`=?;")) {
             ps.setString(1, p.toString());
-            ResultSet r = ps.executeQuery();
-            if (r.next()) {
-                r.deleteRow();
-            }
+            ps.executeUpdate();
 
         } catch (SQLException e) {
-            System.out.println(Arrays.toString(e.getStackTrace()));
+            e.printStackTrace();
         }
 
     }
@@ -182,7 +221,7 @@ public class DatabaseManager {
             }
 
         } catch (SQLException e) {
-            System.out.println(Arrays.toString(e.getStackTrace()));
+            e.printStackTrace();
         }
         return ret;
     }
@@ -195,21 +234,22 @@ public class DatabaseManager {
             psInsert.setString(2, null);
             psInsert.executeUpdate();
         } catch (SQLException ex) {
-            System.out.println(Arrays.toString(ex.getStackTrace()));
+            ex.printStackTrace();
+
         }
 
     }
 
     public void addItem(UUID p, SellingItem sellingItem) {
         try {
-            PreparedStatement psInsert = connection.prepareStatement("INSERT INTO `Items`(`Shop`, `Item`,`Slot`,`Price`,) VALUES(?,?,?,?);");
+            PreparedStatement psInsert = connection.prepareStatement("INSERT INTO `Items`(`Shop`, `Item`,`Slot`,`Price`) VALUES(?,?,?,?);");
             psInsert.setString(1, p.toString());
             psInsert.setString(2, ItemStackSerializer.serializeItemStack(sellingItem.getItem()));
             psInsert.setInt(3, sellingItem.getSlot());
             psInsert.setDouble(4, sellingItem.getPrice());
             psInsert.executeUpdate();
         } catch (SQLException ex) {
-            System.out.println(Arrays.toString(ex.getStackTrace()));
+            ex.printStackTrace();
         }
 
     }
@@ -225,7 +265,7 @@ public class DatabaseManager {
             psInsert.setString(2, text);
             psInsert.executeUpdate();
         } catch (SQLException ex) {
-            System.out.println(Arrays.toString(ex.getStackTrace()));
+            ex.printStackTrace();
         }
 
     }
@@ -241,7 +281,7 @@ public class DatabaseManager {
             }
 
         } catch (SQLException e) {
-            System.out.println(Arrays.toString(e.getStackTrace()));
+            e.printStackTrace();
         }
         return "";
     }
@@ -249,12 +289,12 @@ public class DatabaseManager {
     public void addPlayer(Player p) {
 
         try {
-            PreparedStatement psInsert = connection.prepareStatement("INSERT INTO `Players`(`UUID`, `Name`) VALUES(?,?);");
+            PreparedStatement psInsert = connection.prepareStatement("INSERT OR IGNORE INTO `Players`(`UUID`, `Name`) VALUES(?,?);");
             psInsert.setString(1, p.getUniqueId().toString());
             psInsert.setString(2, p.getName());
             psInsert.executeUpdate();
         } catch (SQLException ex) {
-            System.out.println(Arrays.toString(ex.getStackTrace()));
+            ex.printStackTrace();
         }
 
     }

@@ -93,7 +93,8 @@ public final class ItemStackSerializer {
                 case 13:
                 case 14:
                 case 15:
-                case 16: {
+                case 16:
+                {
                     nmsItemStackContructor = nmsItemStackClass.getDeclaredConstructor(nbtTagCompoundClass);
                     nmsItemStackContructor.setAccessible(true);
                     break;

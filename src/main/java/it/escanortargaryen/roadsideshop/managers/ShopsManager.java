@@ -16,7 +16,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
@@ -29,22 +28,10 @@ public class ShopsManager implements Listener {
 
     }
 
-    public Shop getShop(InventoryHolder f) {
-
-        for (Shop s : RoadsideShops.getCachedShops()) {
-
-            if (s.getHolder().equals(f))
-                return s;
-
-        }
-        return null;
-
-    }
-
     @EventHandler
     private void onClick(InventoryClickEvent e) {
 
-        if (getShop(e.getView().getTopInventory().getHolder()) == null)
+        if (!InternalUtil.INVENTORYHOLDERS.contains(e.getView().getTopInventory().getHolder()))
 
             return;
 
@@ -57,11 +44,10 @@ public class ShopsManager implements Listener {
                 || e.getCurrentItem().getType() == Material.AIR)
             return;
 
-        Shop shop = getShop(e.getView().getTopInventory().getHolder());
+        Shop shop = RoadsideShops.getShop(e.getWhoClicked().getUniqueId());
         SellingItem sellingItem = shop.getItemAt(e.getSlot());
         if (e.getWhoClicked().getUniqueId().equals(shop.getPlayerUUID())) {
-
-            if (e.getClickedInventory().getHolder() != (shop.getHolder())) {
+            if (e.getClickedInventory().getHolder() != e.getView().getTopInventory().getHolder()) {
 
                 if (e.getClick() == ClickType.DOUBLE_CLICK || e.getClick() == ClickType.SHIFT_LEFT
                         || e.getClick() == ClickType.SHIFT_RIGHT) {
@@ -69,9 +55,9 @@ public class ShopsManager implements Listener {
                     e.setCancelled(true);
 
                 }
-
                 return;
             }
+
             e.setCancelled(true);
 
             if (sellingItem == null) {
