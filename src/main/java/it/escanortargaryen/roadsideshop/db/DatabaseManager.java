@@ -25,7 +25,7 @@ public class DatabaseManager {
 
     private final Connection connection;
 
-    private static ArrayList<Shop> cachedShops = new ArrayList<>();
+    private static final ArrayList<Shop> cachedShops = new ArrayList<>();
 
     public DatabaseManager(@NotNull File dbFile) throws Exception {
         Preconditions.checkNotNull(dbFile, "Database file is null.");
@@ -43,6 +43,7 @@ public class DatabaseManager {
     }
 
     public void setUp() throws SQLException {
+
         try (Statement statement = connection.createStatement()) {
 
             statement.addBatch("CREATE TABLE IF NOT EXISTS `Players` (`UUID` TEXT NOT NULL PRIMARY KEY , `Name` TEXT NOT NULL);");
@@ -118,12 +119,7 @@ public class DatabaseManager {
         try (PreparedStatement ps = connection.prepareStatement("SELECT * FROM `Players` WHERE `UUID`=?;")) {
             ps.setString(1, player.toString());
             ResultSet r = ps.executeQuery();
-            if (r.next()) {
-
-                return true;
-            } else {
-                return false;
-            }
+            return r.next();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -131,14 +127,14 @@ public class DatabaseManager {
 
     }
 
-    public ArrayList<Shop> getAlloShops() {
+    public ArrayList<Shop> getAllShops() {
         ArrayList<Shop> ret = new ArrayList<>();
 
         try (PreparedStatement ps = connection.prepareStatement("SELECT * FROM `Shop`;")) {
             ResultSet r = ps.executeQuery();
             while (r.next()) {
 
-                ret.add(getShop(UUID.fromString(r.getString("UUID")),false));
+                ret.add(getShop(UUID.fromString(r.getString("UUID")), false));
             }
         } catch (SQLException e) {
             e.printStackTrace();

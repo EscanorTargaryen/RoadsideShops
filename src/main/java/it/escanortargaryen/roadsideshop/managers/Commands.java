@@ -5,8 +5,13 @@ import dev.jorel.commandapi.arguments.OfflinePlayerArgument;
 import it.escanortargaryen.roadsideshop.InternalUtil;
 import it.escanortargaryen.roadsideshop.RoadsideShops;
 import it.escanortargaryen.roadsideshop.classes.Newspaper;
+import it.escanortargaryen.roadsideshop.classes.Shop;
 import it.escanortargaryen.roadsideshop.classes.ViewMode;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.scheduler.BukkitRunnable;
+
+import java.util.ArrayList;
+import java.util.concurrent.CompletableFuture;
 
 public class Commands {
 
@@ -19,12 +24,25 @@ public class Commands {
 
         new CommandAPICommand(ConfigManager.SHOPCOMMAND).executesPlayer((p, objects) -> {
 
-            if (!RoadsideShops.hasShop(p.getUniqueId())) {
+            CompletableFuture.runAsync(() -> {
+                if (!RoadsideShops.hasShop(p.getUniqueId())) {
 
-                RoadsideShops.getShop(p);
+                    RoadsideShops.getShop(p);
 
-            }
-            RoadsideShops.getShop(p).openInventory(p, ViewMode.SELLER);
+                }
+
+                Shop s = RoadsideShops.getShop(p);
+                new BukkitRunnable() {
+
+                    @Override
+                    public void run() {
+
+                        s.openInventory(p, ViewMode.SELLER);
+
+                    }
+                }.runTask(RoadsideShops.INSTANCE);
+
+            });
 
         }).register();
 
@@ -33,22 +51,47 @@ public class Commands {
             OfflinePlayer shopOwner = (OfflinePlayer) objects[0];
             if (shopOwner != null) {
 
-                if (!RoadsideShops.hasShop(shopOwner.getUniqueId())) {
+                CompletableFuture.runAsync(() -> {
+                    if (!RoadsideShops.hasShop(shopOwner.getUniqueId())) {
+                        new BukkitRunnable() {
 
-                    p.sendMessage(InternalUtil.CONFIGMANAGER.getNoShop());
-
-                } else {
-
-                    if (p.getUniqueId().equals(shopOwner.getUniqueId())) {
-
-                        RoadsideShops.getShop(shopOwner.getUniqueId()).openInventory(p, ViewMode.SELLER);
+                            @Override
+                            public void run() {
+                                p.sendMessage(InternalUtil.CONFIGMANAGER.getNoShop());
+                            }
+                        }.runTask(RoadsideShops.INSTANCE);
 
                     } else {
-                        RoadsideShops.getShop(shopOwner.getUniqueId()).openInventory(p, ViewMode.BUYER);
+
+                        if (p.getUniqueId().equals(shopOwner.getUniqueId())) {
+
+                            Shop s = RoadsideShops.getShop(shopOwner.getUniqueId());
+                            new BukkitRunnable() {
+
+                                @Override
+                                public void run() {
+                                    s.openInventory(p, ViewMode.SELLER);
+                                }
+                            }.runTask(RoadsideShops.INSTANCE);
+
+                        } else {
+
+                            Shop s = RoadsideShops.getShop(shopOwner.getUniqueId());
+                            new BukkitRunnable() {
+
+                                @Override
+                                public void run() {
+                                    s.openInventory(p, ViewMode.BUYER);
+
+                                }
+                            }.runTask(RoadsideShops.INSTANCE);
+
+                        }
 
                     }
 
-                }
+                });
+
             }
 
         }).register();
@@ -58,7 +101,19 @@ public class Commands {
 
         new CommandAPICommand(ConfigManager.NEWSPAPERCOMMAND).executesPlayer((player, objects) -> {
 
-            new Newspaper(RoadsideShops.getAlloShops(), player);
+            CompletableFuture.runAsync(() -> {
+                ArrayList<Shop> shops = RoadsideShops.getAllShops();
+                new BukkitRunnable() {
+
+                    @Override
+
+                    public void run() {
+                        new Newspaper(shops, player);
+                    }
+                }.runTask(RoadsideShops.INSTANCE);
+
+            });
+
         }).register();
 
     }

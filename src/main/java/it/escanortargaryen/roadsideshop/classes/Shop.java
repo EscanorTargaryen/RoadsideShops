@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Objects;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 public class Shop implements InventoryHolder {
 
@@ -473,7 +474,12 @@ public class Shop implements InventoryHolder {
     }
 
     public void save() {
-        RoadsideShops.saveShop(this);
+
+        CompletableFuture.runAsync(() -> {
+
+            RoadsideShops.saveShop(this);
+
+        });
 
     }
 

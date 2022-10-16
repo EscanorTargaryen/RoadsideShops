@@ -17,10 +17,13 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.File;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 import static it.escanortargaryen.roadsideshop.InternalUtil.CONFIGMANAGER;
 
@@ -68,33 +71,53 @@ public class RoadsideShops extends JavaPlugin implements Listener {
         return true;
     }
 
-    public static ArrayList<Shop> getAlloShops() {
-        return databaseManager.getAlloShops();
+    public static ArrayList<Shop> getAllShops() {
+        return databaseManager.getAllShops();
     }
 
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {
         Player p = e.getPlayer();
 
-        databaseManager.addPlayer(p);
+        CompletableFuture.runAsync(() -> {
+            databaseManager.addPlayer(p);
 
-        Shop shop = getShop(p, true);
+            Shop shop = getShop(p, true);
+            new BukkitRunnable() {
 
-        if (shop != null) {
+                @Override
+                public void run() {
 
-            if (shop.getOffMessages().size() > 0) {
-                p.sendMessage(CONFIGMANAGER.getWhileOffline());
-                for (String s : shop.getOffMessages()) {
+                    if (shop != null) {
 
-                    p.sendMessage(s);
+                        if (shop.getOffMessages().size() > 0) {
+                            p.sendMessage(CONFIGMANAGER.getWhileOffline());
+                            for (String s : shop.getOffMessages()) {
+
+                                p.sendMessage(s);
+                            }
+
+                            shop.clearMessages();
+
+                        }
+
+                    }
+
                 }
+            }.runTask(RoadsideShops.INSTANCE);
 
-                shop.clearMessages();
+        });
 
-            }
+    }
 
+    @Override
+    public void onDisable() {
+        super.onDisable();
+        try {
+            databaseManager.close();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
-
     }
 
     @Override
