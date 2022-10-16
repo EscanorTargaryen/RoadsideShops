@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Objects;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 public class Shop implements InventoryHolder {
 
@@ -31,18 +32,32 @@ public class Shop implements InventoryHolder {
 
     private final int unlockedSlotsNumber = InternalUtil.CONFIGMANAGER.getUnlockedSlots();
 
-    private final ArrayList<SellingItem> items = new ArrayList<>();
+    private ArrayList<SellingItem> items = new ArrayList<>();
 
-    private final ArrayList<String> offMessages = new ArrayList<>();
-
-    private final InventoryHolder holder = this;
+    private ArrayList<String> offMessages = new ArrayList<>();
 
     private long lastSponsor = 0L;
 
-    public Shop(Player player) {
+    private final InventoryHolder inventoryHolder;
 
-        this.playerUUID = player.getUniqueId();
-        playerName = player.getName();
+    public Shop(UUID player, String playerName, ArrayList<String> offMessages, SellingItem sponsor, ArrayList<SellingItem> items, long lastSponsor) {
+        InternalUtil.INVENTORYHOLDERS.add(this);
+        this.playerUUID = player;
+        this.playerName = playerName;
+        this.offMessages = offMessages;
+        this.sponsor = sponsor;
+        this.items = items;
+        this.lastSponsor = lastSponsor;
+        inventoryHolder = this;
+    }
+
+    public Shop(UUID player, String playerName) {
+
+        InternalUtil.INVENTORYHOLDERS.add(this);
+
+        this.playerUUID = player;
+        this.playerName = playerName;
+        inventoryHolder = this;
 
     }
 
@@ -55,6 +70,10 @@ public class Shop implements InventoryHolder {
 
         return (time - lastSponsor) / 60000 > ConfigManager.SPONSORTIME;
 
+    }
+
+    public long getLastSponsor() {
+        return lastSponsor;
     }
 
     public long getMissTimeinMins(long time) {
@@ -72,6 +91,10 @@ public class Shop implements InventoryHolder {
 
         lastSponsor = time;
 
+    }
+
+    public InventoryHolder getInventoryHolder() {
+        return inventoryHolder;
     }
 
     public void openInventory(Player p, ViewMode mode) {
@@ -259,7 +282,7 @@ public class Shop implements InventoryHolder {
             setSponsorItem(sellingItem);
 
         }
-
+        save();
     }
 
     public void removeItem(int slot) {
@@ -333,7 +356,7 @@ public class Shop implements InventoryHolder {
             }
 
         }
-
+        save();
     }
 
     public ItemStack generateMapItem(boolean isSponsoring, SellingItem sellingItem) {
@@ -395,6 +418,7 @@ public class Shop implements InventoryHolder {
         setTimeSponsor(System.currentTimeMillis());
         setSponsor(sellingItem);
         updateInventory();
+        save();
 
     }
 
@@ -405,6 +429,7 @@ public class Shop implements InventoryHolder {
     public void clear() {
 
         items.clear();
+        save();
     }
 
     public Inventory getInvSeller() {
@@ -436,10 +461,26 @@ public class Shop implements InventoryHolder {
     }
 
     public ArrayList<String> getOffMessages() {
-        return offMessages;
+        return new ArrayList(offMessages);
     }
 
-    public InventoryHolder getHolder() {
-        return holder;
+    public void addMessage(String s) {
+        offMessages.add(s);
+        save();
     }
+
+    public void clearMessages() {
+        offMessages.clear();
+    }
+
+    public void save() {
+
+        CompletableFuture.runAsync(() -> {
+
+            RoadsideShops.saveShop(this);
+
+        });
+
+    }
+
 }

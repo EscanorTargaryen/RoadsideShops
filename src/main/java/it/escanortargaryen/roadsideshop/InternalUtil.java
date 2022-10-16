@@ -3,9 +3,11 @@ package it.escanortargaryen.roadsideshop;
 import it.escanortargaryen.roadsideshop.managers.ConfigManager;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -25,6 +27,8 @@ TODO cose da sistemare in una classe:
 public class InternalUtil {
 
     public static ConfigManager CONFIGMANAGER;
+
+    public static ArrayList<InventoryHolder> INVENTORYHOLDERS = new ArrayList<>();
     public static ItemStack BACKARROW;
 
     public static ItemStack UNLOCKEDSLOT = new ItemStack(Material.GRAY_STAINED_GLASS_PANE);

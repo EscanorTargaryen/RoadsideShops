@@ -4,6 +4,7 @@ import it.escanortargaryen.roadsideshop.InternalUtil;
 import it.escanortargaryen.roadsideshop.RoadsideShops;
 import it.escanortargaryen.roadsideshop.classes.SellingItem;
 import it.escanortargaryen.roadsideshop.classes.Shop;
+import it.escanortargaryen.roadsideshop.db.DatabaseManager;
 import it.escanortargaryen.roadsideshop.events.PlayerBuyShopEvent;
 import it.escanortargaryen.roadsideshop.inventory.ItemSettings;
 import it.escanortargaryen.roadsideshop.inventory.SaleSettings;
@@ -29,22 +30,20 @@ public class ShopsManager implements Listener {
 
     }
 
-    public Shop getShop(InventoryHolder f) {
+    private Shop getShop(InventoryHolder inventoryHolder) {
 
-        for (Shop s : RoadsideShops.getCachedShops()) {
+        for (Shop s : DatabaseManager.getCachedShops()) {
 
-            if (s.getHolder().equals(f))
+            if (s.getInventoryHolder() == inventoryHolder)
                 return s;
-
         }
         return null;
-
     }
 
     @EventHandler
     private void onClick(InventoryClickEvent e) {
 
-        if (getShop(e.getView().getTopInventory().getHolder()) == null)
+        if (!InternalUtil.INVENTORYHOLDERS.contains(e.getView().getTopInventory().getHolder()))
 
             return;
 
@@ -53,15 +52,16 @@ public class ShopsManager implements Listener {
             return;
         }
 
+
         if (e.getClickedInventory() == null || e.getCurrentItem() == null
                 || e.getCurrentItem().getType() == Material.AIR)
             return;
 
         Shop shop = getShop(e.getView().getTopInventory().getHolder());
         SellingItem sellingItem = shop.getItemAt(e.getSlot());
-        if (e.getWhoClicked().getUniqueId().equals(shop.getPlayerUUID())) {
 
-            if (e.getClickedInventory().getHolder() != (shop.getHolder())) {
+        if (e.getWhoClicked().getUniqueId().equals(shop.getPlayerUUID())) {
+            if (e.getClickedInventory().getHolder() != e.getView().getTopInventory().getHolder()) {
 
                 if (e.getClick() == ClickType.DOUBLE_CLICK || e.getClick() == ClickType.SHIFT_LEFT
                         || e.getClick() == ClickType.SHIFT_RIGHT) {
@@ -69,9 +69,9 @@ public class ShopsManager implements Listener {
                     e.setCancelled(true);
 
                 }
-
                 return;
             }
+
             e.setCancelled(true);
 
             if (sellingItem == null) {
@@ -127,14 +127,15 @@ public class ShopsManager implements Listener {
 
                                 e.getWhoClicked().sendMessage(InternalUtil.CONFIGMANAGER.getBoughtMessage(sellingItem.getPrice(), sellingItem.getItem().getType().toString(), sellingItem.getItem().getAmount(), shop.getPlayerName()));
 
-                                if (Bukkit.getPlayer(shop.getPlayerUUID()) != null) {
+                                Player pl=Bukkit.getPlayer(shop.getPlayerUUID());
+                                String sellerMessage=InternalUtil.CONFIGMANAGER.getSellerMessage(
+                                        sellingItem.getPrice(), sellingItem.getItem().getType().toString(), sellingItem.getItem().getAmount(), p.getName());
+                                if (pl != null) {
 
-                                    Objects.requireNonNull(Bukkit.getPlayer(shop.getPlayerUUID())).sendMessage(InternalUtil.CONFIGMANAGER.getSellerMessage(
-                                            sellingItem.getPrice(), sellingItem.getItem().getType().toString(), sellingItem.getItem().getAmount(), shop.getPlayerName()));
+                                    pl.sendMessage(sellerMessage);
 
                                 } else {
-                                    shop.getOffMessages().add(InternalUtil.CONFIGMANAGER.getSellerMessage(
-                                            sellingItem.getPrice(), sellingItem.getItem().getType().toString(), sellingItem.getItem().getAmount(), shop.getPlayerName()));
+                                    shop.addMessage(sellerMessage);
 
                                 }
                             }

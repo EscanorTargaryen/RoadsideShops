@@ -49,7 +49,7 @@ public class ConfigManager {
         try {
             loadAndValidateConfig();
         } catch (ConfigurationException e) {
-            System.out.println(Arrays.toString(e.getStackTrace()));
+            e.printStackTrace();
             RoadsideShops.INSTANCE.getServer().getPluginManager().disablePlugin(RoadsideShops.INSTANCE);
         }
     }
