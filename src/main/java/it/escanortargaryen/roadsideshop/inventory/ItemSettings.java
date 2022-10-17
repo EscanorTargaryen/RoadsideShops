@@ -22,13 +22,33 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * Class that handles the editing interface of an item that was already for sale.
+ */
 public class ItemSettings implements InventoryHolder, Listener {
 
+    /**
+     * The shop where this item is present.
+     */
     private final Shop shop;
+
+    /**
+     * The item that needs to be modified.
+     */
     private final SellingItem sellingItem;
 
+    /**
+     * Whether the item is set as sponsored or not.
+     */
     private boolean isSponsoring = false;
 
+    /**
+     * Creates a new ItemSettings.
+     *
+     * @param shop        The shop where this item is present.
+     * @param sellingItem The item that needs to be modified.
+     * @param player      The player that displays this menu.
+     */
     public ItemSettings(@NotNull Shop shop, @NotNull SellingItem sellingItem, @NotNull Player player) {
 
         Objects.requireNonNull(shop);

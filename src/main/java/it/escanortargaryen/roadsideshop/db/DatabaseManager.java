@@ -21,12 +21,29 @@ import java.util.ArrayList;
 import java.util.Objects;
 import java.util.UUID;
 
+/**
+ * Class that handles all calls to the SQLite database.
+ * We recommend that you use all of these database calls in async.
+ */
 public class DatabaseManager {
 
+    /**
+     * Database connection.
+     */
     private final Connection connection;
 
+    /**
+     * All shops cached.
+     * By default, only when a player enters the server or when an offline player's shop is requested with the command /roadsideshop <player> its shop is cached.
+     */
     private static final ArrayList<Shop> cachedShops = new ArrayList<>();
 
+    /**
+     * Creates a new DatabaseManager.
+     *
+     * @param dbFile The file for the db.
+     * @throws Exception SQL exceptions.
+     */
     public DatabaseManager(@NotNull File dbFile) throws Exception {
         Preconditions.checkNotNull(dbFile, "Database file is null.");
 
@@ -42,6 +59,11 @@ public class DatabaseManager {
         setUp();
     }
 
+    /**
+     * Set up the database.
+     *
+     * @throws SQLException SQL exceptions.
+     */
     public void setUp() throws SQLException {
 
         try (Statement statement = connection.createStatement()) {
@@ -54,6 +76,13 @@ public class DatabaseManager {
         }
     }
 
+    /**
+     * Returns the shop of a player. If his shop does not exist, it is created.
+     *
+     * @param player      The owner of the shop.
+     * @param saveInCache Whether to cache the shop.
+     * @return the shop of a player.
+     */
     public Shop getShop(@NotNull UUID player, boolean saveInCache) {
         Objects.requireNonNull(player);
         for (Shop sh : cachedShops) {
@@ -112,6 +141,12 @@ public class DatabaseManager {
         return new ArrayList<>(cachedShops);
     }
 
+    /**
+     * If the player has a shop, that is, if the player is registered in the "Players" table of the database.
+     *
+     * @param player
+     * @return
+     */
     public boolean hasShop(@NotNull UUID player) {
 
         Objects.requireNonNull(player);
@@ -127,6 +162,11 @@ public class DatabaseManager {
 
     }
 
+    /**
+     * Returns all stores registered in the database. They are not cached after use.
+     *
+     * @return all stores registered in the database.
+     */
     public ArrayList<Shop> getAllShops() {
         ArrayList<Shop> ret = new ArrayList<>();
 
@@ -143,6 +183,11 @@ public class DatabaseManager {
         return ret;
     }
 
+    /**
+     * Saves the changes to the database.
+     *
+     * @param shop A shop.
+     */
     public void updateShop(@NotNull Shop shop) {
 
         Objects.requireNonNull(shop);
@@ -188,6 +233,12 @@ public class DatabaseManager {
 
     }
 
+    /**
+     * Returns all the items for sale in the shop.
+     *
+     * @param player The player ownner of the shop.
+     * @return all the items for sale in the shop.
+     */
     public ArrayList<SellingItem> getItems(@NotNull UUID player) {
 
         Objects.requireNonNull(player);
@@ -206,6 +257,11 @@ public class DatabaseManager {
         return ret;
     }
 
+    /**
+     * Removes all the items in the shop.
+     *
+     * @param player The shop owner.
+     */
     public void deleteAllItems(@NotNull UUID player) {
         Objects.requireNonNull(player);
         try (PreparedStatement ps = connection.prepareStatement("DELETE FROM `Items` WHERE `Shop`=?;")) {
@@ -218,6 +274,11 @@ public class DatabaseManager {
 
     }
 
+    /**
+     * Removes all the sale message while the owner was offline.
+     *
+     * @param player The shop owner.
+     */
     public void deleteAllMessages(@NotNull UUID player) {
 
         Objects.requireNonNull(player);
@@ -231,6 +292,11 @@ public class DatabaseManager {
 
     }
 
+    /**
+     * Returns all the sale message while the owner was offline.
+     *
+     * @param player The shop owner.
+     */
     public ArrayList<String> getOffMessage(@NotNull UUID player) {
         Objects.requireNonNull(player);
 
@@ -263,6 +329,12 @@ public class DatabaseManager {
 
     }
 
+    /**
+     * Add an item for sale in the shop.
+     *
+     * @param player      The owner of the shop.
+     * @param sellingItem The item to be sold.
+     */
     public void addItem(@NotNull UUID player, @NotNull SellingItem sellingItem) {
         Objects.requireNonNull(player);
         Objects.requireNonNull(sellingItem);
@@ -280,6 +352,12 @@ public class DatabaseManager {
 
     }
 
+    /**
+     * Add a new sale message while the owner is offline.
+     *
+     * @param player The owner of the shop.
+     * @param text   The message to be recorded.
+     */
     private void addOffMessage(@NotNull UUID player, @NotNull String text) {
 
         Objects.requireNonNull(player);
@@ -296,6 +374,12 @@ public class DatabaseManager {
 
     }
 
+    /**
+     * Returns the player's name.
+     *
+     * @param player The owner of the shop.
+     * @return the player's name.
+     */
     public String getPlayerName(@NotNull UUID player) {
         Objects.requireNonNull(player);
 
@@ -313,6 +397,11 @@ public class DatabaseManager {
         return "";
     }
 
+    /**
+     * Add a new player to the database.
+     *
+     * @param player a new player.
+     */
     public void addPlayer(@NotNull Player player) {
         Objects.requireNonNull(player);
         try {
@@ -326,6 +415,11 @@ public class DatabaseManager {
 
     }
 
+    /**
+     * Close the database connection.
+     *
+     * @throws SQLException SQL exceptions.
+     */
     public void close() throws SQLException {
         connection.close();
     }

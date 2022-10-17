@@ -24,6 +24,9 @@ import org.jetbrains.annotations.NotNull;
 import java.util.HashMap;
 import java.util.Objects;
 
+/**
+ * Manager who manages clicks within shop inventories.
+ */
 public class ShopsManager implements Listener {
 
     public ShopsManager() {

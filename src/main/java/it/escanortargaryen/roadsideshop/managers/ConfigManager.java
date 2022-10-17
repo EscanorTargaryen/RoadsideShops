@@ -13,6 +13,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * Config Manager.
+ * We recommend reading the config for all the details of the fields.
+ */
 public class ConfigManager {
 
     private final YamlConfiguration config;

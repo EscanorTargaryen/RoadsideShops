@@ -13,6 +13,9 @@ import org.bukkit.scheduler.BukkitRunnable;
 import java.util.ArrayList;
 import java.util.concurrent.CompletableFuture;
 
+/**
+ * Command recorder.
+ */
 public class Commands {
 
     public Commands() {

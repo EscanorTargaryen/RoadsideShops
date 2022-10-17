@@ -26,17 +26,43 @@ import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
+/**
+ * Class representing and managing the newspaper in the game. Currently it is not totally customizable, maybe it will be in the future.
+ */
 public class Newspaper implements Listener, InventoryHolder {
 
+    /**
+     * The list with all the sponsored items.
+     */
     private ArrayList<SellingItem> items = new ArrayList<>();
+
+    /**
+     * The current number page.
+     */
     private int page = 1;
 
+    /**
+     * Whether an animation is taking place.
+     */
     private boolean duringAnimation = false;
+
+    /**
+     * Glass panel that is placed in the newspaper.
+     */
     private final ItemStack glass;
 
+    /**
+     * Task that makes the animation run.
+     */
     private BukkitTask animationTaskTimer;
 
-    public Newspaper(@NotNull Collection<Shop> allShops,@NotNull Player player) {
+    /**
+     * Creates a new Newspaper.
+     *
+     * @param allShops All the recorded shops.
+     * @param player   What player displays the newspaper.
+     */
+    public Newspaper(@NotNull Collection<Shop> allShops, @NotNull Player player) {
         Objects.requireNonNull(allShops);
         Objects.requireNonNull(player);
 
@@ -415,7 +441,7 @@ public class Newspaper implements Listener, InventoryHolder {
 
     }
 
-    private void dispatchShopCommand(@NotNull HumanEntity humanEntity,@NotNull UUID owner) {
+    private void dispatchShopCommand(@NotNull HumanEntity humanEntity, @NotNull UUID owner) {
         Objects.requireNonNull(humanEntity);
         Objects.requireNonNull(owner);
 

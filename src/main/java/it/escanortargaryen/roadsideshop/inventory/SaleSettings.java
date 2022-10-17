@@ -23,16 +23,59 @@ import org.jetbrains.annotations.NotNull;
 import java.util.HashMap;
 import java.util.Objects;
 
+/**
+ * Class that handles the item sale setting.
+ */
 public class SaleSettings implements InventoryHolder, Listener {
 
+    /**
+     * The shop where this item is present.
+     */
     private final Shop shop;
+
+    /**
+     * The item that needs to be sold.
+     */
     private final ItemStack itemToSell;
+
+    /**
+     * The slot number of the item.
+     */
     private final int slotNumber;
 
-    private boolean isPriceSet = false, isSponsoring = false, settingPrice = false, exit = false;
+    /**
+     * If the price has been set.
+     */
+    private boolean isPriceSet = false;
 
+    /**
+     * If the items is set as sponsored.
+     */
+    private boolean isSponsoring = false;
+
+    /**
+     * If the player is setting the price right now.
+     */
+    private boolean settingPrice = false;
+
+    /**
+     * If the player needs to get out of this inventory.
+     */
+    private boolean exit = false;
+
+    /**
+     * The price of the item.
+     */
     private double price = 0.0;
 
+    /**
+     * Creates a new SaleSettings.
+     *
+     * @param shop       The shop where this item is present.
+     * @param itemToSell The item that needs to be sold.
+     * @param player     The player that displays this menu.
+     * @param slotNumber The slot number of the item.
+     */
     public SaleSettings(@NotNull Shop shop, @NotNull ItemStack itemToSell, @NotNull Player player, int slotNumber) {
 
         Objects.requireNonNull(shop);
@@ -152,7 +195,7 @@ public class SaleSettings implements InventoryHolder, Listener {
 
         if (e.getSlot() == 15) {
 
-            if (shop.canSponsor(System.currentTimeMillis())) {
+            if (shop.canSponsor()) {
 
                 this.isSponsoring = !this.isSponsoring;
 

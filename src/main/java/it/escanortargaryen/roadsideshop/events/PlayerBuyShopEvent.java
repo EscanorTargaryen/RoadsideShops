@@ -10,6 +10,9 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
+/**
+ * Event that is launched when a buyer makes a purchase in a shop.
+ */
 public class PlayerBuyShopEvent extends Event implements Cancellable {
 
     private final Shop shop;
@@ -18,7 +21,7 @@ public class PlayerBuyShopEvent extends Event implements Cancellable {
 
     private final Player buyer;
 
-    public PlayerBuyShopEvent(@NotNull Shop shop,@NotNull SellingItem sellingItem,@NotNull Player buyer) {
+    public PlayerBuyShopEvent(@NotNull Shop shop, @NotNull SellingItem sellingItem, @NotNull Player buyer) {
 
         Objects.requireNonNull(shop);
         Objects.requireNonNull(sellingItem);

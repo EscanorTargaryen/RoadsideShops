@@ -19,28 +19,72 @@ import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
+/**
+ * Class representing a shop.
+ */
 public class Shop implements InventoryHolder {
 
+    /**
+     * The shop UUID owner.
+     */
     private final UUID playerUUID;
 
+    /**
+     * The inventory that is shown to the seller.
+     */
     private Inventory invSeller = null;
 
+    /**
+     * The inventory that is shown to the buyer.
+     */
     private Inventory invBuyer = null;
 
+    /**
+     * The name of the shop owner.
+     */
     private final String playerName;
 
+    /**
+     * The item that is sponsored.
+     * If it is null it means that you are not sponsoring any item.
+     */
     private SellingItem sponsor = null;
 
+    /**
+     * Number of slots unlocked by default.
+     */
     private final int unlockedSlotsNumber = InternalUtil.CONFIGMANAGER.getUnlockedSlots();
 
+    /**
+     * The items for sale.
+     */
     private ArrayList<SellingItem> items = new ArrayList<>();
 
+    /**
+     * If someone buys in your shop while you are offline, the sale messages will be recorded and then shown when the seller returns.
+     */
     private ArrayList<String> offMessages = new ArrayList<>();
 
+    /**
+     * The last time an item was sponsored.
+     */
     private long lastSponsor = 0L;
 
+    /**
+     * The inventory holder of the inventory of the shop.
+     */
     private final InventoryHolder inventoryHolder;
 
+    /**
+     * Creates a new Shop.
+     *
+     * @param player      The UUID of the owner.
+     * @param playerName  The name of the owner.
+     * @param offMessages Sales messages recorded while the owner was offline.
+     * @param sponsor     The sponsored item.
+     * @param items       The items for sale.
+     * @param lastSponsor The last time an item was sponsored.
+     */
     public Shop(@NotNull UUID player, @NotNull String playerName, @NotNull ArrayList<String> offMessages, @Nullable SellingItem sponsor, @NotNull ArrayList<SellingItem> items, long lastSponsor) {
         Objects.requireNonNull(player);
         Objects.requireNonNull(playerName);
@@ -58,6 +102,12 @@ public class Shop implements InventoryHolder {
         inventoryHolder = this;
     }
 
+    /**
+     * Creates a new Shop.
+     *
+     * @param player     The UUID of the owner.
+     * @param playerName The name of the owner.
+     */
     public Shop(@NotNull UUID player, @NotNull String playerName) {
         Objects.requireNonNull(player);
         Objects.requireNonNull(playerName);
@@ -69,7 +119,13 @@ public class Shop implements InventoryHolder {
 
     }
 
-    public boolean canSponsor(long time) {
+    /**
+     * Returns if the player can sponsor a new item.
+     *
+     * @return if the player can sponsor a new item.
+     */
+    public boolean canSponsor() {
+        long time = System.currentTimeMillis();
         Player pl = Bukkit.getPlayer(playerUUID);
         if (pl != null && pl.hasPermission("shop.bypass.sponsortime")) {
 
@@ -84,7 +140,13 @@ public class Shop implements InventoryHolder {
         return lastSponsor;
     }
 
-    public long getMissTimeInMins(long time) {
+    /**
+     * Return how many minutes until the next sponsorship.
+     *
+     * @return how many minutes until the next sponsorship.
+     */
+    public long getMissTimeInMins() {
+        long time = System.currentTimeMillis();
         long i = ConfigManager.SPONSORTIME - (time - lastSponsor) / 60000;
         if (i < 0) {
 
@@ -95,9 +157,12 @@ public class Shop implements InventoryHolder {
 
     }
 
-    private void applySponsor(long time) {
+    /**
+     * Set to now the last sponsorship
+     */
+    private void applySponsor() {
 
-        lastSponsor = time;
+        lastSponsor = System.currentTimeMillis();
 
     }
 
@@ -105,6 +170,12 @@ public class Shop implements InventoryHolder {
         return inventoryHolder;
     }
 
+    /**
+     * Opens the shop inventory to the player.
+     *
+     * @param player A player to show the shop.
+     * @param mode   Whether it is a seller or a buyer who displays it.
+     */
     public void openInventory(@NotNull Player player, ViewMode mode) {
         Objects.requireNonNull(player);
 
@@ -129,12 +200,23 @@ public class Shop implements InventoryHolder {
 
     }
 
+    /**
+     * Update inventories in real time.
+     */
     public void updateInventory() {
         updateInvSeller();
         updateInvBuyer();
 
     }
 
+    /**
+     * Returns the items located at the specified slot.
+     * (Can be null)
+     *
+     * @param slot A slot.
+     * @return the items located at the specified slot.
+     */
+    @Nullable
     public SellingItem getItemAt(int slot) {
 
         for (SellingItem s : items) {
@@ -260,16 +342,37 @@ public class Shop implements InventoryHolder {
 
     }
 
-    public void addItem(@NotNull SellingItem sellingItem) {
-        addItem(sellingItem, false, false);
+    /**
+     * Add item for sale in the shop. (The player will not be notified of this addition)
+     *
+     * @param sellingItem  The item for sale.
+     * @param isSponsoring If it is an item in sponsorship.
+     */
+    public void addItem(@NotNull SellingItem sellingItem, boolean isSponsoring) {
+        addItem(sellingItem, isSponsoring, false);
 
     }
 
+    /**
+     * Add item for sale in the shop. (If it has been set to notify the player, this will be done only if he is online.)
+     *
+     * @param sellingItem  The item for sale.
+     * @param isSponsoring If it is an item in sponsorship.
+     * @param sendMessage  Whether to notify the player that this addition has occurred.
+     */
     public void addItem(@NotNull SellingItem sellingItem, boolean isSponsoring, boolean sendMessage) {
         addItem(sellingItem, isSponsoring, sendMessage, null);
 
     }
 
+    /**
+     * Add item for sale in the shop.
+     *
+     * @param sellingItem    The item for sale.
+     * @param isSponsoring   If it is an item in sponsorship.
+     * @param notifyPlayer   Whether to notify the player that this addition has occurred.
+     * @param playerToNotify Which player to notify for this addition.
+     */
     public void addItem(@NotNull SellingItem sellingItem, boolean isSponsoring, boolean notifyPlayer, @Nullable Player playerToNotify) {
 
         Objects.requireNonNull(sellingItem);
@@ -296,6 +399,12 @@ public class Shop implements InventoryHolder {
         applyChangesDB();
     }
 
+    /**
+     * Remove item for sale. (The player will be notified and receive the item back if it is online)
+     * If the player is not online and needs to receive the item back, it will be lost.
+     *
+     * @param slot The slot of the item for sale.
+     */
     public void removeItem(int slot) {
 
         SellingItem i = getItemAt(slot);
@@ -307,12 +416,28 @@ public class Shop implements InventoryHolder {
 
     }
 
+    /**
+     * Remove item for sale. (The player will be notified and receive the item back)
+     * If the player is not online and needs to receive the item back, it will be lost.
+     *
+     * @param sellingItem    The item for sale.
+     * @param playerToNotify Which player to notify for this removal.
+     */
     public void removeItem(@NotNull SellingItem sellingItem, @Nullable Player playerToNotify) {
 
         removeItem(sellingItem, true, true, playerToNotify);
 
     }
 
+    /**
+     * Remove item for sale.
+     * If the player is not online and needs to receive the item back, it will be lost.
+     *
+     * @param slot           The slot of the item for sale.
+     * @param notifyPlayer   Whether to notify the player that this removal has occurred.
+     * @param giveBack       Whether to give the item back.
+     * @param playerToNotify Which player to notify for this removal.
+     */
     public void removeItem(int slot, boolean notifyPlayer, boolean giveBack, @Nullable Player playerToNotify) {
 
         SellingItem i = getItemAt(slot);
@@ -324,6 +449,15 @@ public class Shop implements InventoryHolder {
 
     }
 
+    /**
+     * Remove item for sale.
+     * If the player is not online and needs to receive the item back, it will be lost.
+     *
+     * @param sellingItem    The item for sale.
+     * @param notifyPlayer   Whether to notify the player that this removal has occurred.
+     * @param giveBack       Whether to give the item back.
+     * @param playerToNotify Which player to notify for this removal.
+     */
     public void removeItem(@NotNull SellingItem sellingItem, boolean notifyPlayer, boolean giveBack, @Nullable Player playerToNotify) {
 
         Objects.requireNonNull(sellingItem);
@@ -368,6 +502,13 @@ public class Shop implements InventoryHolder {
         applyChangesDB();
     }
 
+    /**
+     * Generates the item that explains whether the item for sale is sponsored or not.
+     *
+     * @param isSponsoring If the item will be sponsored.
+     * @param sellingItem  The item for sale.
+     * @return the item that explains whether the item for sale is sponsored or not.
+     */
     public ItemStack generateMapItem(boolean isSponsoring, @Nullable SellingItem sellingItem) {
 
         ItemStack mapItem;
@@ -378,7 +519,7 @@ public class Shop implements InventoryHolder {
             Objects.requireNonNull(m).setDisplayName(InternalUtil.CONFIGMANAGER.getSponsorButtonTitle());
             m.setLore(InternalUtil.CONFIGMANAGER.getSponsoredLore());
             mapItem.setItemMeta(m);
-        } else if (canSponsor(System.currentTimeMillis())) {
+        } else if (canSponsor()) {
 
             if (isSponsoring) {
 
@@ -415,7 +556,7 @@ public class Shop implements InventoryHolder {
             ItemMeta m = mapItem.getItemMeta();
             Objects.requireNonNull(m).setDisplayName(InternalUtil.CONFIGMANAGER.getSponsorButtonTitle());
 
-            m.setLore(InternalUtil.CONFIGMANAGER.getWaitToSponsor(getMissTimeInMins(System.currentTimeMillis())));
+            m.setLore(InternalUtil.CONFIGMANAGER.getWaitToSponsor(getMissTimeInMins()));
 
             mapItem.setItemMeta(m);
 
@@ -423,10 +564,15 @@ public class Shop implements InventoryHolder {
         return mapItem.clone();
     }
 
+    /**
+     * Sets a new sponsored item.
+     *
+     * @param sellingItem The new sponsored item.
+     */
     public void setSponsor(@NotNull SellingItem sellingItem) {
         Objects.requireNonNull(sellingItem);
 
-        applySponsor(System.currentTimeMillis());
+        applySponsor();
         sponsor = sellingItem;
         updateInventory();
         applyChangesDB();
@@ -437,6 +583,9 @@ public class Shop implements InventoryHolder {
         return playerUUID;
     }
 
+    /**
+     * Remove all items.
+     */
     public void emptyItems() {
 
         items.clear();
@@ -463,17 +612,28 @@ public class Shop implements InventoryHolder {
         return new ArrayList<>(offMessages);
     }
 
-    public void addMessage(@NotNull String s) {
-        Objects.requireNonNull(s);
+    /**
+     * Add a sale message made when the owner was offline.
+     *
+     * @param message sale message made when the owner was offline.
+     */
+    public void addMessage(@NotNull String message) {
+        Objects.requireNonNull(message);
 
-        offMessages.add(s);
+        offMessages.add(message);
         applyChangesDB();
     }
 
+    /**
+     * Remove all sale messages.
+     */
     public void clearMessages() {
         offMessages.clear();
     }
 
+    /**
+     * Saves the changes to the database.
+     */
     public void applyChangesDB() {
 
         CompletableFuture.runAsync(() -> RoadsideShops.saveShop(this));

@@ -40,14 +40,23 @@ public class RoadsideShops extends JavaPlugin implements Listener {
         return econ;
     }
 
+    /**
+     * All custom locked slots.
+     */
     private final ArrayList<LockedSlot> lockedSlots = new ArrayList<>();
 
+    /**
+     * @see DatabaseManager#hasShop(UUID)
+     */
     public static boolean hasShop(@NotNull UUID player) {
 
         return databaseManager.hasShop(player);
 
     }
 
+    /**
+     * @see DatabaseManager#updateShop(Shop)
+     */
     public static void saveShop(@NotNull Shop shop) {
         databaseManager.updateShop(shop);
 
@@ -149,6 +158,12 @@ public class RoadsideShops extends JavaPlugin implements Listener {
 
     }
 
+    /**
+     * Register a new custom locked slot.
+     *
+     * @param itemStack       The icon of the locked slot.
+     * @param lockedSlotCheck The condition of when the slot is blocked.
+     */
     public static void registerCustomLockedSlot(@NotNull ItemStack itemStack, @NotNull LockedSlotCheck lockedSlotCheck) {
 
         Objects.requireNonNull(itemStack);
@@ -162,21 +177,33 @@ public class RoadsideShops extends JavaPlugin implements Listener {
         return new ArrayList<>(lockedSlots);
     }
 
+    /**
+     * @see DatabaseManager#getShop(UUID, boolean)
+     */
     public static Shop getShop(@NotNull Player player) {
         Objects.requireNonNull(player);
         return getShop(player.getUniqueId(), true);
     }
 
+    /**
+     * @see DatabaseManager#getShop(UUID, boolean)
+     */
     public static Shop getShop(@NotNull Player player, boolean saveInCache) {
         Objects.requireNonNull(player);
         return getShop(player.getUniqueId(), saveInCache);
     }
 
+    /**
+     * @see DatabaseManager#getShop(UUID, boolean)
+     */
     public static Shop getShop(@NotNull UUID player, boolean saveInCache) {
         Objects.requireNonNull(player);
         return databaseManager.getShop(player, saveInCache);
     }
 
+    /**
+     * @see DatabaseManager#getShop(UUID, boolean)
+     */
     public static Shop getShop(@NotNull UUID player) {
         Objects.requireNonNull(player);
         return databaseManager.getShop(player, true);

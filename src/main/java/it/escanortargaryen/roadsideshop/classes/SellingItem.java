@@ -10,42 +10,66 @@ import java.util.ArrayList;
 import java.util.Objects;
 import java.util.UUID;
 
+/**
+ * Class representing an item for sale.
+ */
 public class SellingItem {
 
+    /**
+     * The item to be sold.
+     */
     private final ItemStack item;
 
+    /**
+     * Item being shown to the seller.
+     */
     private final ItemStack withPriceSeller;
 
+    /**
+     * Item being shown to the buyer.
+     */
     private final ItemStack withPriceBuyer;
 
+    /**
+     * Item that is shown in the newspaper.
+     */
     private final ItemStack forNewspaper;
 
+    /**
+     * Sponsored item being shown to the seller.
+     */
     private final ItemStack withPriceAndSponsorSeller;
 
+    /**
+     * Sponsored item being shown to the buyer.
+     */
     private final ItemStack withPriceAndSponsorBuyer;
 
+    /**
+     * The number of slot the item occupies in the store inventory.
+     */
     private final int slot;
 
+    /**
+     * The price of the item.
+     */
     private final double price;
+
+    /**
+     * The UUID of the owner.
+     */
     private final UUID playerUUID;
 
-    public ItemStack getWithPriceBuyer() {
-        return withPriceBuyer.clone();
-    }
+    /**
+     * Creates a new SellingItem.
+     *
+     * @param item        The item to be sold.
+     * @param slot        The number of slot the item occupies in the store inventory.
+     * @param price       The price of the item.
+     * @param playerOwner The UUID of the owner.
+     */
 
-    public ItemStack getWithPriceAndSponsorBuyer() {
-        return withPriceAndSponsorBuyer.clone();
-    }
-
-    public ItemStack getWithPriceAndSponsorSeller() {
-        return withPriceAndSponsorSeller.clone();
-    }
-
-    public ItemStack getWithPriceSeller() {
-        return withPriceSeller.clone();
-    }
-
-    public SellingItem(@NotNull ItemStack item, int slot, double price,@NotNull UUID playerOwner) {
+    public SellingItem(@NotNull ItemStack item, int slot, double price, @NotNull UUID playerOwner) {
 
         Objects.requireNonNull(item);
         Objects.requireNonNull(playerOwner);
@@ -118,6 +142,22 @@ public class SellingItem {
         h.setItemMeta(m);
         forNewspaper = h;
 
+    }
+
+    public ItemStack getWithPriceBuyer() {
+        return withPriceBuyer.clone();
+    }
+
+    public ItemStack getWithPriceAndSponsorBuyer() {
+        return withPriceAndSponsorBuyer.clone();
+    }
+
+    public ItemStack getWithPriceAndSponsorSeller() {
+        return withPriceAndSponsorSeller.clone();
+    }
+
+    public ItemStack getWithPriceSeller() {
+        return withPriceSeller.clone();
     }
 
     public ItemStack getItem() {
