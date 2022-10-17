@@ -209,4 +209,9 @@ public class RoadsideShops extends JavaPlugin implements Listener {
         return databaseManager.getShop(player, true);
     }
 
+
+    private RoadsideShops() {
+
+    }
+
 }
