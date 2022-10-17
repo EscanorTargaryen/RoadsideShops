@@ -6,6 +6,7 @@ import it.escanortargaryen.roadsideshop.managers.ConfigManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -22,18 +23,23 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Objects;
+import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
-//TODO make newspaper number pages customizable
 public class Newspaper implements Listener, InventoryHolder {
 
-    private ArrayList<SellingItem> list = new ArrayList<>();
-    private int pagina = 1;
+    private ArrayList<SellingItem> items = new ArrayList<>();
+    private int page = 1;
 
-    private boolean animation = false;
+    private boolean duringAnimation = false;
     private final ItemStack glass;
 
-    public Newspaper(Collection<Shop> collection, Player p) {
+    private BukkitTask animationTaskTimer;
+
+    public Newspaper(@NotNull Collection<Shop> allShops,@NotNull Player player) {
+        Objects.requireNonNull(allShops);
+        Objects.requireNonNull(player);
+
         Bukkit.getPluginManager().registerEvents(this, RoadsideShops.INSTANCE);
 
         glass = new ItemStack(Material.GRAY_STAINED_GLASS_PANE);
@@ -41,44 +47,42 @@ public class Newspaper implements Listener, InventoryHolder {
         Objects.requireNonNull(m).setDisplayName(ChatColor.AQUA + "");
         glass.setItemMeta(m);
 
-        ArrayList<SellingItem> sel = new ArrayList<>();
+        ArrayList<SellingItem> t = new ArrayList<>();
 
-        for (Shop s : collection) {
+        for (Shop s : allShops) {
 
             if (s.getSponsor() != null) {
-                if (!s.getPlayerUUID().equals(p.getUniqueId()))
+                if (!s.getPlayerUUID().equals(player.getUniqueId()))
 
-                    sel.add(s.getSponsor());
+                    t.add(s.getSponsor());
 
             }
 
         }
 
-        if (sel.size() < 19) {
+        if (t.size() < 19) {
 
-            list = sel;
+            items = t;
         } else {
 
             for (int i = 0; i < 18; i++) {
 
-                int randomNum = ThreadLocalRandom.current().nextInt(0, sel.size());
-                list.add(sel.get(randomNum));
-                sel.remove(randomNum);
+                int randomNum = ThreadLocalRandom.current().nextInt(0, t.size());
+                items.add(t.get(randomNum));
+                t.remove(randomNum);
 
             }
 
         }
 
-        if (list.size() == 0) {
-            p.sendMessage(InternalUtil.CONFIGMANAGER.getNoAdv());
+        if (items.size() == 0) {
+            player.sendMessage(InternalUtil.CONFIGMANAGER.getNoAdv());
 
         } else {
 
-            p.openInventory(getInventory());
+            player.openInventory(getInventory());
         }
     }
-
-    BukkitTask task;
 
     @NotNull
     @Override
@@ -93,104 +97,104 @@ public class Newspaper implements Listener, InventoryHolder {
 
         }
 
-        if (pagina == 1) {
+        if (page == 1) {
             inv.setItem(26, InternalUtil.RIGHTARROW);
 
-            inv.setItem(11, list.get(0).getForNewspaper());
-            if (list.size() > 1)
-                inv.setItem(20, list.get(1).getForNewspaper());
+            inv.setItem(11, items.get(0).getForNewspaper());
+            if (items.size() > 1)
+                inv.setItem(20, items.get(1).getForNewspaper());
             else
                 inv.setItem(20, paper);
 
-            if (list.size() > 2)
-                inv.setItem(29, list.get(2).getForNewspaper());
+            if (items.size() > 2)
+                inv.setItem(29, items.get(2).getForNewspaper());
             else
                 inv.setItem(29, paper);
-            if (list.size() > 3)
+            if (items.size() > 3)
 
-                inv.setItem(15, list.get(3).getForNewspaper());
+                inv.setItem(15, items.get(3).getForNewspaper());
             else
                 inv.setItem(15, paper);
-            if (list.size() > 4)
+            if (items.size() > 4)
 
-                inv.setItem(24, list.get(4).getForNewspaper());
+                inv.setItem(24, items.get(4).getForNewspaper());
             else
                 inv.setItem(24, paper);
-            if (list.size() > 5)
+            if (items.size() > 5)
 
-                inv.setItem(33, list.get(5).getForNewspaper());
+                inv.setItem(33, items.get(5).getForNewspaper());
             else
                 inv.setItem(33, paper);
 
         }
-        if (pagina == 2) {
+        if (page == 2) {
 
             inv.setItem(26, InternalUtil.RIGHTARROW);
             inv.setItem(18, InternalUtil.LEFTARROW);
-            if (list.size() > 6)
+            if (items.size() > 6)
 
-                inv.setItem(11, list.get(6).getForNewspaper());
+                inv.setItem(11, items.get(6).getForNewspaper());
             else
                 inv.setItem(11, paper);
-            if (list.size() > 7)
+            if (items.size() > 7)
 
-                inv.setItem(20, list.get(7).getForNewspaper());
+                inv.setItem(20, items.get(7).getForNewspaper());
             else
                 inv.setItem(20, paper);
-            if (list.size() > 8)
+            if (items.size() > 8)
 
-                inv.setItem(29, list.get(8).getForNewspaper());
+                inv.setItem(29, items.get(8).getForNewspaper());
             else
                 inv.setItem(29, paper);
-            if (list.size() > 9)
+            if (items.size() > 9)
 
-                inv.setItem(15, list.get(9).getForNewspaper());
+                inv.setItem(15, items.get(9).getForNewspaper());
             else
                 inv.setItem(15, paper);
-            if (list.size() > 10)
+            if (items.size() > 10)
 
-                inv.setItem(24, list.get(10).getForNewspaper());
+                inv.setItem(24, items.get(10).getForNewspaper());
             else
                 inv.setItem(24, paper);
-            if (list.size() > 11)
+            if (items.size() > 11)
 
-                inv.setItem(33, list.get(11).getForNewspaper());
+                inv.setItem(33, items.get(11).getForNewspaper());
             else
                 inv.setItem(33, paper);
 
         }
 
-        if (pagina == 3) {
+        if (page == 3) {
 
             inv.setItem(18, InternalUtil.LEFTARROW);
-            if (list.size() > 12)
+            if (items.size() > 12)
 
-                inv.setItem(11, list.get(12).getForNewspaper());
+                inv.setItem(11, items.get(12).getForNewspaper());
             else
                 inv.setItem(11, paper);
-            if (list.size() > 13)
+            if (items.size() > 13)
 
-                inv.setItem(20, list.get(13).getForNewspaper());
+                inv.setItem(20, items.get(13).getForNewspaper());
             else
                 inv.setItem(20, paper);
-            if (list.size() > 14)
+            if (items.size() > 14)
 
-                inv.setItem(29, list.get(14).getForNewspaper());
+                inv.setItem(29, items.get(14).getForNewspaper());
             else
                 inv.setItem(29, paper);
-            if (list.size() > 15)
+            if (items.size() > 15)
 
-                inv.setItem(15, list.get(15).getForNewspaper());
+                inv.setItem(15, items.get(15).getForNewspaper());
             else
                 inv.setItem(15, paper);
-            if (list.size() > 16)
+            if (items.size() > 16)
 
-                inv.setItem(24, list.get(16).getForNewspaper());
+                inv.setItem(24, items.get(16).getForNewspaper());
             else
                 inv.setItem(24, paper);
-            if (list.size() > 17)
+            if (items.size() > 17)
 
-                inv.setItem(33, list.get(17).getForNewspaper());
+                inv.setItem(33, items.get(17).getForNewspaper());
             else
                 inv.setItem(33, paper);
 
@@ -226,7 +230,7 @@ public class Newspaper implements Listener, InventoryHolder {
         if (e.getView().getTopInventory().getHolder() != this)
             return;
 
-        if (animation) {
+        if (duringAnimation) {
             e.setCancelled(true);
             return;
 
@@ -235,14 +239,15 @@ public class Newspaper implements Listener, InventoryHolder {
         e.setCancelled(true);
 
         if (Objects.requireNonNull(e.getInventory().getItem(e.getSlot())).getType() == Material.ARROW) {
+            Inventory inv = e.getWhoClicked().getOpenInventory().getTopInventory();
 
             if (e.getSlot() == 26) {
 
-                pagina++;
+                page++;
                 Inventory p = getInventory();
-                animation = true;
+                duringAnimation = true;
 
-                task = new BukkitRunnable() {
+                animationTaskTimer = new BukkitRunnable() {
                     int y = 0;
 
                     @Override
@@ -250,35 +255,35 @@ public class Newspaper implements Listener, InventoryHolder {
 
                         for (int i = 11; i < 17; i++) {
 
-                            e.getWhoClicked().getOpenInventory().getTopInventory().setItem(i - 1,
-                                    e.getWhoClicked().getOpenInventory().getTopInventory().getItem(i));
+                            inv.setItem(i - 1,
+                                    inv.getItem(i));
 
                         }
 
                         for (int i = 20; i < 26; i++) {
 
-                            e.getWhoClicked().getOpenInventory().getTopInventory().setItem(i - 1,
-                                    e.getWhoClicked().getOpenInventory().getTopInventory().getItem(i));
+                            inv.setItem(i - 1,
+                                    inv.getItem(i));
 
                         }
 
                         for (int i = 29; i < 35; i++) {
 
-                            e.getWhoClicked().getOpenInventory().getTopInventory().setItem(i - 1,
-                                    e.getWhoClicked().getOpenInventory().getTopInventory().getItem(i));
+                            inv.setItem(i - 1,
+                                    inv.getItem(i));
 
                         }
-                        e.getWhoClicked().getOpenInventory().getTopInventory().setItem(16, p.getItem(10 + y));
-                        e.getWhoClicked().getOpenInventory().getTopInventory().setItem(25, p.getItem(19 + y));
-                        e.getWhoClicked().getOpenInventory().getTopInventory().setItem(34, p.getItem(28 + y));
+                        inv.setItem(16, p.getItem(10 + y));
+                        inv.setItem(25, p.getItem(19 + y));
+                        inv.setItem(34, p.getItem(28 + y));
 
                         y++;
                         if (y == 7) {
 
-                            e.getWhoClicked().getOpenInventory().getTopInventory().setItem(26, p.getItem(26));
-                            e.getWhoClicked().getOpenInventory().getTopInventory().setItem(18, p.getItem(18));
+                            inv.setItem(26, p.getItem(26));
+                            inv.setItem(18, p.getItem(18));
 
-                            animation = false;
+                            duringAnimation = false;
                             cancel();
 
                         }
@@ -289,10 +294,10 @@ public class Newspaper implements Listener, InventoryHolder {
 
             if (e.getSlot() == 18) {
 
-                pagina--;
+                page--;
                 Inventory p = getInventory();
-                animation = true;
-                task = new BukkitRunnable() {
+                duringAnimation = true;
+                animationTaskTimer = new BukkitRunnable() {
                     int y = 0;
 
                     @Override
@@ -300,35 +305,35 @@ public class Newspaper implements Listener, InventoryHolder {
 
                         for (int i = 15; i > 9; i--) {
 
-                            e.getWhoClicked().getOpenInventory().getTopInventory().setItem(i + 1,
-                                    e.getWhoClicked().getOpenInventory().getTopInventory().getItem(i));
+                            inv.setItem(i + 1,
+                                    inv.getItem(i));
 
                         }
 
                         for (int i = 24; i > 18; i--) {
 
-                            e.getWhoClicked().getOpenInventory().getTopInventory().setItem(i + 1,
-                                    e.getWhoClicked().getOpenInventory().getTopInventory().getItem(i));
+                            inv.setItem(i + 1,
+                                    inv.getItem(i));
 
                         }
 
                         for (int i = 33; i > 27; i--) {
 
-                            e.getWhoClicked().getOpenInventory().getTopInventory().setItem(i + 1,
-                                    e.getWhoClicked().getOpenInventory().getTopInventory().getItem(i));
+                            inv.setItem(i + 1,
+                                    inv.getItem(i));
 
                         }
-                        e.getWhoClicked().getOpenInventory().getTopInventory().setItem(10, p.getItem(16 - y));
-                        e.getWhoClicked().getOpenInventory().getTopInventory().setItem(19, p.getItem(25 - y));
-                        e.getWhoClicked().getOpenInventory().getTopInventory().setItem(28, p.getItem(34 - y));
+                        inv.setItem(10, p.getItem(16 - y));
+                        inv.setItem(19, p.getItem(25 - y));
+                        inv.setItem(28, p.getItem(34 - y));
 
                         y++;
                         if (y == 7) {
 
-                            e.getWhoClicked().getOpenInventory().getTopInventory().setItem(26, p.getItem(26));
-                            e.getWhoClicked().getOpenInventory().getTopInventory().setItem(18, p.getItem(18));
+                            inv.setItem(26, p.getItem(26));
+                            inv.setItem(18, p.getItem(18));
 
-                            animation = false;
+                            duringAnimation = false;
                             cancel();
 
                         }
@@ -340,90 +345,82 @@ public class Newspaper implements Listener, InventoryHolder {
         }
 
         if (Objects.requireNonNull(e.getInventory().getItem(e.getSlot())).getType() != Material.PAPER) {
+            HumanEntity humanEntity = e.getWhoClicked();
+            int slot = e.getSlot();
+            if (slot == 11) {
 
-            if (e.getSlot() == 11) {
+                if (page == 1)
+                    dispatchShopCommand(humanEntity, items.get(0).getPlayerUUID());
 
-                if (pagina == 1)
-                    Bukkit.dispatchCommand(e.getWhoClicked(),
-                            ConfigManager.SHOPCOMMAND + " " + Bukkit.getOfflinePlayer(list.get(0).getPlayerUUID()).getName());
+                if (page == 2)
+                    dispatchShopCommand(humanEntity, items.get(6).getPlayerUUID());
 
-                if (pagina == 2)
-                    Bukkit.dispatchCommand(e.getWhoClicked(),
-                            ConfigManager.SHOPCOMMAND + " " + Bukkit.getOfflinePlayer(list.get(6).getPlayerUUID()).getName());
-                if (pagina == 3)
-                    Bukkit.dispatchCommand(e.getWhoClicked(),
-                            ConfigManager.SHOPCOMMAND + " " + Bukkit.getOfflinePlayer(list.get(12).getPlayerUUID()).getName());
-
-            }
-            if (e.getSlot() == 20) {
-
-                if (pagina == 1)
-                    Bukkit.dispatchCommand(e.getWhoClicked(),
-                            ConfigManager.SHOPCOMMAND + " " + Bukkit.getOfflinePlayer(list.get(1).getPlayerUUID()).getName());
-
-                if (pagina == 2)
-                    Bukkit.dispatchCommand(e.getWhoClicked(),
-                            ConfigManager.SHOPCOMMAND + " " + Bukkit.getOfflinePlayer(list.get(7).getPlayerUUID()).getName());
-                if (pagina == 3)
-                    Bukkit.dispatchCommand(e.getWhoClicked(),
-                            ConfigManager.SHOPCOMMAND + " " + Bukkit.getOfflinePlayer(list.get(13).getPlayerUUID()).getName());
+                if (page == 3)
+                    dispatchShopCommand(humanEntity, items.get(12).getPlayerUUID());
 
             }
-            if (e.getSlot() == 29) {
-                if (pagina == 1)
-                    Bukkit.dispatchCommand(e.getWhoClicked(),
-                            ConfigManager.SHOPCOMMAND + " " + Bukkit.getOfflinePlayer(list.get(2).getPlayerUUID()).getName());
+            if (slot == 20) {
 
-                if (pagina == 2)
-                    Bukkit.dispatchCommand(e.getWhoClicked(),
-                            ConfigManager.SHOPCOMMAND + " " + Bukkit.getOfflinePlayer(list.get(8).getPlayerUUID()).getName());
-                if (pagina == 3)
-                    Bukkit.dispatchCommand(e.getWhoClicked(),
-                            ConfigManager.SHOPCOMMAND + " " + Bukkit.getOfflinePlayer(list.get(14).getPlayerUUID()).getName());
+                if (page == 1)
+                    dispatchShopCommand(humanEntity, items.get(1).getPlayerUUID());
+
+                if (page == 2)
+                    dispatchShopCommand(humanEntity, items.get(7).getPlayerUUID());
+                if (page == 3)
+                    dispatchShopCommand(humanEntity, items.get(13).getPlayerUUID());
 
             }
-            if (e.getSlot() == 15) {
-                if (pagina == 1)
-                    Bukkit.dispatchCommand(e.getWhoClicked(),
-                            ConfigManager.SHOPCOMMAND + " " + Bukkit.getOfflinePlayer(list.get(3).getPlayerUUID()).getName());
+            if (slot == 29) {
+                if (page == 1)
+                    dispatchShopCommand(humanEntity, items.get(2).getPlayerUUID());
 
-                if (pagina == 2)
-                    Bukkit.dispatchCommand(e.getWhoClicked(),
-                            ConfigManager.SHOPCOMMAND + " " + Bukkit.getOfflinePlayer(list.get(9).getPlayerUUID()).getName());
-                if (pagina == 3)
-                    Bukkit.dispatchCommand(e.getWhoClicked(),
-                            ConfigManager.SHOPCOMMAND + " " + Bukkit.getOfflinePlayer(list.get(15).getPlayerUUID()).getName());
+                if (page == 2)
+                    dispatchShopCommand(humanEntity, items.get(8).getPlayerUUID());
+                if (page == 3)
+                    dispatchShopCommand(humanEntity, items.get(14).getPlayerUUID());
 
             }
-            if (e.getSlot() == 24) {
-                if (pagina == 1)
-                    Bukkit.dispatchCommand(e.getWhoClicked(),
-                            ConfigManager.SHOPCOMMAND + " " + Bukkit.getOfflinePlayer(list.get(4).getPlayerUUID()).getName());
+            if (slot == 15) {
+                if (page == 1)
+                    dispatchShopCommand(humanEntity, items.get(3).getPlayerUUID());
 
-                if (pagina == 2)
-                    Bukkit.dispatchCommand(e.getWhoClicked(),
-                            ConfigManager.SHOPCOMMAND + " " + Bukkit.getOfflinePlayer(list.get(10).getPlayerUUID()).getName());
-                if (pagina == 3)
-                    Bukkit.dispatchCommand(e.getWhoClicked(),
-                            ConfigManager.SHOPCOMMAND + " " + Bukkit.getOfflinePlayer(list.get(16).getPlayerUUID()).getName());
+                if (page == 2)
+                    dispatchShopCommand(humanEntity, items.get(9).getPlayerUUID());
+                if (page == 3)
+                    dispatchShopCommand(humanEntity, items.get(15).getPlayerUUID());
 
             }
-            if (e.getSlot() == 33) {
+            if (slot == 24) {
+                if (page == 1)
+                    dispatchShopCommand(humanEntity, items.get(4).getPlayerUUID());
 
-                if (pagina == 1)
-                    Bukkit.dispatchCommand(e.getWhoClicked(),
-                            ConfigManager.SHOPCOMMAND + " " + Bukkit.getOfflinePlayer(list.get(5).getPlayerUUID()).getName());
+                if (page == 2)
+                    dispatchShopCommand(humanEntity, items.get(10).getPlayerUUID());
+                if (page == 3)
+                    dispatchShopCommand(humanEntity, items.get(16).getPlayerUUID());
 
-                if (pagina == 2)
-                    Bukkit.dispatchCommand(e.getWhoClicked(),
-                            ConfigManager.SHOPCOMMAND + " " + Bukkit.getOfflinePlayer(list.get(11).getPlayerUUID()).getName());
-                if (pagina == 3)
-                    Bukkit.dispatchCommand(e.getWhoClicked(),
-                            ConfigManager.SHOPCOMMAND + " " + Bukkit.getOfflinePlayer(list.get(17).getPlayerUUID()).getName());
+            }
+            if (slot == 33) {
+
+                if (page == 1)
+                    dispatchShopCommand(humanEntity, items.get(5).getPlayerUUID());
+                if (page == 2)
+                    dispatchShopCommand(humanEntity, items.get(1).getPlayerUUID());
+                if (page == 3)
+                    dispatchShopCommand(humanEntity, items.get(17).getPlayerUUID());
 
             }
 
         }
+
+    }
+
+    private void dispatchShopCommand(@NotNull HumanEntity humanEntity,@NotNull UUID owner) {
+        Objects.requireNonNull(humanEntity);
+        Objects.requireNonNull(owner);
+
+        Bukkit.dispatchCommand(humanEntity,
+                ConfigManager.SHOPCOMMAND + " " + Bukkit.getOfflinePlayer(owner).getName());
 
     }
 
@@ -432,8 +429,8 @@ public class Newspaper implements Listener, InventoryHolder {
 
         if (e.getInventory().getHolder() == this) {
 
-            if (animation)
-                task.cancel();
+            if (duringAnimation)
+                animationTaskTimer.cancel();
 
             InventoryClickEvent.getHandlerList().unregister(this);
             InventoryCloseEvent.getHandlerList().unregister(this);

@@ -18,10 +18,12 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
@@ -40,13 +42,14 @@ public class RoadsideShops extends JavaPlugin implements Listener {
 
     private final ArrayList<LockedSlot> lockedSlots = new ArrayList<>();
 
-    public static boolean hasShop(UUID player) {
+    public static boolean hasShop(@NotNull UUID player) {
+
         return databaseManager.hasShop(player);
 
     }
 
-    public static void saveShop(Shop p) {
-        databaseManager.updateShop(p);
+    public static void saveShop(@NotNull Shop shop) {
+        databaseManager.updateShop(shop);
 
     }
 
@@ -146,7 +149,10 @@ public class RoadsideShops extends JavaPlugin implements Listener {
 
     }
 
-    public static void registerCustomLockedSlot(ItemStack itemStack, LockedSlotCheck lockedSlotCheck) {
+    public static void registerCustomLockedSlot(@NotNull ItemStack itemStack, @NotNull LockedSlotCheck lockedSlotCheck) {
+
+        Objects.requireNonNull(itemStack);
+        Objects.requireNonNull(lockedSlotCheck);
 
         INSTANCE.lockedSlots.add(new LockedSlot(itemStack, lockedSlotCheck));
 
@@ -156,24 +162,24 @@ public class RoadsideShops extends JavaPlugin implements Listener {
         return new ArrayList<>(lockedSlots);
     }
 
-    public static Shop getShop(Player p) {
-
-        return getShop(p.getUniqueId(), true);
+    public static Shop getShop(@NotNull Player player) {
+        Objects.requireNonNull(player);
+        return getShop(player.getUniqueId(), true);
     }
 
-    public static Shop getShop(Player p, boolean saveInCache) {
-
-        return getShop(p.getUniqueId(), saveInCache);
+    public static Shop getShop(@NotNull Player player, boolean saveInCache) {
+        Objects.requireNonNull(player);
+        return getShop(player.getUniqueId(), saveInCache);
     }
 
-    public static Shop getShop(UUID p, boolean saveInCache) {
-
-        return databaseManager.getShop(p, saveInCache);
+    public static Shop getShop(@NotNull UUID player, boolean saveInCache) {
+        Objects.requireNonNull(player);
+        return databaseManager.getShop(player, saveInCache);
     }
 
-    public static Shop getShop(UUID p) {
-
-        return databaseManager.getShop(p, true);
+    public static Shop getShop(@NotNull UUID player) {
+        Objects.requireNonNull(player);
+        return databaseManager.getShop(player, true);
     }
 
 }

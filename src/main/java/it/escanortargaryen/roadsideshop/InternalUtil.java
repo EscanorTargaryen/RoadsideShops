@@ -11,19 +11,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-/*
-
-TODO cose da sistemare in una classe:
-
-        typo
-        warnings
-        spazi
-        documentazione
-        mettere private e protected gli attributi
-        rimuovere codice inutile e commenti
-        rimuovere import inutili
-        no parole in italiano
-        oBjects.requirenotnull*/
 public class InternalUtil {
 
     public static ConfigManager CONFIGMANAGER;
@@ -69,14 +56,14 @@ public class InternalUtil {
 
         RIGHTARROW = new ItemStack(Material.ARROW);
         ws = RIGHTARROW.getItemMeta();
-        Objects.requireNonNull(ws).setDisplayName(CONFIGMANAGER.getRightarrowTitle());
-        ws.setLore(CONFIGMANAGER.getRightarrowLore());
+        Objects.requireNonNull(ws).setDisplayName(CONFIGMANAGER.getRightArrowTitle());
+        ws.setLore(CONFIGMANAGER.getRightArrowLore());
         RIGHTARROW.setItemMeta(ws);
 
         LEFTARROW = new ItemStack(Material.ARROW);
         ws = LEFTARROW.getItemMeta();
-        Objects.requireNonNull(ws).setDisplayName(CONFIGMANAGER.getLeftarrowTitle());
-        ws.setLore(CONFIGMANAGER.getLeftarrowLore());
+        Objects.requireNonNull(ws).setDisplayName(CONFIGMANAGER.getLeftArrowTitle());
+        ws.setLore(CONFIGMANAGER.getLeftArrowLore());
         LEFTARROW.setItemMeta(ws);
 
     }

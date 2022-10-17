@@ -8,6 +8,9 @@ import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 
+/**
+ * Taken from https://gist.github.com/pedroagrs/ece014ae567481df848eca042d7580a5
+ */
 public class ItemSerializer {
 
     public static String write(ItemStack... items) {

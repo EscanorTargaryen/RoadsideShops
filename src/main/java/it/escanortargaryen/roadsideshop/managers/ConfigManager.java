@@ -5,11 +5,11 @@ import it.escanortargaryen.roadsideshop.RoadsideShops;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
+import org.jetbrains.annotations.NotNull;
 
 import javax.naming.ConfigurationException;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -38,11 +38,13 @@ public class ConfigManager {
 
     private List<String> sponsoring, sponsoringChange, notSponsoring, notSponsoringChange, waitToSponsor;
 
-    private String whileOffline, leftarrowTitle, rightarrowTitle, newspaperTitle, shopTitle, itemSettingsTitle, sellButtonTitle, priceButtonTitle, sellButtonTitleNotSet, priceButtonTitleNotSet, wrongPrice, anvilTitle, itemModify, backButtonTitle, removeButtonTitle, fullInvDrop, fullInvNoDrop, noShop, noMoney;
+    private String whileOffline, leftArrowTitle, rightArrowTitle, newspaperTitle, shopTitle, itemSettingsTitle, sellButtonTitle, priceButtonTitle, sellButtonTitleNotSet, priceButtonTitleNotSet, wrongPrice, anvilTitle, itemModify, backButtonTitle, removeButtonTitle, fullInvDrop, fullInvNoDrop, noShop, noMoney;
 
-    private List<String> sponsoredLore, leftarrowLore, rightarrowLore, itemSaleSeller, itemSaleBuyer, itemSaleSellerSponsor, itemSaleBuyerSponsor, loreForNewspaper, sellButtonLore, priceButtonLore, sellButtonLoreNotSet, priceButtonLoreNotSet, backButtonLore, removeButtonLore;
+    private List<String> sponsoredLore, leftArrowLore, rightArrowLore, itemSaleSeller, itemSaleBuyer, itemSaleSellerSponsor, itemSaleBuyerSponsor, loreForNewspaper, sellButtonLore, priceButtonLore, sellButtonLoreNotSet, priceButtonLoreNotSet, backButtonLore, removeButtonLore;
 
-    public ConfigManager(Plugin pl) {
+    public ConfigManager(@NotNull Plugin pl) {
+
+        Objects.requireNonNull(pl);
 
         final File c = new File(pl.getDataFolder() + "/config.yml");
         config = YamlConfiguration.loadConfiguration(c);
@@ -162,22 +164,22 @@ public class ConfigManager {
         if (!config.isSet("newspaper.arrows.right.lore")) {
             throw new ConfigurationException("newspaper.arrows.right.lore " + notSet);
         }
-        rightarrowLore = config.getStringList("newspaper.arrows.right.lore");
+        rightArrowLore = config.getStringList("newspaper.arrows.right.lore");
 
         if (!config.isSet("newspaper.arrows.left.lore")) {
             throw new ConfigurationException("newspaper.arrows.left.lore " + notSet);
         }
-        leftarrowLore = config.getStringList("newspaper.arrows.left.lore");
+        leftArrowLore = config.getStringList("newspaper.arrows.left.lore");
 
         if (!config.isSet("newspaper.arrows.left.title")) {
             throw new ConfigurationException("newspaper.arrows.left.title " + notSet);
         }
-        leftarrowTitle = config.getString("newspaper.arrows.left.title");
+        leftArrowTitle = config.getString("newspaper.arrows.left.title");
 
         if (!config.isSet("newspaper.arrows.right.title")) {
             throw new ConfigurationException("newspaper.arrows.right.title " + notSet);
         }
-        rightarrowTitle = config.getString("newspaper.arrows.right.title");
+        rightArrowTitle = config.getString("newspaper.arrows.right.title");
 
         if (!config.isSet("newspaper.title")) {
             throw new ConfigurationException("newspaper.title " + notSet);
@@ -553,10 +555,10 @@ public class ConfigManager {
         return t;
     }
 
-    public List<String> getLeftarrowLore() {
+    public List<String> getLeftArrowLore() {
         ArrayList<String> t = new ArrayList<>();
 
-        for (String s : leftarrowLore) {
+        for (String s : leftArrowLore) {
             t.add(ChatColor.translateAlternateColorCodes('&', s));
 
         }
@@ -564,18 +566,18 @@ public class ConfigManager {
         return t;
     }
 
-    public String getLeftarrowTitle() {
-        return ChatColor.translateAlternateColorCodes('&', leftarrowTitle);
+    public String getLeftArrowTitle() {
+        return ChatColor.translateAlternateColorCodes('&', leftArrowTitle);
     }
 
     public String getNewspaperTitle() {
         return ChatColor.translateAlternateColorCodes('&', newspaperTitle);
     }
 
-    public List<String> getRightarrowLore() {
+    public List<String> getRightArrowLore() {
         ArrayList<String> t = new ArrayList<>();
 
-        for (String s : rightarrowLore) {
+        for (String s : rightArrowLore) {
             t.add(ChatColor.translateAlternateColorCodes('&', s));
 
         }
@@ -583,8 +585,8 @@ public class ConfigManager {
         return t;
     }
 
-    public String getRightarrowTitle() {
-        return ChatColor.translateAlternateColorCodes('&', rightarrowTitle);
+    public String getRightArrowTitle() {
+        return ChatColor.translateAlternateColorCodes('&', rightArrowTitle);
     }
 
     public String getPriceMessage(double price) {

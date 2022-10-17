@@ -29,13 +29,17 @@ public class ItemSettings implements InventoryHolder, Listener {
 
     private boolean isSponsoring = false;
 
-    public ItemSettings(Shop shop, SellingItem sellingItem, Player p) {
+    public ItemSettings(@NotNull Shop shop, @NotNull SellingItem sellingItem, @NotNull Player player) {
+
+        Objects.requireNonNull(shop);
+        Objects.requireNonNull(sellingItem);
+        Objects.requireNonNull(player);
 
         Bukkit.getPluginManager().registerEvents(this, RoadsideShops.INSTANCE);
 
         this.shop = shop;
         this.sellingItem = sellingItem;
-        p.openInventory(getInventory());
+        player.openInventory(getInventory());
     }
 
     @NotNull
@@ -134,7 +138,7 @@ public class ItemSettings implements InventoryHolder, Listener {
                 e.getPlayer()
                         .sendMessage(InternalUtil.CONFIGMANAGER.getSponsorSet(sellingItem.getPrice(), sellingItem.getItem().getType().toString(), sellingItem.getItem().getAmount()));
 
-                shop.setSponsorItem(sellingItem);
+                shop.setSponsor(sellingItem);
             }
 
             InventoryClickEvent.getHandlerList().unregister(this);

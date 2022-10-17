@@ -2,6 +2,9 @@ package it.escanortargaryen.roadsideshop.classes;
 
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.Objects;
 
 public class LockedSlot {
 
@@ -9,7 +12,10 @@ public class LockedSlot {
 
     private final LockedSlotCheck lockedSlotCheck;
 
-    public LockedSlot(ItemStack itemStack, LockedSlotCheck lockedSlotCheck) {
+    public LockedSlot(@NotNull ItemStack itemStack,@NotNull LockedSlotCheck lockedSlotCheck) {
+        Objects.requireNonNull(itemStack);
+        Objects.requireNonNull(lockedSlotCheck);
+
         this.itemStack = itemStack;
         this.lockedSlotCheck = lockedSlotCheck;
     }
@@ -18,12 +24,10 @@ public class LockedSlot {
         return itemStack;
     }
 
-    public boolean isLocked(Player player) {
-        if (player != null) {
-            return lockedSlotCheck.isLocked(player);
+    public boolean isLocked(@NotNull Player player) {
 
-        }
-        return true;
+        Objects.requireNonNull(player);
+        return lockedSlotCheck.isLocked(player);
 
     }
 }

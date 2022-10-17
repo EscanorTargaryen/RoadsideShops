@@ -4,6 +4,7 @@ import it.escanortargaryen.roadsideshop.InternalUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -44,12 +45,15 @@ public class SellingItem {
         return withPriceSeller.clone();
     }
 
-    public SellingItem(ItemStack item, int slot, double price, UUID owner) {
+    public SellingItem(@NotNull ItemStack item, int slot, double price,@NotNull UUID playerOwner) {
+
+        Objects.requireNonNull(item);
+        Objects.requireNonNull(playerOwner);
 
         this.item = item;
         this.slot = slot;
         this.price = price;
-        this.playerUUID = owner;
+        this.playerUUID = playerOwner;
 
         ItemMeta m = item.getItemMeta();
         Objects.requireNonNull(m);

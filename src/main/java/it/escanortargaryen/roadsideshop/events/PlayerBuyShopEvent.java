@@ -8,6 +8,8 @@ import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Objects;
+
 public class PlayerBuyShopEvent extends Event implements Cancellable {
 
     private final Shop shop;
@@ -16,11 +18,15 @@ public class PlayerBuyShopEvent extends Event implements Cancellable {
 
     private final Player buyer;
 
-    public PlayerBuyShopEvent(Shop shop2, SellingItem c, Player whoClicked) {
+    public PlayerBuyShopEvent(@NotNull Shop shop,@NotNull SellingItem sellingItem,@NotNull Player buyer) {
 
-        shop = shop2;
-        item = c;
-        buyer = whoClicked;
+        Objects.requireNonNull(shop);
+        Objects.requireNonNull(sellingItem);
+        Objects.requireNonNull(buyer);
+
+        this.shop = shop;
+        item = sellingItem;
+        this.buyer = buyer;
 
     }
 

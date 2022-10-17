@@ -19,6 +19,7 @@ import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.Objects;
@@ -30,7 +31,9 @@ public class ShopsManager implements Listener {
 
     }
 
-    private Shop getShop(InventoryHolder inventoryHolder) {
+    private Shop getShop(@NotNull InventoryHolder inventoryHolder) {
+
+        Objects.requireNonNull(inventoryHolder);
 
         for (Shop s : DatabaseManager.getCachedShops()) {
 
@@ -52,13 +55,12 @@ public class ShopsManager implements Listener {
             return;
         }
 
-
         if (e.getClickedInventory() == null || e.getCurrentItem() == null
                 || e.getCurrentItem().getType() == Material.AIR)
             return;
 
-        Shop shop = getShop(e.getView().getTopInventory().getHolder());
-        SellingItem sellingItem = shop.getItemAt(e.getSlot());
+        Shop shop = getShop(Objects.requireNonNull(e.getView().getTopInventory().getHolder()));
+        SellingItem sellingItem = Objects.requireNonNull(shop).getItemAt(e.getSlot());
 
         if (e.getWhoClicked().getUniqueId().equals(shop.getPlayerUUID())) {
             if (e.getClickedInventory().getHolder() != e.getView().getTopInventory().getHolder()) {
@@ -127,8 +129,8 @@ public class ShopsManager implements Listener {
 
                                 e.getWhoClicked().sendMessage(InternalUtil.CONFIGMANAGER.getBoughtMessage(sellingItem.getPrice(), sellingItem.getItem().getType().toString(), sellingItem.getItem().getAmount(), shop.getPlayerName()));
 
-                                Player pl=Bukkit.getPlayer(shop.getPlayerUUID());
-                                String sellerMessage=InternalUtil.CONFIGMANAGER.getSellerMessage(
+                                Player pl = Bukkit.getPlayer(shop.getPlayerUUID());
+                                String sellerMessage = InternalUtil.CONFIGMANAGER.getSellerMessage(
                                         sellingItem.getPrice(), sellingItem.getItem().getType().toString(), sellingItem.getItem().getAmount(), p.getName());
                                 if (pl != null) {
 

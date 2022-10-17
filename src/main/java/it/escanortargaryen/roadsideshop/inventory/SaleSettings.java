@@ -33,13 +33,18 @@ public class SaleSettings implements InventoryHolder, Listener {
 
     private double price = 0.0;
 
-    public SaleSettings(Shop shop, ItemStack itemToSell, Player p, int slotNumber) {
+    public SaleSettings(@NotNull Shop shop, @NotNull ItemStack itemToSell, @NotNull Player player, int slotNumber) {
+
+        Objects.requireNonNull(shop);
+        Objects.requireNonNull(itemToSell);
+        Objects.requireNonNull(player);
+
         Bukkit.getPluginManager().registerEvents(this, RoadsideShops.INSTANCE);
 
         this.shop = shop;
         this.slotNumber = slotNumber;
         this.itemToSell = itemToSell.clone();
-        p.openInventory(getInventory());
+        player.openInventory(getInventory());
     }
 
     @NotNull
@@ -53,41 +58,41 @@ public class SaleSettings implements InventoryHolder, Listener {
         inv.setItem(10, item);
 
         inv.setItem(15, shop.generateMapItem(isSponsoring, null));
-        ItemStack wool, prezzo;
+        ItemStack sellButton, priceButton;
 
         if (isPriceSet) {
 
-            wool = new ItemStack(Material.GREEN_WOOL);
-            ItemMeta mw = wool.getItemMeta();
+            sellButton = new ItemStack(Material.GREEN_WOOL);
+            ItemMeta mw = sellButton.getItemMeta();
             Objects.requireNonNull(mw).setDisplayName(InternalUtil.CONFIGMANAGER.getSellButtonTitle());
             mw.setLore(InternalUtil.CONFIGMANAGER.getSellButtonLore());
-            wool.setItemMeta(mw);
+            sellButton.setItemMeta(mw);
 
-            prezzo = new ItemStack(Material.NAME_TAG);
-            mw = prezzo.getItemMeta();
+            priceButton = new ItemStack(Material.NAME_TAG);
+            mw = priceButton.getItemMeta();
             Objects.requireNonNull(mw).setDisplayName(InternalUtil.CONFIGMANAGER.getPriceButtonTitle(price));
 
             mw.setLore(InternalUtil.CONFIGMANAGER.getPriceButtonLore(price));
-            prezzo.setItemMeta(mw);
+            priceButton.setItemMeta(mw);
 
         } else {
 
-            wool = new ItemStack(Material.RED_WOOL);
-            ItemMeta mw = wool.getItemMeta();
+            sellButton = new ItemStack(Material.RED_WOOL);
+            ItemMeta mw = sellButton.getItemMeta();
             Objects.requireNonNull(mw).setDisplayName(InternalUtil.CONFIGMANAGER.getSellButtonTitleNotSet());
             mw.setLore(InternalUtil.CONFIGMANAGER.getSellButtonLoreNotSet());
-            wool.setItemMeta(mw);
+            sellButton.setItemMeta(mw);
 
-            prezzo = new ItemStack(Material.NAME_TAG);
-            mw = prezzo.getItemMeta();
+            priceButton = new ItemStack(Material.NAME_TAG);
+            mw = priceButton.getItemMeta();
             Objects.requireNonNull(mw).setDisplayName(InternalUtil.CONFIGMANAGER.getPriceButtonTitleNotSet());
             mw.setLore(InternalUtil.CONFIGMANAGER.getPriceButtonLoreNotSet());
-            prezzo.setItemMeta(mw);
+            priceButton.setItemMeta(mw);
 
         }
 
-        inv.setItem(24, wool);
-        inv.setItem(6, prezzo);
+        inv.setItem(24, sellButton);
+        inv.setItem(6, priceButton);
 
         return inv;
     }

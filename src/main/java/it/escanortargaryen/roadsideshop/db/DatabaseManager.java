@@ -54,8 +54,8 @@ public class DatabaseManager {
         }
     }
 
-    public Shop getShop(UUID player, boolean saveInCache) {
-
+    public Shop getShop(@NotNull UUID player, boolean saveInCache) {
+        Objects.requireNonNull(player);
         for (Shop sh : cachedShops) {
 
             if (sh.getPlayerUUID().equals(player)) {
@@ -112,7 +112,7 @@ public class DatabaseManager {
         return new ArrayList<>(cachedShops);
     }
 
-    public boolean hasShop(UUID player) {
+    public boolean hasShop(@NotNull UUID player) {
 
         Objects.requireNonNull(player);
 
@@ -143,7 +143,7 @@ public class DatabaseManager {
         return ret;
     }
 
-    public void updateShop(Shop shop) {
+    public void updateShop(@NotNull Shop shop) {
 
         Objects.requireNonNull(shop);
 
@@ -188,13 +188,16 @@ public class DatabaseManager {
 
     }
 
-    public ArrayList<SellingItem> getItems(UUID p) {
+    public ArrayList<SellingItem> getItems(@NotNull UUID player) {
+
+        Objects.requireNonNull(player);
+
         ArrayList<SellingItem> ret = new ArrayList<>();
         try (PreparedStatement ps = connection.prepareStatement("SELECT * FROM `Items` WHERE `Shop`=?;")) {
-            ps.setString(1, p.toString());
+            ps.setString(1, player.toString());
             ResultSet r = ps.executeQuery();
             while (r.next()) {
-                ret.add(new SellingItem(ItemSerializer.read(r.getString("Item"))[0], r.getInt("Slot"), r.getDouble("Price"), p));
+                ret.add(new SellingItem(ItemSerializer.read(r.getString("Item"))[0], r.getInt("Slot"), r.getDouble("Price"), player));
             }
 
         } catch (SQLException e) {
@@ -203,10 +206,10 @@ public class DatabaseManager {
         return ret;
     }
 
-    public void deleteAllItems(UUID p) {
-
+    public void deleteAllItems(@NotNull UUID player) {
+        Objects.requireNonNull(player);
         try (PreparedStatement ps = connection.prepareStatement("DELETE FROM `Items` WHERE `Shop`=?;")) {
-            ps.setString(1, p.toString());
+            ps.setString(1, player.toString());
             ps.executeUpdate();
 
         } catch (SQLException e) {
@@ -215,10 +218,11 @@ public class DatabaseManager {
 
     }
 
-    public void deleteAllMessages(UUID p) {
+    public void deleteAllMessages(@NotNull UUID player) {
 
+        Objects.requireNonNull(player);
         try (PreparedStatement ps = connection.prepareStatement("DELETE FROM `Messages` WHERE `UUID`=?;")) {
-            ps.setString(1, p.toString());
+            ps.setString(1, player.toString());
             ps.executeUpdate();
 
         } catch (SQLException e) {
@@ -227,10 +231,12 @@ public class DatabaseManager {
 
     }
 
-    public ArrayList<String> getOffMessage(UUID p) {
+    public ArrayList<String> getOffMessage(@NotNull UUID player) {
+        Objects.requireNonNull(player);
+
         ArrayList<String> ret = new ArrayList<>();
         try (PreparedStatement ps = connection.prepareStatement("SELECT * FROM `Messages` WHERE `UUID`=?;")) {
-            ps.setString(1, p.toString());
+            ps.setString(1, player.toString());
             ResultSet r = ps.executeQuery();
             while (r.next()) {
                 ret.add(r.getString("Text"));
@@ -243,11 +249,11 @@ public class DatabaseManager {
         return ret;
     }
 
-    private void createShop(UUID p) {
-
+    private void createShop(@NotNull UUID player) {
+        Objects.requireNonNull(player);
         try {
             PreparedStatement psInsert = connection.prepareStatement("INSERT INTO `Shop`(`UUID`, `Sponsor`) VALUES(?,?);");
-            psInsert.setString(1, p.toString());
+            psInsert.setString(1, player.toString());
             psInsert.setString(2, null);
             psInsert.executeUpdate();
         } catch (SQLException ex) {
@@ -257,10 +263,13 @@ public class DatabaseManager {
 
     }
 
-    public void addItem(UUID p, SellingItem sellingItem) {
+    public void addItem(@NotNull UUID player, @NotNull SellingItem sellingItem) {
+        Objects.requireNonNull(player);
+        Objects.requireNonNull(sellingItem);
+
         try {
             PreparedStatement psInsert = connection.prepareStatement("INSERT INTO `Items`(`Shop`, `Item`,`Slot`,`Price`) VALUES(?,?,?,?);");
-            psInsert.setString(1, p.toString());
+            psInsert.setString(1, player.toString());
             psInsert.setString(2, ItemSerializer.write(sellingItem.getItem()));
             psInsert.setInt(3, sellingItem.getSlot());
             psInsert.setDouble(4, sellingItem.getPrice());
@@ -271,14 +280,14 @@ public class DatabaseManager {
 
     }
 
-    private void addOffMessage(UUID p, String text) {
+    private void addOffMessage(@NotNull UUID player, @NotNull String text) {
 
-        Objects.requireNonNull(p);
+        Objects.requireNonNull(player);
         Objects.requireNonNull(text);
 
         try {
             PreparedStatement psInsert = connection.prepareStatement("INSERT INTO `Messages`(`UUID`, `Text`) VALUES(?,?);");
-            psInsert.setString(1, p.toString());
+            psInsert.setString(1, player.toString());
             psInsert.setString(2, text);
             psInsert.executeUpdate();
         } catch (SQLException ex) {
@@ -287,10 +296,11 @@ public class DatabaseManager {
 
     }
 
-    public String getPlayerName(UUID p) {
+    public String getPlayerName(@NotNull UUID player) {
+        Objects.requireNonNull(player);
 
         try (PreparedStatement ps = connection.prepareStatement("SELECT * FROM `Players` WHERE `UUID`=?;")) {
-            ps.setString(1, p.toString());
+            ps.setString(1, player.toString());
             ResultSet r = ps.executeQuery();
             if (r.next()) {
                 return r.getString(2);
@@ -303,12 +313,12 @@ public class DatabaseManager {
         return "";
     }
 
-    public void addPlayer(Player p) {
-
+    public void addPlayer(@NotNull Player player) {
+        Objects.requireNonNull(player);
         try {
             PreparedStatement psInsert = connection.prepareStatement("INSERT OR IGNORE INTO `Players`(`UUID`, `Name`) VALUES(?,?);");
-            psInsert.setString(1, p.getUniqueId().toString());
-            psInsert.setString(2, p.getName());
+            psInsert.setString(1, player.getUniqueId().toString());
+            psInsert.setString(2, player.getName());
             psInsert.executeUpdate();
         } catch (SQLException ex) {
             ex.printStackTrace();
