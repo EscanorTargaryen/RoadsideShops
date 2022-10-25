@@ -131,7 +131,7 @@ public class DatabaseManager {
                 return shop;
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+           // e.printStackTrace();
         }
         return null;
 
@@ -392,7 +392,7 @@ public class DatabaseManager {
             }
 
         } catch (SQLException e) {
-            e.printStackTrace();
+           // e.printStackTrace();
         }
         return "";
     }

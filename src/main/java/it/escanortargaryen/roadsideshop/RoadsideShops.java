@@ -50,23 +50,6 @@ public class RoadsideShops extends JavaPlugin implements Listener {
      */
     private final ArrayList<LockedSlot> lockedSlots = new ArrayList<>();
 
-    /**
-     * @see DatabaseManager#hasShop(UUID)
-     */
-    public static boolean hasShop(@NotNull UUID player) {
-
-        return databaseManager.hasShop(player);
-
-    }
-
-    /**
-     * @see DatabaseManager#updateShop(Shop)
-     */
-    public static void saveShop(@NotNull Shop shop) {
-        databaseManager.updateShop(shop);
-
-    }
-
     @Override
     public void onLoad() {
         INSTANCE = this;
@@ -163,6 +146,23 @@ public class RoadsideShops extends JavaPlugin implements Listener {
         }
         String s = "§7----§c§nRoadside§r §6§nShops§r§7----§r\n§fby §eEscanorTargaryen§r\n§2Enabled version: " + this.getDescription().getVersion() + "§r\n§7-----------------------§r";
         Bukkit.getConsoleSender().sendMessage(s);
+
+    }
+
+    /**
+     * @see DatabaseManager#hasShop(UUID)
+     */
+    public static boolean hasShop(@NotNull UUID player) {
+
+        return databaseManager.hasShop(player);
+
+    }
+
+    /**
+     * @see DatabaseManager#updateShop(Shop)
+     */
+    public static void saveShop(@NotNull Shop shop) {
+        databaseManager.updateShop(shop);
 
     }
 
