@@ -1,4 +1,4 @@
-package roadsideshop;
+package roadsideshop.mock;
 
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.economy.EconomyResponse;
@@ -234,4 +234,5 @@ public class VaultEconomyTest implements Economy {
     public boolean createPlayerAccount(OfflinePlayer player, String worldName) {
         return false;
     }
+
 }

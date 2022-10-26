@@ -4,7 +4,6 @@ import be.seeseemelk.mockbukkit.MockBukkit;
 import be.seeseemelk.mockbukkit.MockPlugin;
 import be.seeseemelk.mockbukkit.ServerMock;
 import be.seeseemelk.mockbukkit.entity.PlayerMock;
-import it.escanortargaryen.roadsideshop.InternalUtil;
 import it.escanortargaryen.roadsideshop.RoadsideShops;
 import it.escanortargaryen.roadsideshop.classes.Shop;
 import it.escanortargaryen.roadsideshop.classes.ViewMode;
@@ -16,18 +15,16 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
+import roadsideshop.mock.VaultEconomyTest;
 
+import java.util.Objects;
 import java.util.UUID;
 
 import static org.junit.Assert.*;
 
 public class RoadsideShopsTest {
-    private ServerMock server;
-    private RoadsideShops plugin;
+    public static ServerMock server;
     private VaultEconomyTest vaultEconomyTest;
-
-    private PlayerMock es;
-    private PlayerMock fren;
 
     @Before
     public void setUp() {
@@ -37,24 +34,22 @@ public class RoadsideShopsTest {
         MockPlugin g = MockBukkit.createMockPlugin("Vault");
         server.getPluginManager().enablePlugin(g);
 
-        plugin = MockBukkit.load(RoadsideShops.class);
+        MockBukkit.load(RoadsideShops.class);
 
-        RoadsideShops.registerCustomLockedSlot(new ItemStack(Material.GOLD_BLOCK), (p) -> true);
     }
 
     @After
     public void tearDown() {
 
         MockBukkit.unmock();
-
     }
 
     @Test
     public void vaultTest() {
 
-        es = server.addPlayer("EscanorTargaryen");
+        PlayerMock es = server.addPlayer("EscanorTargaryen");
         Mockito.timeout(100);
-        fren = server.addPlayer("fren_gor");
+        PlayerMock fren = server.addPlayer("fren_gor");
         Mockito.timeout(100);
         vaultEconomyTest.registerPlayer(es);
         vaultEconomyTest.registerPlayer(fren);
@@ -72,13 +67,13 @@ public class RoadsideShopsTest {
 
         vaultEconomyTest.withdrawPlayer(es, 20);
         assertFalse(vaultEconomyTest.has(es, 10));
+        mainClassTest();
 
-
-        apiTest();
     }
 
+    public void mainClassTest() {
 
-    public void apiTest() {
+        PlayerMock es = server.getPlayer(1);
 
         assertTrue(RoadsideShops.hasShop(es.getUniqueId()));
 
@@ -86,11 +81,32 @@ public class RoadsideShopsTest {
 
         Shop shop = RoadsideShops.getShop(es);
 
+        assertNotNull(shop);
         shop.openInventory(es, ViewMode.SELLER);
-        assertTrue(InternalUtil.INVENTORYHOLDERS.contains(es.getOpenInventory().getTopInventory().getHolder()));
-        assertEquals(es.getOpenInventory().getTopInventory().getItem(9 * 2 - 2).getType(), Material.GOLD_BLOCK);
+        RoadsideShops.registerCustomLockedSlot(new ItemStack(Material.GOLD_BLOCK), (p) -> false);
+        assertEquals(Material.BLACK_STAINED_GLASS_PANE, Objects.requireNonNull(es.getOpenInventory().getTopInventory().getItem(9 * 2 - 2)).getType());
+        RoadsideShops.registerCustomLockedSlot(new ItemStack(Material.GOLD_BLOCK), (p) -> true);
+
+        assertEquals(Material.BLACK_STAINED_GLASS_PANE, Objects.requireNonNull(es.getOpenInventory().getTopInventory().getItem(9 * 2 - 2)).getType());
+
+        shop.updateInventory();
+        assertEquals(Material.GOLD_BLOCK, Objects.requireNonNull(es.getOpenInventory().getTopInventory().getItem(9 * 2 - 2)).getType());
+
+        for (int i = 0; i < 30; i++) {
+
+            RoadsideShops.registerCustomLockedSlot(new ItemStack(Material.DIAMOND_AXE), (p) -> true);
+
+        }
+        shop.updateInventory();
+        assertEquals(Material.GOLD_BLOCK, Objects.requireNonNull(es.getOpenInventory().getTopInventory().getItem(9 * 2 - 2)).getType());
+        assertEquals(Material.OAK_LOG, Objects.requireNonNull(es.getOpenInventory().getTopInventory().getItem(0)).getType());
+        assertEquals(Material.DIAMOND_AXE, Objects.requireNonNull(es.getOpenInventory().getTopInventory().getItem(1)).getType());
 
         assertEquals(RoadsideShops.getAllShops().size(), 2);
 
+        Shop shop1 = RoadsideShops.getShop(new UUID(34243, 34243));
+        assertNull(shop1);
+
     }
+
 }

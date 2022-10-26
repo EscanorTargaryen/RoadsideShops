@@ -58,7 +58,7 @@ public class Shop implements InventoryHolder {
     /**
      * The items for sale.
      */
-    private ArrayList<SellingItem> items = new ArrayList<>();
+    private HashMap<Integer, SellingItem> items = new HashMap<>();
 
     /**
      * If someone buys in your shop while you are offline, the sale messages will be recorded and then shown when the seller returns.
@@ -97,7 +97,12 @@ public class Shop implements InventoryHolder {
         this.playerName = playerName;
         this.offMessages = offMessages;
         this.sponsor = sponsor;
-        this.items = items;
+
+        for (SellingItem i : items) {
+            this.items.put(i.getSlot(), i);
+
+        }
+
         this.lastSponsor = lastSponsor;
         inventoryHolder = this;
     }
@@ -147,7 +152,7 @@ public class Shop implements InventoryHolder {
      */
     public long getMissTimeInMins() {
         long time = System.currentTimeMillis();
-        long i = ConfigManager.SPONSORTIME - (time - lastSponsor) / 60000;
+        long i = (ConfigManager.SPONSORTIME * 1000 - (time - lastSponsor)) / 60000;
         if (i < 0) {
 
             return 0;
@@ -219,12 +224,7 @@ public class Shop implements InventoryHolder {
     @Nullable
     public SellingItem getItemAt(int slot) {
 
-        for (SellingItem s : items) {
-            if (s != null)
-                if (s.getSlot() == slot)
-                    return s;
-        }
-        return null;
+        return items.get(slot);
 
     }
 
@@ -268,7 +268,7 @@ public class Shop implements InventoryHolder {
             invSeller.setItem(9, InternalUtil.LOG);
             invSeller.setItem(17, InternalUtil.LOG);
 
-            for (SellingItem s : items) {
+            for (SellingItem s : getItems()) {
 
                 if (s.equals(sponsor)) {
 
@@ -289,7 +289,7 @@ public class Shop implements InventoryHolder {
                 int y = 14;
 
                 for (LockedSlot l : lo) {
-                    if (l.isLocked(p)) {
+                    if (l.isLocked(p) && y > 0) {
                         if (y > 7) {
 
                             invSeller.setItem(y + 2, l.getItemStack());
@@ -325,7 +325,7 @@ public class Shop implements InventoryHolder {
             invBuyer.setItem(9, InternalUtil.LOG);
             invBuyer.setItem(17, InternalUtil.LOG);
 
-            for (SellingItem s : items) {
+            for (SellingItem s : getItems()) {
 
                 if (s.equals(sponsor)) {
 
@@ -382,7 +382,7 @@ public class Shop implements InventoryHolder {
 
         }
 
-        items.add(sellingItem);
+        items.put(sellingItem.getSlot(), sellingItem);
 
         updateInventory();
 
@@ -466,7 +466,7 @@ public class Shop implements InventoryHolder {
 
         }
 
-        if (items.remove(sellingItem)) {
+        if (items.remove(sellingItem) != null) {
 
             if (sellingItem.equals(sponsor)) {
 
@@ -605,7 +605,7 @@ public class Shop implements InventoryHolder {
     }
 
     public ArrayList<SellingItem> getItems() {
-        return new ArrayList<>(items);
+        return new ArrayList<>(items.values());
     }
 
     public ArrayList<String> getOffMessages() {
