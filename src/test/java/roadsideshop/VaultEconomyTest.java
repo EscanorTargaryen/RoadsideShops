@@ -1,4 +1,4 @@
-package it.escanortargaryen.roadsideshop;
+package roadsideshop;
 
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.economy.EconomyResponse;

@@ -1,9 +1,11 @@
-package it.escanortargaryen.roadsideshop;
+package roadsideshop;
 
 import be.seeseemelk.mockbukkit.MockBukkit;
 import be.seeseemelk.mockbukkit.MockPlugin;
 import be.seeseemelk.mockbukkit.ServerMock;
 import be.seeseemelk.mockbukkit.entity.PlayerMock;
+import it.escanortargaryen.roadsideshop.InternalUtil;
+import it.escanortargaryen.roadsideshop.RoadsideShops;
 import it.escanortargaryen.roadsideshop.classes.Shop;
 import it.escanortargaryen.roadsideshop.classes.ViewMode;
 import net.milkbowl.vault.economy.Economy;
