@@ -14,7 +14,6 @@ import org.bukkit.plugin.ServicePriority;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mockito;
 import roadsideshop.mock.VaultEconomyTest;
 
 import java.util.Objects;
@@ -45,12 +44,12 @@ public class RoadsideShopsTest {
     }
 
     @Test
-    public void vaultTest() {
+    public void vaultTest() throws InterruptedException {
 
         PlayerMock es = server.addPlayer("EscanorTargaryen");
-        Mockito.timeout(100);
+        Thread.sleep(10);
         PlayerMock fren = server.addPlayer("fren_gor");
-        Mockito.timeout(100);
+        Thread.sleep(10);
         vaultEconomyTest.registerPlayer(es);
         vaultEconomyTest.registerPlayer(fren);
 

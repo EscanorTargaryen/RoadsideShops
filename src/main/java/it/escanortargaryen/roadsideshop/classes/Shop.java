@@ -17,7 +17,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Objects;
 import java.util.UUID;
-import java.util.concurrent.CompletableFuture;
 
 /**
  * Class representing a shop.
@@ -575,6 +574,7 @@ public class Shop implements InventoryHolder {
         applySponsor();
         sponsor = sellingItem;
         updateInventory();
+
         applyChangesDB();
 
     }
@@ -636,7 +636,7 @@ public class Shop implements InventoryHolder {
      */
     public void applyChangesDB() {
 
-        CompletableFuture.runAsync(() -> RoadsideShops.saveShop(this));
+        RoadsideShops.saveShop(this);
 
     }
 

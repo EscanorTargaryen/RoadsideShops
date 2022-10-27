@@ -77,7 +77,7 @@ public class ShopTest {
 
         assertFalse(s.canSponsor());
 
-        assertTrue(s.getMissTimeInMins() == 5 || s.getMissTimeInMins() == 4);
+        assertEquals(4, s.getMissTimeInMins() );
 
     }
 

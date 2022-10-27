@@ -65,10 +65,11 @@ public class DatabaseManager {
         try (Statement statement = connection.createStatement()) {
 
             statement.addBatch("CREATE TABLE IF NOT EXISTS `Players` (`UUID` TEXT NOT NULL PRIMARY KEY , `Name` TEXT NOT NULL);");
-            statement.addBatch("CREATE TABLE IF NOT EXISTS `Messages` (`Text` TEXT NOT NULL, `Key` INTEGER PRIMARY KEY AUTOINCREMENT, `UUID` TEXT NOT NULL, FOREIGN KEY(`UUID`) REFERENCES `Players`(`UUID`) ON DELETE CASCADE ON UPDATE CASCADE);");
+            statement.addBatch("CREATE TABLE IF NOT EXISTS `Messages` (`Text` TEXT NOT NULL, `Key` INTEGER PRIMARY KEY AUTOINCREMENT, `UUID` TEXT NOT NULL, FOREIGN KEY(`UUID`) REFERENCES `Shop`(`UUID`) ON DELETE CASCADE ON UPDATE CASCADE);");
             statement.addBatch("CREATE TABLE IF NOT EXISTS `Shop` (`UUID` TEXT PRIMARY KEY NOT NULL,`Sponsor` TEXT,`LastSponsor` INT DEFAULT 0 NOT NULL, FOREIGN KEY(`UUID`) REFERENCES `Players`(`UUID`) ON DELETE CASCADE ON UPDATE CASCADE);");
             statement.addBatch("CREATE TABLE IF NOT EXISTS `Items` (`Item` TEXT NOT NULL,`Slot` INT NOT NULL,`Price` REAL NOT NULL,`Shop` INT NOT NULL, PRIMARY KEY(`Shop`,`Slot`), FOREIGN KEY(`Shop`) REFERENCES `Shop`(`UUID`) ON DELETE CASCADE ON UPDATE CASCADE);");
             statement.executeBatch();
+
         }
     }
 
@@ -142,10 +143,10 @@ public class DatabaseManager {
 
     /**
      * If the player has a shop, that is, if the player is registered in the "Players" table of the database.
-     * @see DatabaseManager#isRegistered(UUID)
-     * 
+     *
      * @param player A player.
      * @return If the player has a shop.
+     * @see DatabaseManager#isRegistered(UUID)
      */
     public boolean hasShop(@NotNull UUID player) {
 
@@ -204,21 +205,26 @@ public class DatabaseManager {
 
                 psInsert = connection.prepareStatement("INSERT INTO `Shop`(`UUID`, `Sponsor`, `LastSponsor`) VALUES(?,?,?);");
                 psInsert.setString(1, shop.getPlayerUUID().toString());
-                psInsert.setString(2, sponsor);
+                psInsert.setString(2, null);
                 psInsert.setLong(3, shop.getLastSponsor());
                 psInsert.executeUpdate();
 
-                deleteAllMessages(shop.getPlayerUUID());
+                //deleteAllMessages(shop.getPlayerUUID());
                 for (String s : shop.getOffMessages()) {
                     addOffMessage(shop.getPlayerUUID(), s);
 
                 }
-                deleteAllItems(shop.getPlayerUUID());
+
                 for (SellingItem s : shop.getItems()) {
                     addItem(shop.getPlayerUUID(), s);
 
                 }
 
+                psInsert = connection.prepareStatement("UPDATE Shop SET `Sponsor` = ? WHERE `UUID` = ?;");
+                psInsert.setString(1, sponsor);
+                psInsert.setString(2, shop.getPlayerUUID().toString());
+
+                psInsert.executeUpdate();
             }
         } catch (SQLException e) {
             e.printStackTrace();
