@@ -465,7 +465,7 @@ public class Shop implements InventoryHolder {
 
         }
 
-        if (items.remove(sellingItem) != null) {
+        if (items.remove(sellingItem.getSlot()) != null) {
 
             if (sellingItem.equals(sponsor)) {
 

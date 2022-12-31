@@ -52,6 +52,7 @@ public class ShopTest {
         Mockito.timeout(100);
 
         SellingItem sellingItem = new SellingItem(new ItemStack(Material.ARROW), 1, 20.0, es.getUniqueId());
+        SellingItem sellingItem1 = new SellingItem(new ItemStack(Material.ARROW), 2, 20.0, es.getUniqueId());
 
         Shop s = RoadsideShops.getShop(es);
         s.openInventory(es, ViewMode.SELLER);
@@ -74,10 +75,32 @@ public class ShopTest {
 
         assertEquals(1, s.getItems().size());
         assertNotNull(s.getSponsor());
+        assertEquals(s.getSponsor(), sellingItem);
 
         assertFalse(s.canSponsor());
 
         assertTrue( s.getMissTimeInMins()== 4 ||s.getMissTimeInMins()== 5 );
+
+        assertNotNull(s.getItemAt(1));
+        assertNull(s.getItemAt(0));
+        assertNull(s.getItemAt(-1));
+        assertNull(s.getItemAt(3));
+
+        s.addItem(sellingItem1, false);
+        assertNotNull(s.getItemAt(2));
+        assertEquals(2, s.getItems().size());
+        assertEquals(s.getItemAt(1),sellingItem);
+        assertEquals(s.getItemAt(2),sellingItem1);
+
+        s.removeItem(1);
+        assertNull(s.getItemAt(1));
+        assertEquals(s.getItems().size(),1);
+        assertEquals(s.getItemAt(2),sellingItem1);
+
+        s.removeItem(sellingItem1,es);
+        assertNull(s.getItemAt(0));
+        assertEquals(s.getItems().size(),0);
+
 
     }
 
