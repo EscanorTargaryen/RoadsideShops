@@ -570,12 +570,27 @@ public class Shop implements InventoryHolder {
      */
     public void setSponsor(@NotNull SellingItem sellingItem) {
         Objects.requireNonNull(sellingItem);
+        if (getItems().contains(sellingItem)) {
 
-        applySponsor();
-        sponsor = sellingItem;
-        updateInventory();
+            applySponsor();
+            sponsor = sellingItem;
+            updateInventory();
 
-        applyChangesDB();
+            applyChangesDB();
+        }
+
+    }
+
+    /**
+     * Sets a new sponsored item.
+     *
+     * @param slot The new sponsored item from an existing sellingItem.
+     */
+    public void setSponsor(int slot) {
+
+        if (getItemAt(slot) != null) {
+            setSponsor(getItemAt(slot));
+        }
 
     }
 

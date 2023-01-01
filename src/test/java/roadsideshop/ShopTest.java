@@ -101,6 +101,19 @@ public class ShopTest {
         assertNull(s.getItemAt(0));
         assertEquals(s.getItems().size(),0);
 
+        assertNull(s.getSponsor());
+        s.setSponsor(sellingItem);
+
+        s.addItem(sellingItem, false);
+        s.setSponsor(sellingItem);
+        assertNotNull(s.getSponsor());
+        s.removeItem(1);
+        s.addItem(sellingItem, false);
+        s.setSponsor(1);
+        assertNotNull(s.getSponsor());
+
+        s.emptyItems();
+        assertEquals(s.getItems(), 0);
 
     }
 
