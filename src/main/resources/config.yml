@@ -4,7 +4,7 @@
 
 #  --Plugin settings--
 
-#The time in seconds to set an item as sponsored after already placing one 
+#The time in seconds to set an item as sponsored after already placing one
 sponsor-time: 300
 
 #The number of the unlocked slots (must be positive and less than 15)
