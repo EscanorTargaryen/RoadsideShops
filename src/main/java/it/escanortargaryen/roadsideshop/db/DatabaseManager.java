@@ -164,7 +164,7 @@ public class DatabaseManager {
     public ArrayList<Shop> getAllShops() {
         ArrayList<Shop> ret = new ArrayList<>();
 
-        try (PreparedStatement ps = connection.prepareStatement("SELECT * FROM `Shop`;")) {
+        try (PreparedStatement ps = connection.prepareStatement("SELECT `UUID` FROM `Shop`;")) {
             ResultSet r = ps.executeQuery();
             while (r.next()) {
 
