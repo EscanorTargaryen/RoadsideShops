@@ -5,8 +5,10 @@
 
 Dive deeper into the seller's side with Roadside shops! With newspaper sponsor system.
 <hr>
+
+
 **Spigot Page:** <https://www.spigotmc.org/resources/>  
-**Discord Server:** <https://discord.gg/KRS7dSU6tR>  
+**Discord Server:** <https://discord.gg/KRS7dSU6tR> 
 
 ## License
 
