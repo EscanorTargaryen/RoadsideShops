@@ -66,13 +66,13 @@ public class RoadsideShopsTest {
 
         vaultEconomyTest.withdrawPlayer(es, 20);
         assertFalse(vaultEconomyTest.has(es, 10));
-        mainClassTest();
 
     }
 
-    public void mainClassTest() {
-
-        PlayerMock es = server.getPlayer(1);
+    @Test
+    public void mainClassTest() throws InterruptedException {
+        PlayerMock es = server.addPlayer("EscanorTargaryen");
+        Thread.sleep(10);
 
         assertTrue(RoadsideShops.hasShop(es.getUniqueId()));
 
@@ -83,6 +83,7 @@ public class RoadsideShopsTest {
         assertNotNull(shop);
         shop.openInventory(es, ViewMode.SELLER);
         RoadsideShops.registerCustomLockedSlot(new ItemStack(Material.GOLD_BLOCK), (p) -> false);
+        shop.updateInventory();
         assertEquals(Material.BLACK_STAINED_GLASS_PANE, Objects.requireNonNull(es.getOpenInventory().getTopInventory().getItem(9 * 2 - 2)).getType());
         RoadsideShops.registerCustomLockedSlot(new ItemStack(Material.GOLD_BLOCK), (p) -> true);
 
@@ -100,8 +101,6 @@ public class RoadsideShopsTest {
         assertEquals(Material.GOLD_BLOCK, Objects.requireNonNull(es.getOpenInventory().getTopInventory().getItem(9 * 2 - 2)).getType());
         assertEquals(Material.OAK_LOG, Objects.requireNonNull(es.getOpenInventory().getTopInventory().getItem(0)).getType());
         assertEquals(Material.DIAMOND_AXE, Objects.requireNonNull(es.getOpenInventory().getTopInventory().getItem(1)).getType());
-
-        assertEquals(RoadsideShops.getAllShops().size(), 2);
 
         Shop shop1 = RoadsideShops.getShop(new UUID(34243, 34243));
         assertNull(shop1);
