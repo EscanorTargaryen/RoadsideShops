@@ -1,5 +1,6 @@
 # Roadside Shop config
 # For help see the official wiki
+# Or join our Discord https://discord.gg/KRS7dSU6tR
 
 #  --Plugin settings--
 
@@ -9,8 +10,10 @@ sponsor-time: 300
 #The number of the unlocked slots (must be positive and less than 15)
 unlocked-slot: 13
 
+#The command to open the shop GUI
 shop-command: "roadsideshop"
 
+#The command to open the newspaper GUI
 newspaper-command: "newspaper"
 
 #  --Messages--

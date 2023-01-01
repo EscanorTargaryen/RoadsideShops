@@ -15,8 +15,10 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.plugin.java.JavaPluginLoader;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 
@@ -36,6 +38,8 @@ public class RoadsideShops extends JavaPlugin implements Listener {
     private static Economy econ = null;
     private static DatabaseManager databaseManager = null;
 
+    private boolean test = false;
+
     public static Economy getEconomy() {
         return econ;
     }
@@ -45,27 +49,11 @@ public class RoadsideShops extends JavaPlugin implements Listener {
      */
     private final ArrayList<LockedSlot> lockedSlots = new ArrayList<>();
 
-    /**
-     * @see DatabaseManager#hasShop(UUID)
-     */
-    public static boolean hasShop(@NotNull UUID player) {
-
-        return databaseManager.hasShop(player);
-
-    }
-
-    /**
-     * @see DatabaseManager#updateShop(Shop)
-     */
-    public static void saveShop(@NotNull Shop shop) {
-        databaseManager.updateShop(shop);
-
-    }
-
     @Override
     public void onLoad() {
         INSTANCE = this;
-        CommandAPI.onLoad(new CommandAPIConfig().verboseOutput(false));
+        if (!test)
+            CommandAPI.onLoad(new CommandAPIConfig().verboseOutput(false));
 
         saveResource("config.yml", false);
 
@@ -139,13 +127,15 @@ public class RoadsideShops extends JavaPlugin implements Listener {
             getServer().getPluginManager().disablePlugin(this);
             return;
         }
-        CommandAPI.onEnable(this);
+        if (!test)
+            CommandAPI.onEnable(this);
 
         Bukkit.getPluginManager().registerEvents(this, this);
 
         new InternalUtil();
         new ShopsManager();
-        new Commands();
+        if (!test)
+            new Commands();
         try {
             databaseManager = new DatabaseManager(new File(getDataFolder() + "/database.db"));
         } catch (Exception e) {
@@ -155,6 +145,23 @@ public class RoadsideShops extends JavaPlugin implements Listener {
         }
         String s = "§7----§c§nRoadside§r §6§nShops§r§7----§r\n§fby §eEscanorTargaryen§r\n§2Enabled version: " + this.getDescription().getVersion() + "§r\n§7-----------------------§r";
         Bukkit.getConsoleSender().sendMessage(s);
+
+    }
+
+    /**
+     * @see DatabaseManager#hasShop(UUID)
+     */
+    public static boolean hasShop(@NotNull UUID player) {
+
+        return databaseManager.hasShop(player);
+
+    }
+
+    /**
+     * @see DatabaseManager#updateShop(Shop)
+     */
+    public static void saveShop(@NotNull Shop shop) {
+        databaseManager.updateShop(shop);
 
     }
 
@@ -209,9 +216,13 @@ public class RoadsideShops extends JavaPlugin implements Listener {
         return databaseManager.getShop(player, true);
     }
 
+    public RoadsideShops() {
 
-    private RoadsideShops() {
+    }
 
+    protected RoadsideShops(JavaPluginLoader loader, PluginDescriptionFile description, File dataFolder, File file) {
+        super(loader, description, dataFolder, file);
+        test = true;
     }
 
 }

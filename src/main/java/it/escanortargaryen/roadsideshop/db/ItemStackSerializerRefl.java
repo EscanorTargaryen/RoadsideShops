@@ -45,6 +45,8 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
+ * Old system
+ *
  * From: <a href=
  * "https://www.spigotmc.org/threads/how-to-serialize-itemstack-inventory-with-attributestorage.152931/#post-3077661">https://www.spigotmc.org/threads/how-to-serialize-itemstack-inventory-with-attributestorage.152931/#post-3077661</a><br>
  * Optimized by fren_gor

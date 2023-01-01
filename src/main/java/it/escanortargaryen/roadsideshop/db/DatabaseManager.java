@@ -5,18 +5,14 @@ import it.escanortargaryen.roadsideshop.classes.SellingItem;
 import it.escanortargaryen.roadsideshop.classes.Shop;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.sqlite.SQLiteConfig;
 import org.sqlite.SQLiteConfig.Encoding;
 import org.sqlite.SQLiteConfig.SynchronousMode;
 
 import java.io.File;
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.UUID;
@@ -69,10 +65,11 @@ public class DatabaseManager {
         try (Statement statement = connection.createStatement()) {
 
             statement.addBatch("CREATE TABLE IF NOT EXISTS `Players` (`UUID` TEXT NOT NULL PRIMARY KEY , `Name` TEXT NOT NULL);");
-            statement.addBatch("CREATE TABLE IF NOT EXISTS `Messages` (`Text` TEXT NOT NULL, `Key` INTEGER PRIMARY KEY AUTOINCREMENT, `UUID` TEXT NOT NULL, FOREIGN KEY(`UUID`) REFERENCES `Players`(`UUID`) ON DELETE CASCADE ON UPDATE CASCADE);");
+            statement.addBatch("CREATE TABLE IF NOT EXISTS `Messages` (`Text` TEXT NOT NULL, `Key` INTEGER PRIMARY KEY AUTOINCREMENT, `UUID` TEXT NOT NULL, FOREIGN KEY(`UUID`) REFERENCES `Shop`(`UUID`) ON DELETE CASCADE ON UPDATE CASCADE);");
             statement.addBatch("CREATE TABLE IF NOT EXISTS `Shop` (`UUID` TEXT PRIMARY KEY NOT NULL,`Sponsor` TEXT,`LastSponsor` INT DEFAULT 0 NOT NULL, FOREIGN KEY(`UUID`) REFERENCES `Players`(`UUID`) ON DELETE CASCADE ON UPDATE CASCADE);");
             statement.addBatch("CREATE TABLE IF NOT EXISTS `Items` (`Item` TEXT NOT NULL,`Slot` INT NOT NULL,`Price` REAL NOT NULL,`Shop` INT NOT NULL, PRIMARY KEY(`Shop`,`Slot`), FOREIGN KEY(`Shop`) REFERENCES `Shop`(`UUID`) ON DELETE CASCADE ON UPDATE CASCADE);");
             statement.executeBatch();
+
         }
     }
 
@@ -83,8 +80,10 @@ public class DatabaseManager {
      * @param saveInCache Whether to cache the shop.
      * @return the shop of a player.
      */
+    @Nullable
     public Shop getShop(@NotNull UUID player, boolean saveInCache) {
         Objects.requireNonNull(player);
+
         for (Shop sh : cachedShops) {
 
             if (sh.getPlayerUUID().equals(player)) {
@@ -93,7 +92,7 @@ public class DatabaseManager {
 
             }
         }
-
+        if (!isRegistered(player)) return null;
         try (PreparedStatement ps = connection.prepareStatement("SELECT * FROM `Shop` WHERE `UUID`=?;")) {
             ps.setString(1, player.toString());
             ResultSet r = ps.executeQuery();
@@ -118,12 +117,13 @@ public class DatabaseManager {
 
                 }
 
-                Shop shop = new Shop(player, getPlayerName(player), getOffMessage(player), sponsor, i, r.getLong("LastSponsor"));
+                Shop shop = new Shop(player, Objects.requireNonNull(getPlayerName(player)), getOffMessage(player), sponsor, i, r.getLong("LastSponsor"));
                 if (saveInCache)
                     cachedShops.add(shop);
                 return shop;
 
             } else {
+
                 createShop(player);
                 Shop shop = new Shop(player, getPlayerName(player));
                 if (saveInCache)
@@ -131,7 +131,7 @@ public class DatabaseManager {
                 return shop;
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            // e.printStackTrace();
         }
         return null;
 
@@ -144,21 +144,15 @@ public class DatabaseManager {
     /**
      * If the player has a shop, that is, if the player is registered in the "Players" table of the database.
      *
-     * @param player
-     * @return
+     * @param player A player.
+     * @return If the player has a shop.
+     * @see DatabaseManager#isRegistered(UUID)
      */
     public boolean hasShop(@NotNull UUID player) {
 
         Objects.requireNonNull(player);
 
-        try (PreparedStatement ps = connection.prepareStatement("SELECT * FROM `Players` WHERE `UUID`=?;")) {
-            ps.setString(1, player.toString());
-            ResultSet r = ps.executeQuery();
-            return r.next();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return false;
+        return isRegistered(player);
 
     }
 
@@ -170,7 +164,7 @@ public class DatabaseManager {
     public ArrayList<Shop> getAllShops() {
         ArrayList<Shop> ret = new ArrayList<>();
 
-        try (PreparedStatement ps = connection.prepareStatement("SELECT * FROM `Shop`;")) {
+        try (PreparedStatement ps = connection.prepareStatement("SELECT `UUID` FROM `Shop`;")) {
             ResultSet r = ps.executeQuery();
             while (r.next()) {
 
@@ -211,21 +205,26 @@ public class DatabaseManager {
 
                 psInsert = connection.prepareStatement("INSERT INTO `Shop`(`UUID`, `Sponsor`, `LastSponsor`) VALUES(?,?,?);");
                 psInsert.setString(1, shop.getPlayerUUID().toString());
-                psInsert.setString(2, sponsor);
+                psInsert.setString(2, null);
                 psInsert.setLong(3, shop.getLastSponsor());
                 psInsert.executeUpdate();
 
-                deleteAllMessages(shop.getPlayerUUID());
+                //deleteAllMessages(shop.getPlayerUUID());
                 for (String s : shop.getOffMessages()) {
                     addOffMessage(shop.getPlayerUUID(), s);
 
                 }
-                deleteAllItems(shop.getPlayerUUID());
+
                 for (SellingItem s : shop.getItems()) {
                     addItem(shop.getPlayerUUID(), s);
 
                 }
 
+                psInsert = connection.prepareStatement("UPDATE Shop SET `Sponsor` = ? WHERE `UUID` = ?;");
+                psInsert.setString(1, sponsor);
+                psInsert.setString(2, shop.getPlayerUUID().toString());
+
+                psInsert.executeUpdate();
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -236,7 +235,7 @@ public class DatabaseManager {
     /**
      * Returns all the items for sale in the shop.
      *
-     * @param player The player ownner of the shop.
+     * @param player The player owner of the shop.
      * @return all the items for sale in the shop.
      */
     public ArrayList<SellingItem> getItems(@NotNull UUID player) {
@@ -317,13 +316,14 @@ public class DatabaseManager {
 
     private void createShop(@NotNull UUID player) {
         Objects.requireNonNull(player);
+
         try {
             PreparedStatement psInsert = connection.prepareStatement("INSERT INTO `Shop`(`UUID`, `Sponsor`) VALUES(?,?);");
             psInsert.setString(1, player.toString());
             psInsert.setString(2, null);
             psInsert.executeUpdate();
         } catch (SQLException ex) {
-            ex.printStackTrace();
+            //  ex.printStackTrace();
 
         }
 
@@ -380,6 +380,7 @@ public class DatabaseManager {
      * @param player The owner of the shop.
      * @return the player's name.
      */
+    @Nullable
     public String getPlayerName(@NotNull UUID player) {
         Objects.requireNonNull(player);
 
@@ -394,7 +395,29 @@ public class DatabaseManager {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return "";
+        return null;
+    }
+
+    /**
+     * If the player is registered, that is, if the player is registered in the "Players" table of the database.
+     *
+     * @param player A player.
+     * @return If the player is registered.
+     */
+    @Nullable
+    public boolean isRegistered(@NotNull UUID player) {
+        Objects.requireNonNull(player);
+
+        try (PreparedStatement ps = connection.prepareStatement("SELECT * FROM `Players` WHERE `UUID`=?;")) {
+            ps.setString(1, player.toString());
+            ResultSet r = ps.executeQuery();
+            return r.next();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+
     }
 
     /**

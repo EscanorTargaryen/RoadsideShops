@@ -1,10 +1,10 @@
 main: it.escanortargaryen.roadsideshop.RoadsideShops
 name: ${project.name}
 version: ${project.version}
-author: [EscanorTargaryen]
+author: [ EscanorTargaryen ]
 
 api-version: 1.15
-depend: [Vault]
+depend: [ Vault ]
 
 permissions:
   shop.bypass.sponsortime:
