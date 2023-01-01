@@ -1,7 +1,7 @@
 name: Maven Build
 on:
   push:
-    branches: [master, dev, try]
+    branches: [master, dev]
 
 jobs:
   build:
@@ -14,8 +14,8 @@ jobs:
           distribution: 'adopt'
           cache: 'maven'
       - run: mvn --batch-mode --update-snapshots verify
-      - run: mkdir staging && cp target/*.jar staging
+      - run: mkdir jars && cp target/*.jar jars
       - uses: actions/upload-artifact@v3
         with:
-          name: Package
-          path: staging
+          name: Plugin
+          path: jars
