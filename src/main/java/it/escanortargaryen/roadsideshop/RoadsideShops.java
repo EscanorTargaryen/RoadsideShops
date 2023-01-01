@@ -40,7 +40,6 @@ public class RoadsideShops extends JavaPlugin implements Listener {
 
     private boolean test = false;
 
-
     public static Economy getEconomy() {
         return econ;
     }
@@ -217,8 +216,7 @@ public class RoadsideShops extends JavaPlugin implements Listener {
         return databaseManager.getShop(player, true);
     }
 
-
-    private RoadsideShops() {
+    public RoadsideShops() {
 
     }
 

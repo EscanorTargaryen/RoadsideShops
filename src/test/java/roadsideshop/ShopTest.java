@@ -79,7 +79,7 @@ public class ShopTest {
 
         assertFalse(s.canSponsor());
 
-        assertTrue( s.getMissTimeInMins()== 4 ||s.getMissTimeInMins()== 5 );
+        assertTrue(s.getMissTimeInMins() == 4 || s.getMissTimeInMins() == 5);
 
         assertNotNull(s.getItemAt(1));
         assertNull(s.getItemAt(0));
@@ -89,17 +89,17 @@ public class ShopTest {
         s.addItem(sellingItem1, false);
         assertNotNull(s.getItemAt(2));
         assertEquals(2, s.getItems().size());
-        assertEquals(s.getItemAt(1),sellingItem);
-        assertEquals(s.getItemAt(2),sellingItem1);
+        assertEquals(s.getItemAt(1), sellingItem);
+        assertEquals(s.getItemAt(2), sellingItem1);
 
         s.removeItem(1);
         assertNull(s.getItemAt(1));
-        assertEquals(s.getItems().size(),1);
-        assertEquals(s.getItemAt(2),sellingItem1);
+        assertEquals(s.getItems().size(), 1);
+        assertEquals(s.getItemAt(2), sellingItem1);
 
-        s.removeItem(sellingItem1,es);
+        s.removeItem(sellingItem1, es);
         assertNull(s.getItemAt(0));
-        assertEquals(s.getItems().size(),0);
+        assertEquals(s.getItems().size(), 0);
 
         assertNull(s.getSponsor());
         s.setSponsor(sellingItem);
@@ -113,7 +113,7 @@ public class ShopTest {
         assertNotNull(s.getSponsor());
 
         s.emptyItems();
-        assertEquals(s.getItems(), 0);
+        assertEquals(s.getItems().size(), 0);
 
     }
 
