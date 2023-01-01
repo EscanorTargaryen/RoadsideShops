@@ -1,6 +1,12 @@
 # Roadside Shops
 
+![Logo](https://raw.githubusercontent.com/EscanorTargaryen/RoadsideShops/dev/imgs/Logo2.png)
+
+
 Dive deeper into the seller's side with Roadside shops! With newspaper sponsor system.
+<hr>
+**Spigot Page:** <https://www.spigotmc.org/resources/>  
+**Discord Server:** <https://discord.gg/KRS7dSU6tR>  
 
 ## License
 
