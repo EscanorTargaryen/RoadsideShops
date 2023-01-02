@@ -40,6 +40,17 @@
         </repository>
     </repositories>
 
+    <distributionManagement>
+        <snapshotRepository>
+            <id>snapshots</id>
+            <url>https://nexus.frengor.com/repository/escanortargaryen-snapshots/</url>
+        </snapshotRepository>
+        <repository>
+            <id>releases</id>
+            <url>https://nexus.frengor.com/repository/escanortargaryen-releases/</url>
+        </repository>
+    </distributionManagement>
+
     <dependencies>
         <dependency>
             <groupId>org.xerial</groupId>
