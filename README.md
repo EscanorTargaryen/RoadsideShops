@@ -10,6 +10,23 @@ Dive deeper into the seller's side with Roadside shops! With newspaper sponsor s
 **Spigot Page:** <https://www.spigotmc.org/resources/>  
 **Discord Server:** <https://discord.gg/KRS7dSU6tR> 
 
+## Maven
+
+```xml
+<repository>
+    <id>escanortargaryen</id>
+    <url>https://nexus.frengor.com/repository/escanortargaryen-public/</url>
+</repository>
+```   
+```xml
+<dependency>
+    <groupId>it.escanortargaryen</groupId>
+    <artifactId>roadsideshops</artifactId>
+    <version>1.0.0</version>
+    <scope>provided</scope>
+</dependency>
+```
+
 ## License
 
 This project is licensed under the [GNU Lesser General Public License v3.0 or later](https://www.gnu.org/licenses/lgpl-3.0.txt).
