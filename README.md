@@ -7,7 +7,7 @@ Dive deeper into the seller's side with Roadside shops! With newspaper sponsor s
 <hr>
 
 
-**Spigot Page:** <https://www.spigotmc.org/resources/>  
+**Spigot Page:** <https://www.spigotmc.org/resources/roadside-shops.107148/>  
 **Discord Server:** <https://discord.gg/KRS7dSU6tR> 
 
 ## Maven
