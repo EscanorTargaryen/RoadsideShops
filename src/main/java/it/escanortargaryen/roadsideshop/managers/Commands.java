@@ -25,7 +25,7 @@ public class Commands {
 
     private void enableRoadSideCommand() {
 
-        new CommandAPICommand(ConfigManager.SHOPCOMMAND).executesPlayer((p, objects) -> {
+        new CommandAPICommand(ConfigManager.SHOPCOMMAND).withPermission("roadsideshops.shopcommand").executesPlayer((p, objects) -> {
 
             CompletableFuture.runAsync(() -> {
                 if (!RoadsideShops.hasShop(p.getUniqueId())) {
@@ -49,7 +49,7 @@ public class Commands {
 
         }).register();
 
-        new CommandAPICommand(ConfigManager.SHOPCOMMAND).withArguments(new OfflinePlayerArgument("shopOwner")).executesPlayer((p, objects) -> {
+        new CommandAPICommand(ConfigManager.SHOPCOMMAND).withPermission("roadsideshops.shopcommand").withArguments(new OfflinePlayerArgument("shopOwner")).executesPlayer((p, objects) -> {
 
             OfflinePlayer shopOwner = (OfflinePlayer) objects[0];
             if (shopOwner != null) {
@@ -102,14 +102,13 @@ public class Commands {
 
     private void enableNewsPaperCommand() {
 
-        new CommandAPICommand(ConfigManager.NEWSPAPERCOMMAND).executesPlayer((player, objects) -> {
+        new CommandAPICommand(ConfigManager.NEWSPAPERCOMMAND).withPermission("roadsideshops.newspapercommand").executesPlayer((player, objects) -> {
 
             CompletableFuture.runAsync(() -> {
                 ArrayList<Shop> shops = RoadsideShops.getAllShops();
                 new BukkitRunnable() {
 
                     @Override
-
                     public void run() {
                         new Newspaper(shops, player);
                     }

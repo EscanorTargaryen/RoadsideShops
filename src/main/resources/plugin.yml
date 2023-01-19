@@ -7,6 +7,12 @@ api-version: 1.15
 depend: [ Vault ]
 
 permissions:
-  shop.bypass.sponsortime:
+  roadsideshops.bypass.sponsortime:
     description: if have this permission dont wait before select a new item to sponsor
     default: op
+  roadsideshops.shopcommand:
+    description: can use the command to see the shops
+    default: true
+  roadsideshops.newspapercommand:
+    description: can use the command to see the newspaper
+    default: true
