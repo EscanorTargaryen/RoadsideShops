@@ -9,6 +9,7 @@ import it.escanortargaryen.roadsideshop.db.DatabaseManager;
 import it.escanortargaryen.roadsideshop.managers.Commands;
 import it.escanortargaryen.roadsideshop.managers.ShopsManager;
 import net.milkbowl.vault.economy.Economy;
+import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -127,8 +128,14 @@ public class RoadsideShops extends JavaPlugin implements Listener {
             getServer().getPluginManager().disablePlugin(this);
             return;
         }
-        if (!test)
+        if (!test){
             CommandAPI.onEnable(this);
+
+            //setup bstat
+            int pluginId = 17468; // <-- Replace with the id of your plugin!
+            Metrics metrics = new Metrics(this, pluginId);
+        }
+
 
         Bukkit.getPluginManager().registerEvents(this, this);
 
@@ -143,6 +150,7 @@ public class RoadsideShops extends JavaPlugin implements Listener {
             getServer().getPluginManager().disablePlugin(RoadsideShops.INSTANCE);
             return;
         }
+
         String s = "§7----§c§nRoadside§r §6§nShops§r§7----§r\n§fby §eEscanorTargaryen§r\n§2Enabled version: " + this.getDescription().getVersion() + "§r\n§7-----------------------§r";
         Bukkit.getConsoleSender().sendMessage(s);
 

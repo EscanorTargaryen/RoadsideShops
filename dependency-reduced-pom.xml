@@ -42,6 +42,10 @@
                   <pattern>dev.jorel.commandapi</pattern>
                   <shadedPattern>it.escanortargaryen.roadsideshop.commandapi</shadedPattern>
                 </relocation>
+                <relocation>
+                  <pattern>org.bstats</pattern>
+                  <shadedPattern>it.escanortargaryen.roadsideshop.bstat</shadedPattern>
+                </relocation>
               </relocations>
               <minimizeJar>false</minimizeJar>
             </configuration>
