@@ -8,14 +8,14 @@ depend: [ Vault ]
 
 permissions:
   roadsideshops.admin.sponsortimebypass:
-    description: if have this permission dont wait before select a new item to sponsor
+    description: bypass sponsor time
     default: op
   roadsideshops.admin.editshops:
     description: permission to edit the shops of others with command /roadsideshopsadmin <player>
     default: op
   roadsideshops.shopcommand:
-    description: can use the command to see the shops
+    description: open shop GUI
     default: true
   roadsideshops.newspapercommand:
-    description: can use the command to see the newspaper
+    description: open newspaper GUI
     default: true
