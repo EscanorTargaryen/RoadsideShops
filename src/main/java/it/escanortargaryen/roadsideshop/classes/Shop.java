@@ -131,7 +131,7 @@ public class Shop implements InventoryHolder {
     public boolean canSponsor() {
         long time = System.currentTimeMillis();
         Player pl = Bukkit.getPlayer(playerUUID);
-        if (pl != null && pl.hasPermission("shop.bypass.sponsortime")) {
+        if (pl != null && pl.hasPermission("roadsideshops.admin.sponsortimebypass")) {
 
             return true;
         }
