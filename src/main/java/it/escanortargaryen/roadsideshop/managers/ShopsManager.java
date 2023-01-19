@@ -4,6 +4,7 @@ import it.escanortargaryen.roadsideshop.InternalUtil;
 import it.escanortargaryen.roadsideshop.RoadsideShops;
 import it.escanortargaryen.roadsideshop.classes.SellingItem;
 import it.escanortargaryen.roadsideshop.classes.Shop;
+import it.escanortargaryen.roadsideshop.classes.ViewMode;
 import it.escanortargaryen.roadsideshop.db.DatabaseManager;
 import it.escanortargaryen.roadsideshop.events.PlayerBuyShopEvent;
 import it.escanortargaryen.roadsideshop.inventory.ItemSettings;
@@ -65,7 +66,7 @@ public class ShopsManager implements Listener {
         Shop shop = getShop(Objects.requireNonNull(e.getView().getTopInventory().getHolder()));
         SellingItem sellingItem = Objects.requireNonNull(shop).getItemAt(e.getSlot());
 
-        if (e.getWhoClicked().getUniqueId().equals(shop.getPlayerUUID())) {
+        if (shop.getViewers().get((Player) e.getWhoClicked()) == ViewMode.SELLER) {
             if (e.getClickedInventory().getHolder() != e.getView().getTopInventory().getHolder()) {
 
                 if (e.getClick() == ClickType.DOUBLE_CLICK || e.getClick() == ClickType.SHIFT_LEFT

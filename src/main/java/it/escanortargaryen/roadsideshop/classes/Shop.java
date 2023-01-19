@@ -6,6 +6,8 @@ import it.escanortargaryen.roadsideshop.managers.ConfigManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
@@ -73,6 +75,11 @@ public class Shop implements InventoryHolder {
      * The inventory holder of the inventory of the shop.
      */
     private final InventoryHolder inventoryHolder;
+
+    /**
+     * The list of the viewers of the inventory.
+     */
+    private HashMap<Player, ViewMode> viewers = new HashMap<>();
 
     /**
      * Creates a new Shop.
@@ -191,6 +198,7 @@ public class Shop implements InventoryHolder {
             }
 
             player.openInventory(invSeller);
+            viewers.put(player, ViewMode.SELLER);
 
         } else {
             if (invBuyer == null) {
@@ -199,6 +207,7 @@ public class Shop implements InventoryHolder {
 
             }
             player.openInventory(invBuyer);
+            viewers.put(player, ViewMode.BUYER);
 
         }
 
@@ -655,4 +664,16 @@ public class Shop implements InventoryHolder {
 
     }
 
+    @EventHandler
+    public void onClose(InventoryCloseEvent e) {
+
+        if (e.getInventory().getHolder() == this) {
+            viewers.remove(e.getPlayer());
+        }
+
+    }
+
+    public HashMap<Player, ViewMode> getViewers() {
+        return viewers;
+    }
 }

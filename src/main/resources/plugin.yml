@@ -11,7 +11,7 @@ permissions:
     description: if have this permission dont wait before select a new item to sponsor
     default: op
   roadsideshops.admin.editshops:
-    description: permission to edit the shops of others
+    description: permission to edit the shops of others with command /roadsideshopsadmin <player>
     default: op
   roadsideshops.shopcommand:
     description: can use the command to see the shops

@@ -98,6 +98,40 @@ public class Commands {
             }
 
         }).register();
+
+        new CommandAPICommand("roadsideshopsadmin").withPermission("roadsideshops.admin.editshops").withArguments(new OfflinePlayerArgument("shopOwner")).executesPlayer((p, objects) -> {
+
+            OfflinePlayer shopOwner = (OfflinePlayer) objects[0];
+            if (shopOwner != null) {
+
+                CompletableFuture.runAsync(() -> {
+                    if (!RoadsideShops.hasShop(shopOwner.getUniqueId())) {
+                        new BukkitRunnable() {
+
+                            @Override
+                            public void run() {
+                                p.sendMessage(InternalUtil.CONFIGMANAGER.getNoShop());
+                            }
+                        }.runTask(RoadsideShops.INSTANCE);
+
+                    } else {
+
+                        Shop s = RoadsideShops.getShop(shopOwner.getUniqueId());
+                        new BukkitRunnable() {
+
+                            @Override
+                            public void run() {
+                                s.openInventory(p, ViewMode.SELLER);
+                            }
+                        }.runTask(RoadsideShops.INSTANCE);
+
+                    }
+
+                });
+
+            }
+
+        }).register();
     }
 
     private void enableNewsPaperCommand() {
