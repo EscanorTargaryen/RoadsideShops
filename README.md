@@ -22,7 +22,7 @@ Dive deeper into the seller's side with Roadside shops! With newspaper sponsor s
 <dependency>
     <groupId>it.escanortargaryen</groupId>
     <artifactId>roadsideshops</artifactId>
-    <version>1.0.0</version>
+    <version>1.1.0</version>
     <scope>provided</scope>
 </dependency>
 ```
