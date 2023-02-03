@@ -1,6 +1,5 @@
 # Roadside Shop config
-# For help see the official wiki
-# Or join our Discord https://discord.gg/KRS7dSU6tR
+# For help join our Discord https://discord.gg/KRS7dSU6tR
 
 #  --Plugin settings--
 
@@ -80,7 +79,7 @@ seller-message: '&6You sold &a <type>x<amount> &6for&a <price>CC &6to <name>'
 item-sale-lore:
   #In addition to the lore of the item when it is for sale, displayed by the shop owner
   #Placeholders:
-  # <price-message> - The price of the item but
+  # <price-message> - The price of the item
   # <price> - The price of the item
   seller:
     - ""
@@ -90,7 +89,7 @@ item-sale-lore:
 
   #In addition to the lore of the item when it is for sale, displayed by the buyer
   #Placeholders:
-  # <price-message> - The price of the item but
+  # <price-message> - The price of the item
   # <price> - The price of the item
   buyer:
     - ""
@@ -100,7 +99,7 @@ item-sale-lore:
 
   #In addition to the lore of the item when it is for sale and sponsored, displayed by the shop owner
   #Placeholders:
-  # <price-message> - The price of the item but
+  # <price-message> - The price of the item
   # <price> - The price of the item
   seller-sponsor:
     - ""
@@ -112,7 +111,7 @@ item-sale-lore:
 
   #In addition to the lore of the item when it is for sale and sponsored, displayed by the buyer
   #Placeholders:
-  # <price-message> - The price of the item but
+  # <price-message> - The price of the item
   # <price> - The price of the item
   buyer-sponsor:
     - ""
