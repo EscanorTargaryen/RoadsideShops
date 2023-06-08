@@ -128,23 +128,24 @@ public class RoadsideShops extends JavaPlugin implements Listener {
             getServer().getPluginManager().disablePlugin(this);
             return;
         }
-        if (!test){
+        Metrics metrics = null;
+        if (!test) {
             CommandAPI.onEnable(this);
 
             //setup bstat
             int pluginId = 17468; // <-- Replace with the id of your plugin!
-            Metrics metrics = new Metrics(this, pluginId);
-        }
+            metrics = new Metrics(this, pluginId);
 
+        }
 
         Bukkit.getPluginManager().registerEvents(this, this);
 
         new InternalUtil();
-        new ShopsManager();
+        new ShopsManager(metrics);
         if (!test)
             new Commands();
         try {
-            databaseManager = new DatabaseManager(new File(getDataFolder() + "/database.db"));
+            databaseManager = new DatabaseManager(new File(getDataFolder() + "/database.db"), metrics);
         } catch (Exception e) {
             e.printStackTrace();
             getServer().getPluginManager().disablePlugin(RoadsideShops.INSTANCE);

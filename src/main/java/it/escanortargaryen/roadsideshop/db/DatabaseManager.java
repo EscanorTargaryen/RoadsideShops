@@ -3,6 +3,8 @@ package it.escanortargaryen.roadsideshop.db;
 import com.google.common.base.Preconditions;
 import it.escanortargaryen.roadsideshop.classes.SellingItem;
 import it.escanortargaryen.roadsideshop.classes.Shop;
+import org.bstats.bukkit.Metrics;
+import org.bstats.charts.SingleLineChart;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -28,6 +30,8 @@ public class DatabaseManager {
      */
     private final Connection connection;
 
+    private int newshops = 0;
+
     /**
      * All shops cached.
      * By default, only when a player enters the server or when an offline player's shop is requested with the command /roadsideshop <player> its shop is cached.
@@ -40,7 +44,7 @@ public class DatabaseManager {
      * @param dbFile The file for the db.
      * @throws Exception SQL exceptions.
      */
-    public DatabaseManager(@NotNull File dbFile) throws Exception {
+    public DatabaseManager(@NotNull File dbFile, @Nullable Metrics metrics) throws Exception {
         Preconditions.checkNotNull(dbFile, "Database file is null.");
 
         if (!dbFile.exists() && !dbFile.createNewFile()) {
@@ -53,6 +57,12 @@ public class DatabaseManager {
         config.setSynchronous(SynchronousMode.FULL);
         this.connection = DriverManager.getConnection("jdbc:sqlite:" + dbFile, config.toProperties());
         setUp();
+        if (metrics != null)
+            metrics.addCustomChart(new SingleLineChart("new_shops", () -> {
+                int t = newshops;
+                newshops = 0;
+                return t;
+            }));
     }
 
     /**
@@ -125,6 +135,7 @@ public class DatabaseManager {
             } else {
 
                 createShop(player);
+                newshops++;
                 Shop shop = new Shop(player, getPlayerName(player));
                 if (saveInCache)
                     cachedShops.add(shop);
