@@ -9,6 +9,8 @@ import it.escanortargaryen.roadsideshop.db.DatabaseManager;
 import it.escanortargaryen.roadsideshop.events.PlayerBuyShopEvent;
 import it.escanortargaryen.roadsideshop.inventory.ItemSettings;
 import it.escanortargaryen.roadsideshop.inventory.SaleSettings;
+import org.bstats.bukkit.Metrics;
+import org.bstats.charts.SingleLineChart;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
@@ -21,6 +23,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Objects;
@@ -30,8 +33,16 @@ import java.util.Objects;
  */
 public class ShopsManager implements Listener {
 
-    public ShopsManager() {
+    private int itemsSold = 0;
+
+    public ShopsManager(@Nullable Metrics metrics) {
         Bukkit.getPluginManager().registerEvents(this, RoadsideShops.INSTANCE);
+        if (metrics != null)
+            metrics.addCustomChart(new SingleLineChart("new_items_sold", () -> {
+                int t = itemsSold;
+                itemsSold = 0;
+                return t;
+            }));
 
     }
 
@@ -126,7 +137,7 @@ public class ShopsManager implements Listener {
 
                                 RoadsideShops.getEconomy().withdrawPlayer((OfflinePlayer) e.getWhoClicked(), sellingItem.getPrice());
                                 RoadsideShops.getEconomy().depositPlayer(Bukkit.getOfflinePlayer(shop.getPlayerUUID()), sellingItem.getPrice());
-
+                                itemsSold++;
                                 e.setCancelled(true);
 
                                 shop.removeItem(sellingItem, false, false, null);
@@ -136,6 +147,7 @@ public class ShopsManager implements Listener {
                                 Player pl = Bukkit.getPlayer(shop.getPlayerUUID());
                                 String sellerMessage = InternalUtil.CONFIGMANAGER.getSellerMessage(
                                         sellingItem.getPrice(), sellingItem.getItem().getType().toString(), sellingItem.getItem().getAmount(), p.getName());
+
                                 if (pl != null) {
 
                                     pl.sendMessage(sellerMessage);

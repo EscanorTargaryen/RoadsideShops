@@ -5,7 +5,6 @@ import it.escanortargaryen.roadsideshop.RoadsideShops;
 import it.escanortargaryen.roadsideshop.classes.SellingItem;
 import it.escanortargaryen.roadsideshop.classes.Shop;
 import it.escanortargaryen.roadsideshop.classes.ViewMode;
-import it.escanortargaryen.roadsideshop.managers.ConfigManager;
 import net.wesjd.anvilgui.AnvilGUI;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -21,6 +20,8 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Objects;
 
@@ -161,27 +162,30 @@ public class SaleSettings implements InventoryHolder, Listener {
             settingPrice = true;
             e.getWhoClicked().closeInventory();
 
-            new AnvilGUI.Builder().onClose(player -> {
+            new AnvilGUI.Builder().onClose(p -> {
                         settingPrice = false;
 
                         new BukkitRunnable() {
 
                             @Override
                             public void run() {
-
+                                Player player = p.getPlayer();
                                 player.openInventory(getInventory());
+
                             }
                         }.runTask(RoadsideShops.INSTANCE);
 
-                    }).onComplete((player, text) -> { // called when the inventory output slot is clicked
-
+                    }).onClick((slot, stateSnapshot) -> { // called when the inventory output slot is clicked
+                        if (slot != AnvilGUI.Slot.OUTPUT) {
+                            return Collections.emptyList();
+                        }
                         try {
-                            price = Double.parseDouble(text);
+                            price = Double.parseDouble(stateSnapshot.getText());
                             isPriceSet = true;
-                            return AnvilGUI.Response.close();
+                            return Arrays.asList(AnvilGUI.ResponseAction.close());
 
                         } catch (NumberFormatException ff) {
-                            return AnvilGUI.Response.text(InternalUtil.CONFIGMANAGER.getWrongPrice());
+                            return Arrays.asList(AnvilGUI.ResponseAction.replaceInputText(InternalUtil.CONFIGMANAGER.getWrongPrice()));
 
                         }
 
@@ -219,7 +223,6 @@ public class SaleSettings implements InventoryHolder, Listener {
                     @Override
                     public void run() {
 
-
                         shop.openInventory(p, ViewMode.SELLER);
                     }
                 }.runTask(RoadsideShops.INSTANCE);
@@ -243,7 +246,6 @@ public class SaleSettings implements InventoryHolder, Listener {
 
                     @Override
                     public void run() {
-
 
                         shop.openInventory(p, ViewMode.SELLER);
                     }

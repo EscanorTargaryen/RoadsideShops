@@ -51,7 +51,7 @@ public class Commands {
 
         new CommandAPICommand(ConfigManager.SHOPCOMMAND).withPermission("roadsideshops.shopcommand").withArguments(new OfflinePlayerArgument("shopOwner")).executesPlayer((p, objects) -> {
 
-            OfflinePlayer shopOwner = (OfflinePlayer) objects[0];
+            OfflinePlayer shopOwner = (OfflinePlayer) objects.get(0);
             if (shopOwner != null) {
 
                 CompletableFuture.runAsync(() -> {
@@ -101,7 +101,7 @@ public class Commands {
 
         new CommandAPICommand("roadsideshopsadmin").withPermission("roadsideshops.admin.editshops").withArguments(new OfflinePlayerArgument("shopOwner")).executesPlayer((p, objects) -> {
 
-            OfflinePlayer shopOwner = (OfflinePlayer) objects[0];
+            OfflinePlayer shopOwner = (OfflinePlayer) objects.get(0);
             if (shopOwner != null) {
 
                 CompletableFuture.runAsync(() -> {
