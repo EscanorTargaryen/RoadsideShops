@@ -47,6 +47,15 @@
                   <shadedPattern>it.escanortargaryen.roadsideshop.bstat</shadedPattern>
                 </relocation>
               </relocations>
+              <filters>
+                <filter>
+                  <artifact>*:*</artifact>
+                  <excludeDefaults>false</excludeDefaults>
+                  <includes>
+                    <include>it.escanortargaryen.roadsideshop.anvilgui</include>
+                  </includes>
+                </filter>
+              </filters>
               <minimizeJar>false</minimizeJar>
             </configuration>
           </execution>
@@ -88,7 +97,7 @@
     <dependency>
       <groupId>org.spigotmc</groupId>
       <artifactId>spigot-api</artifactId>
-      <version>1.19.4-R0.1-SNAPSHOT</version>
+      <version>1.20-R0.1-snapshot</version>
       <scope>provided</scope>
     </dependency>
     <dependency>

@@ -1,7 +1,7 @@
 package it.escanortargaryen.roadsideshop;
 
 import dev.jorel.commandapi.CommandAPI;
-import dev.jorel.commandapi.CommandAPIConfig;
+import dev.jorel.commandapi.CommandAPIBukkitConfig;
 import it.escanortargaryen.roadsideshop.classes.LockedSlot;
 import it.escanortargaryen.roadsideshop.classes.LockedSlotCheck;
 import it.escanortargaryen.roadsideshop.classes.Shop;
@@ -54,7 +54,7 @@ public class RoadsideShops extends JavaPlugin implements Listener {
     public void onLoad() {
         INSTANCE = this;
         if (!test)
-            CommandAPI.onLoad(new CommandAPIConfig().verboseOutput(false));
+            CommandAPI.onLoad(new CommandAPIBukkitConfig(this).silentLogs(true));
 
         saveResource("config.yml", false);
 
@@ -130,7 +130,7 @@ public class RoadsideShops extends JavaPlugin implements Listener {
         }
         Metrics metrics = null;
         if (!test) {
-            CommandAPI.onEnable(this);
+            CommandAPI.onEnable();
 
             //setup bstat
             int pluginId = 17468; // <-- Replace with the id of your plugin!
