@@ -10,7 +10,17 @@ Dive deeper into the seller's side with Roadside shops! With newspaper sponsor s
 **Spigot Page:** <https://www.spigotmc.org/resources/roadside-shops.107148/>  
 **Discord Server:** <https://discord.gg/KRS7dSU6tR> 
 
-## Maven
+## ReadyToUse zip
+Download in one zip everything you need to get RoadsideShops going in one click!
+
+The zip will contain:
+- Vault v1.7.3
+- EssentialsX v2.20.0
+- RoadsideShops v1.1.2
+
+Click [here](https://github.com/EscanorTargaryen/RoadsideShops/releases/download/1.1.2/RoadsideShops-1.1.2.-.ReadyToUse.zip) for the download!
+
+## Maven for developer
 
 ```xml
 <repository>
