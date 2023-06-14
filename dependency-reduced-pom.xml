@@ -4,7 +4,7 @@
   <groupId>it.escanortargaryen</groupId>
   <artifactId>roadsideshops</artifactId>
   <name>RoadsideShops</name>
-  <version>1.1.1</version>
+  <version>1.1.2</version>
   <build>
     <defaultGoal>clean install</defaultGoal>
     <resources>
@@ -97,7 +97,7 @@
     <dependency>
       <groupId>org.spigotmc</groupId>
       <artifactId>spigot-api</artifactId>
-      <version>1.20-R0.1-snapshot</version>
+      <version>1.20.1-R0.1-SNAPSHOT</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
