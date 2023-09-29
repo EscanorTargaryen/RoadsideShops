@@ -17,7 +17,6 @@ public class InternalUtil {
 
     public static ArrayList<InventoryHolder> INVENTORYHOLDERS = new ArrayList<>();
     public static ItemStack BACKARROW;
-
     public static ItemStack UNLOCKEDSLOT = new ItemStack(Material.GRAY_STAINED_GLASS_PANE);
     public static ItemStack LOCKEDSLOT;
     public static ItemStack LOG;

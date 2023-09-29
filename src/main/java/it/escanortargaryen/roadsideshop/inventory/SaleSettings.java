@@ -146,7 +146,6 @@ public class SaleSettings implements InventoryHolder, Listener {
     private void onClick(InventoryClickEvent e) {
 
         if (e.getView().getTopInventory().getHolder() != this)
-
             return;
 
         e.setCancelled(true);

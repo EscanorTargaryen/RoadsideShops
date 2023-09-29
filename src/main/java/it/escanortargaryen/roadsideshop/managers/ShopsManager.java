@@ -62,7 +62,6 @@ public class ShopsManager implements Listener {
     private void onClick(InventoryClickEvent e) {
 
         if (!InternalUtil.INVENTORYHOLDERS.contains(e.getView().getTopInventory().getHolder()))
-
             return;
 
         if (e.getAction() == InventoryAction.HOTBAR_SWAP) {

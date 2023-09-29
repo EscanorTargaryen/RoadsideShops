@@ -5,7 +5,6 @@ import it.escanortargaryen.roadsideshop.RoadsideShops;
 import it.escanortargaryen.roadsideshop.classes.SellingItem;
 import it.escanortargaryen.roadsideshop.classes.Shop;
 import it.escanortargaryen.roadsideshop.classes.ViewMode;
-import it.escanortargaryen.roadsideshop.managers.ConfigManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -97,7 +96,6 @@ public class ItemSettings implements InventoryHolder, Listener {
     private void onClick(InventoryClickEvent e) {
 
         if (e.getView().getTopInventory().getHolder() != this)
-
             return;
 
         e.setCancelled(true);

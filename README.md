@@ -15,8 +15,8 @@ Download in one zip everything you need to get RoadsideShops going in one click!
 
 The zip will contain:
 - Vault v1.7.3
-- EssentialsX v2.20.0
-- RoadsideShops v1.1.3
+- EssentialsX v2.21.0
+- RoadsideShops v1.1.4
 
 Click [here](https://cdn.modrinth.com/data/GG9Y6mro/versions/6jrKmmr7/RoadsideShops-1.1.3.-.ReadyToUse.zip) for the download!
 
@@ -32,7 +32,7 @@ Click [here](https://cdn.modrinth.com/data/GG9Y6mro/versions/6jrKmmr7/RoadsideSh
 <dependency>
     <groupId>it.escanortargaryen</groupId>
     <artifactId>roadsideshops</artifactId>
-    <version>1.1.3</version>
+    <version>1.1.4</version>
     <scope>provided</scope>
 </dependency>
 ```
