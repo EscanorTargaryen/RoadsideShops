@@ -15,7 +15,7 @@ Download in one zip everything you need to test RoadsideShops going in one click
 
 The zip will contain:
 - Vault v1.7.3
-- [SimpleEconomy](https://github.com/EscanorTargaryen/SimpleEconomy)
+- [SimpleEconomy](https://github.com/EscanorTargaryen/SimpleEconomy) v1.0.0
 - RoadsideShops v1.1.6
 
 Click [here](https://modrinth.com/plugin/roadside-shops/version/1.1.6) for the download!
