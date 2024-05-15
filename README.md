@@ -7,18 +7,20 @@ Dive deeper into the seller's side with Roadside shops! With newspaper sponsor s
 <hr>
 
 
-**Spigot Page:** <https://www.spigotmc.org/resources/roadside-shops.107148/>  
+**Spigot Page:** <https://www.spigotmc.org/resources/107148/>  
 **Discord Server:** <https://discord.gg/KRS7dSU6tR> 
 
-## ReadyToUse zip
-Download in one zip everything you need to get RoadsideShops going in one click!
+## ReadyToTest zip
+Download in one zip everything you need to test RoadsideShops going in one click!
 
 The zip will contain:
 - Vault v1.7.3
-- EssentialsX v2.21.0
-- RoadsideShops v1.1.5
+- [SimpleEconomy](https://github.com/EscanorTargaryen/SimpleEconomy)
+- RoadsideShops v1.1.6
 
-Click [here](https://cdn.modrinth.com/data/GG9Y6mro/versions/raZaDgZe/RoadsideShops-1.1.5.-.ReadyToUse.zip) for the download!
+Click [here](https://modrinth.com/plugin/roadside-shops/version/1.1.6) for the download!
+
+> Note! **SimpleEconomy** was released in order to be able to test RoadsideShops quickly. It is recommended to use another economy plugin of your choice that is compatible with Vault.
 
 ## Maven for developer
 
@@ -32,7 +34,7 @@ Click [here](https://cdn.modrinth.com/data/GG9Y6mro/versions/raZaDgZe/RoadsideSh
 <dependency>
     <groupId>it.escanortargaryen</groupId>
     <artifactId>roadsideshops</artifactId>
-    <version>1.1.5</version>
+    <version>1.1.6</version>
     <scope>provided</scope>
 </dependency>
 ```
