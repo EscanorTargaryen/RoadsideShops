@@ -54,7 +54,7 @@ public class RoadsideShops extends JavaPlugin implements Listener {
     public void onLoad() {
         INSTANCE = this;
         if (!test)
-            CommandAPI.onLoad(new CommandAPIBukkitConfig(this).silentLogs(true));
+            CommandAPI.onLoad(new CommandAPIBukkitConfig(this).silentLogs(true).usePluginNamespace());
 
         saveResource("config.yml", false);
 
