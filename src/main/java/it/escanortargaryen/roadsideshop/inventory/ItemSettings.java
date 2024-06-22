@@ -141,8 +141,15 @@ public class ItemSettings implements InventoryHolder, Listener {
         }
 
         if (e.getSlot() == 22) {
-            this.isSponsoring = !this.isSponsoring;
-            e.getInventory().setItem(22, shop.generateMapItem(isSponsoring, sellingItem));
+
+            if (shop.canSponsor() && !shop.getSponsor().equals(sellingItem)) {
+
+                this.isSponsoring = !this.isSponsoring;
+
+                e.getInventory().setItem(22, shop.generateMapItem(isSponsoring, sellingItem));
+
+            }
+
 
         }
 
@@ -153,8 +160,7 @@ public class ItemSettings implements InventoryHolder, Listener {
 
         if (e.getInventory().getHolder() == this) {
 
-            if (isSponsoring) {
-
+            if (!shop.getSponsor().equals(sellingItem) && isSponsoring) {
                 e.getPlayer()
                         .sendMessage(InternalUtil.CONFIGMANAGER.getSponsorSet(sellingItem.getPrice(), sellingItem.getItem().getType().toString(), sellingItem.getItem().getAmount()));
 

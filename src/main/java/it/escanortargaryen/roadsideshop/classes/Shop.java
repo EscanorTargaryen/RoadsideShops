@@ -143,7 +143,7 @@ public class Shop implements InventoryHolder {
             return true;
         }
 
-        return (time - lastSponsor) / 60000 > ConfigManager.SPONSORTIME;
+        return (time - lastSponsor) / 1000 > ConfigManager.SPONSORTIME;
 
     }
 
@@ -158,7 +158,7 @@ public class Shop implements InventoryHolder {
      */
     public long getMissTimeInMins() {
         long time = System.currentTimeMillis();
-        long i = (ConfigManager.SPONSORTIME * 1000 - (time - lastSponsor)) / 60000;
+        long i = ((ConfigManager.SPONSORTIME * 1000 - (time - lastSponsor)) / 60000) + 1;
         if (i < 0) {
 
             return 0;
