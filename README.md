@@ -16,13 +16,13 @@ Download in one zip everything you need to test RoadsideShops going in one click
 The zip will contain:
 - Vault v1.7.3
 - [SimpleEconomy](https://github.com/EscanorTargaryen/SimpleEconomy) v1.0.1
-- RoadsideShops v1.1.7
+- RoadsideShops v1.1.8
 
-Click [here](https://modrinth.com/plugin/roadside-shops/version/1.1.7) for the download!
+Click [here](https://modrinth.com/plugin/roadside-shops/version/1.1.8) for the download!
 
 > Note! **SimpleEconomy** was released in order to be able to test RoadsideShops quickly. It is recommended to use another economy plugin of your choice that is compatible with Vault.
 
-## Maven for developer
+## Maven for developers
 
 ```xml
 <repository>
@@ -34,7 +34,7 @@ Click [here](https://modrinth.com/plugin/roadside-shops/version/1.1.7) for the d
 <dependency>
     <groupId>it.escanortargaryen</groupId>
     <artifactId>roadsideshops</artifactId>
-    <version>1.1.7</version>
+    <version>1.1.8</version>
     <scope>provided</scope>
 </dependency>
 ```
