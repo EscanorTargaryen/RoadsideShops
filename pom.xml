@@ -86,7 +86,9 @@
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>
-            <version>1.21-R0.1-SNAPSHOT</version>
+            <version>1.20.6-R0.1-SNAPSHOT</version> <!-- In Spigot version 1.21 they changed the handling of interfaces such
+            as InventoryView. By leaving Spigot at the previous version, Spigot solves the problem internally
+            https://hub.spigotmc.org/stash/projects/SPIGOT/repos/craftbukkit/commits/d01c70e93ea1018048a433717c46120eaaeda5ab#src%2Fmain%2Fjava%2Forg%2Fbukkit%2Fcraftbukkit%2Futil%2FCommodore.java -->
             <scope>provided</scope>
         </dependency>
         <dependency>
