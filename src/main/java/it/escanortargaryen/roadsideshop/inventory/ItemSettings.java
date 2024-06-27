@@ -42,6 +42,8 @@ public class ItemSettings implements InventoryHolder, Listener {
      */
     private boolean isSponsoring = false;
 
+    private boolean isInventoryClosing = false;
+
     /**
      * Creates a new ItemSettings.
      *
@@ -124,6 +126,8 @@ public class ItemSettings implements InventoryHolder, Listener {
 
         if (e.getSlot() == 24) {
 
+            isInventoryClosing = true;
+
             Player p = (Player) e.getWhoClicked();
 
             shop.removeItem(sellingItem, p);
@@ -142,7 +146,7 @@ public class ItemSettings implements InventoryHolder, Listener {
 
         if (e.getSlot() == 22) {
 
-            if (shop.canSponsor() && !shop.getSponsor().equals(sellingItem)) {
+            if (shop.canSponsor() && ((shop.getSponsor() == null) || (!shop.getSponsor().equals(sellingItem)))) {
 
                 this.isSponsoring = !this.isSponsoring;
 
@@ -160,7 +164,7 @@ public class ItemSettings implements InventoryHolder, Listener {
 
         if (e.getInventory().getHolder() == this) {
 
-            if (!shop.getSponsor().equals(sellingItem) && isSponsoring) {
+            if (!isInventoryClosing && ((shop.getSponsor() == null) || (!shop.getSponsor().equals(sellingItem))) && isSponsoring) {
                 e.getPlayer()
                         .sendMessage(InternalUtil.CONFIGMANAGER.getSponsorSet(sellingItem.getPrice(), sellingItem.getItem().getType().toString(), sellingItem.getItem().getAmount()));
 
