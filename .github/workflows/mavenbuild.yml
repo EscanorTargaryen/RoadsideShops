@@ -1,7 +1,5 @@
 name: Maven Build
-on:
-  push:
-    branches: [master, dev]
+on: [push, pull_request, workflow_dispatch]
 
 jobs:
   build:
