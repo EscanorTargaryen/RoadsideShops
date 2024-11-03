@@ -88,4 +88,20 @@ public class InternalUtil {
         }
     }
 
+    public static void setCursor(InventoryClickEvent event, ItemStack replace) {
+        try {
+
+            Object view = event.getView();
+
+            Method setCursorMethod = view.getClass().getMethod("setCursor", ItemStack.class);
+
+            setCursorMethod.setAccessible(true);
+
+            setCursorMethod.invoke(view, replace);
+
+        } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 }

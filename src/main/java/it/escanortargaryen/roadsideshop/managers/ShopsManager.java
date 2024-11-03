@@ -99,15 +99,13 @@ public class ShopsManager implements Listener {
                 if (e.getCurrentItem().equals(InternalUtil.UNLOCKEDSLOT)) {
 
                     if (e.getCursor() == null || e.getCursor().getType() == Material.AIR) {
-
                         return;
-
                     }
-                    ItemStack i = e.getCursor();
-                    ItemStack old = i.clone();
-                    i.setType(Material.AIR);
 
-                    new SaleSettings(shop, old, player, e.getSlot());
+                    ItemStack i = e.getCursor().clone();
+                    InternalUtil.setCursor(e, new ItemStack(Material.AIR));
+
+                    new SaleSettings(shop, i.clone(), player, e.getSlot());
 
                 }
 
