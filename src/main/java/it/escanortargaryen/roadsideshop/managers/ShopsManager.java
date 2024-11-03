@@ -13,13 +13,13 @@ import org.bstats.bukkit.Metrics;
 import org.bstats.charts.SingleLineChart;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -61,7 +61,11 @@ public class ShopsManager implements Listener {
     @EventHandler
     private void onClick(InventoryClickEvent e) {
 
-        if (!InternalUtil.INVENTORYHOLDERS.contains(e.getView().getTopInventory().getHolder()))
+        Inventory topInventory = InternalUtil.getTopInventory(e);
+
+        Player player = (Player) e.getWhoClicked();
+
+        if (!InternalUtil.INVENTORYHOLDERS.contains(topInventory.getHolder()))
             return;
 
         if (e.getAction() == InventoryAction.HOTBAR_SWAP) {
@@ -73,11 +77,11 @@ public class ShopsManager implements Listener {
                 || e.getCurrentItem().getType() == Material.AIR)
             return;
 
-        Shop shop = getShop(Objects.requireNonNull(e.getView().getTopInventory().getHolder()));
+        Shop shop = getShop(Objects.requireNonNull(topInventory.getHolder()));
         SellingItem sellingItem = Objects.requireNonNull(shop).getItemAt(e.getSlot());
 
-        if (shop.getViewers().get((Player) e.getWhoClicked()) == ViewMode.SELLER) {
-            if (e.getClickedInventory().getHolder() != e.getView().getTopInventory().getHolder()) {
+        if (shop.getViewers().get(player) == ViewMode.SELLER) {
+            if (e.getClickedInventory().getHolder() != topInventory.getHolder()) {
 
                 if (e.getClick() == ClickType.DOUBLE_CLICK || e.getClick() == ClickType.SHIFT_LEFT
                         || e.getClick() == ClickType.SHIFT_RIGHT) {
@@ -99,16 +103,17 @@ public class ShopsManager implements Listener {
                         return;
 
                     }
-                    ItemStack i = e.getCursor().clone();
-                    e.getView().setCursor(new ItemStack(Material.AIR));
+                    ItemStack i = e.getCursor();
+                    ItemStack old = i.clone();
+                    i.setType(Material.AIR);
 
-                    new SaleSettings(shop, i.clone(), (Player) e.getWhoClicked(), e.getSlot());
+                    new SaleSettings(shop, old, player, e.getSlot());
 
                 }
 
             } else {
 
-                new ItemSettings(shop, sellingItem, (Player) e.getWhoClicked());
+                new ItemSettings(shop, sellingItem, player);
 
             }
 
@@ -118,34 +123,33 @@ public class ShopsManager implements Listener {
             if (e.getCursor() == null || e.getCursor().getType() == Material.AIR) {
 
                 if (sellingItem != null) {
-                    if (RoadsideShops.getEconomy().has((OfflinePlayer) e.getWhoClicked(), sellingItem.getPrice())) {
+                    if (RoadsideShops.getEconomy().has(player, sellingItem.getPrice())) {
 
-                        PlayerBuyShopEvent ev = new PlayerBuyShopEvent(shop, sellingItem, (Player) e.getWhoClicked());
+                        PlayerBuyShopEvent ev = new PlayerBuyShopEvent(shop, sellingItem, player);
 
                         Bukkit.getPluginManager().callEvent(ev);
 
                         if (!ev.isCancelled()) {
-                            Player p = (Player) e.getWhoClicked();
 
-                            HashMap<Integer, ItemStack> i = p.getInventory().addItem(sellingItem.getItem());
+                            HashMap<Integer, ItemStack> i = player.getInventory().addItem(sellingItem.getItem());
 
                             if (i.size() > 0) {
 
-                                p.sendMessage(InternalUtil.CONFIGMANAGER.getFullInvNoDrop());
+                                player.sendMessage(InternalUtil.CONFIGMANAGER.getFullInvNoDrop());
                             } else {
 
-                                RoadsideShops.getEconomy().withdrawPlayer((OfflinePlayer) e.getWhoClicked(), sellingItem.getPrice());
+                                RoadsideShops.getEconomy().withdrawPlayer(player, sellingItem.getPrice());
                                 RoadsideShops.getEconomy().depositPlayer(Bukkit.getOfflinePlayer(shop.getPlayerUUID()), sellingItem.getPrice());
                                 itemsSold++;
                                 e.setCancelled(true);
 
                                 shop.removeItem(sellingItem, false, false, null);
 
-                                e.getWhoClicked().sendMessage(InternalUtil.CONFIGMANAGER.getBoughtMessage(sellingItem.getPrice(), sellingItem.getItem().getType().toString(), sellingItem.getItem().getAmount(), shop.getPlayerName()));
+                                player.sendMessage(InternalUtil.CONFIGMANAGER.getBoughtMessage(sellingItem.getPrice(), sellingItem.getItem().getType().toString(), sellingItem.getItem().getAmount(), shop.getPlayerName()));
 
                                 Player pl = Bukkit.getPlayer(shop.getPlayerUUID());
                                 String sellerMessage = InternalUtil.CONFIGMANAGER.getSellerMessage(
-                                        sellingItem.getPrice(), sellingItem.getItem().getType().toString(), sellingItem.getItem().getAmount(), p.getName());
+                                        sellingItem.getPrice(), sellingItem.getItem().getType().toString(), sellingItem.getItem().getAmount(), player.getName());
 
                                 if (pl != null) {
 
@@ -161,7 +165,7 @@ public class ShopsManager implements Listener {
 
                     } else {
                         e.setCancelled(true);
-                        e.getWhoClicked().sendMessage(InternalUtil.CONFIGMANAGER.getNoMoney());
+                        player.sendMessage(InternalUtil.CONFIGMANAGER.getNoMoney());
                     }
 
                 }

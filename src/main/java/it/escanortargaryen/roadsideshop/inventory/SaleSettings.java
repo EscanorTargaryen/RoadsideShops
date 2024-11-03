@@ -145,7 +145,11 @@ public class SaleSettings implements InventoryHolder, Listener {
     @EventHandler
     private void onClick(InventoryClickEvent e) {
 
-        if (e.getView().getTopInventory().getHolder() != this)
+        Inventory topInventory = InternalUtil.getTopInventory(e);
+
+        Player player = (Player) e.getWhoClicked();
+
+        if (topInventory.getHolder() != this)
             return;
 
         e.setCancelled(true);
@@ -159,7 +163,7 @@ public class SaleSettings implements InventoryHolder, Listener {
 
         if (e.getSlot() == 6) {
             settingPrice = true;
-            e.getWhoClicked().closeInventory();
+            player.closeInventory();
 
             new AnvilGUI.Builder().onClose(p -> {
                         settingPrice = false;
@@ -193,7 +197,7 @@ public class SaleSettings implements InventoryHolder, Listener {
                     .text(".")
                     .title(InternalUtil.CONFIGMANAGER.getAnvilTitle()) // set the title of the GUI (only works in 1.14+)
                     .plugin(RoadsideShops.INSTANCE) // set the plugin instance
-                    .open((Player) e.getWhoClicked());
+                    .open(player);
 
         }
 
@@ -210,19 +214,19 @@ public class SaleSettings implements InventoryHolder, Listener {
         if (e.getSlot() == 24) {
 
             if (isPriceSet) {
-                Player p = ((Player) e.getWhoClicked());
+
                 SellingItem sellingItem = new SellingItem(itemToSell, slotNumber, price, shop.getPlayerUUID());
 
-                shop.addItem(sellingItem, isSponsoring, true, p);
+                shop.addItem(sellingItem, isSponsoring, true, player);
 
                 exit = true;
-                p.closeInventory();
+                player.closeInventory();
                 new BukkitRunnable() {
 
                     @Override
                     public void run() {
 
-                        shop.openInventory(p, ViewMode.SELLER);
+                        shop.openInventory(player, ViewMode.SELLER);
                     }
                 }.runTask(RoadsideShops.INSTANCE);
 
