@@ -4,7 +4,7 @@
   <groupId>it.escanortargaryen</groupId>
   <artifactId>roadsideshops</artifactId>
   <name>RoadsideShops</name>
-  <version>1.1.11</version>
+  <version>1.1.12</version>
   <build>
     <defaultGoal>clean install</defaultGoal>
     <resources>
@@ -171,6 +171,10 @@
         <exclusion>
           <artifactId>maven-resolver-transport-http</artifactId>
           <groupId>org.apache.maven.resolver</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>byte-buddy</artifactId>
+          <groupId>net.bytebuddy</groupId>
         </exclusion>
       </exclusions>
     </dependency>
