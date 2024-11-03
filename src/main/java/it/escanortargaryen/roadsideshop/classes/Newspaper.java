@@ -2,7 +2,7 @@ package it.escanortargaryen.roadsideshop.classes;
 
 import it.escanortargaryen.roadsideshop.InternalUtil;
 import it.escanortargaryen.roadsideshop.RoadsideShops;
-import it.escanortargaryen.roadsideshop.managers.ConfigManager;
+import it.escanortargaryen.roadsideshop.managers.Commands;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -249,11 +249,15 @@ public class Newspaper implements Listener, InventoryHolder {
     @EventHandler
     private void onClick(InventoryClickEvent e) {
 
+        Inventory topInventory = InternalUtil.getTopInventory(e);
+
+        Player player = (Player) e.getWhoClicked();
+
         if (e.getClickedInventory() == null || e.getCurrentItem() == null
                 || e.getCurrentItem().getType() == Material.AIR)
             return;
 
-        if (e.getView().getTopInventory().getHolder() != this)
+        if (topInventory.getHolder() != this)
             return;
 
         if (duringAnimation) {
@@ -265,7 +269,7 @@ public class Newspaper implements Listener, InventoryHolder {
         e.setCancelled(true);
 
         if (Objects.requireNonNull(e.getInventory().getItem(e.getSlot())).getType() == Material.ARROW) {
-            Inventory inv = e.getWhoClicked().getOpenInventory().getTopInventory();
+            Inventory inv = InternalUtil.getTopInventory(e);
 
             if (e.getSlot() == 26) {
 
@@ -371,69 +375,69 @@ public class Newspaper implements Listener, InventoryHolder {
         }
 
         if (Objects.requireNonNull(e.getInventory().getItem(e.getSlot())).getType() != Material.PAPER) {
-            HumanEntity humanEntity = e.getWhoClicked();
+
             int slot = e.getSlot();
             if (slot == 11) {
 
                 if (page == 1)
-                    dispatchShopCommand(humanEntity, items.get(0).getPlayerUUID());
+                    dispatchShopCommand(player, items.get(0).getPlayerUUID());
 
                 if (page == 2)
-                    dispatchShopCommand(humanEntity, items.get(6).getPlayerUUID());
+                    dispatchShopCommand(player, items.get(6).getPlayerUUID());
 
                 if (page == 3)
-                    dispatchShopCommand(humanEntity, items.get(12).getPlayerUUID());
+                    dispatchShopCommand(player, items.get(12).getPlayerUUID());
 
             }
             if (slot == 20) {
 
                 if (page == 1)
-                    dispatchShopCommand(humanEntity, items.get(1).getPlayerUUID());
+                    dispatchShopCommand(player, items.get(1).getPlayerUUID());
 
                 if (page == 2)
-                    dispatchShopCommand(humanEntity, items.get(7).getPlayerUUID());
+                    dispatchShopCommand(player, items.get(7).getPlayerUUID());
                 if (page == 3)
-                    dispatchShopCommand(humanEntity, items.get(13).getPlayerUUID());
+                    dispatchShopCommand(player, items.get(13).getPlayerUUID());
 
             }
             if (slot == 29) {
                 if (page == 1)
-                    dispatchShopCommand(humanEntity, items.get(2).getPlayerUUID());
+                    dispatchShopCommand(player, items.get(2).getPlayerUUID());
 
                 if (page == 2)
-                    dispatchShopCommand(humanEntity, items.get(8).getPlayerUUID());
+                    dispatchShopCommand(player, items.get(8).getPlayerUUID());
                 if (page == 3)
-                    dispatchShopCommand(humanEntity, items.get(14).getPlayerUUID());
+                    dispatchShopCommand(player, items.get(14).getPlayerUUID());
 
             }
             if (slot == 15) {
                 if (page == 1)
-                    dispatchShopCommand(humanEntity, items.get(3).getPlayerUUID());
+                    dispatchShopCommand(player, items.get(3).getPlayerUUID());
 
                 if (page == 2)
-                    dispatchShopCommand(humanEntity, items.get(9).getPlayerUUID());
+                    dispatchShopCommand(player, items.get(9).getPlayerUUID());
                 if (page == 3)
-                    dispatchShopCommand(humanEntity, items.get(15).getPlayerUUID());
+                    dispatchShopCommand(player, items.get(15).getPlayerUUID());
 
             }
             if (slot == 24) {
                 if (page == 1)
-                    dispatchShopCommand(humanEntity, items.get(4).getPlayerUUID());
+                    dispatchShopCommand(player, items.get(4).getPlayerUUID());
 
                 if (page == 2)
-                    dispatchShopCommand(humanEntity, items.get(10).getPlayerUUID());
+                    dispatchShopCommand(player, items.get(10).getPlayerUUID());
                 if (page == 3)
-                    dispatchShopCommand(humanEntity, items.get(16).getPlayerUUID());
+                    dispatchShopCommand(player, items.get(16).getPlayerUUID());
 
             }
             if (slot == 33) {
 
                 if (page == 1)
-                    dispatchShopCommand(humanEntity, items.get(5).getPlayerUUID());
+                    dispatchShopCommand(player, items.get(5).getPlayerUUID());
                 if (page == 2)
-                    dispatchShopCommand(humanEntity, items.get(1).getPlayerUUID());
+                    dispatchShopCommand(player, items.get(1).getPlayerUUID());
                 if (page == 3)
-                    dispatchShopCommand(humanEntity, items.get(17).getPlayerUUID());
+                    dispatchShopCommand(player, items.get(17).getPlayerUUID());
 
             }
 
@@ -445,8 +449,7 @@ public class Newspaper implements Listener, InventoryHolder {
         Objects.requireNonNull(humanEntity);
         Objects.requireNonNull(owner);
 
-        Bukkit.dispatchCommand(humanEntity,
-                ConfigManager.SHOPCOMMAND + " " + Bukkit.getOfflinePlayer(owner).getName());
+        Commands.openPlayerShop((Player) humanEntity, Bukkit.getOfflinePlayer(owner));
 
     }
 

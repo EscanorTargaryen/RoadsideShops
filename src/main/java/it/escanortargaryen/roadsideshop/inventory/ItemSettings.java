@@ -97,7 +97,11 @@ public class ItemSettings implements InventoryHolder, Listener {
     @EventHandler
     private void onClick(InventoryClickEvent e) {
 
-        if (e.getView().getTopInventory().getHolder() != this)
+        Inventory topInventory = InternalUtil.getTopInventory(e);
+
+        Player player=(Player) e.getWhoClicked();
+
+        if (topInventory.getHolder() != this)
             return;
 
         e.setCancelled(true);
@@ -110,14 +114,14 @@ public class ItemSettings implements InventoryHolder, Listener {
             return;
 
         if (e.getSlot() == 20) {
-            e.getWhoClicked().closeInventory();
+            player.closeInventory();
 
             new BukkitRunnable() {
 
                 @Override
                 public void run() {
 
-                    shop.openInventory((Player) e.getWhoClicked(), ViewMode.SELLER);
+                    shop.openInventory(player, ViewMode.SELLER);
 
                 }
             }.runTask(RoadsideShops.INSTANCE);
@@ -128,17 +132,17 @@ public class ItemSettings implements InventoryHolder, Listener {
 
             isInventoryClosing = true;
 
-            Player p = (Player) e.getWhoClicked();
 
-            shop.removeItem(sellingItem, p);
-            p.closeInventory();
+
+            shop.removeItem(sellingItem, player);
+            player.closeInventory();
 
             new BukkitRunnable() {
 
                 @Override
                 public void run() {
 
-                    shop.openInventory(p, ViewMode.SELLER);
+                    shop.openInventory(player, ViewMode.SELLER);
                 }
             }.runTask(RoadsideShops.INSTANCE);
 
@@ -153,7 +157,6 @@ public class ItemSettings implements InventoryHolder, Listener {
                 e.getInventory().setItem(22, shop.generateMapItem(isSponsoring, sellingItem));
 
             }
-
 
         }
 
