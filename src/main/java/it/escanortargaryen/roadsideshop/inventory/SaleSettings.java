@@ -184,7 +184,8 @@ public class SaleSettings implements InventoryHolder, Listener {
                         }
                         try {
                             price = Double.parseDouble(stateSnapshot.getText());
-                            isPriceSet = true;
+                            isPriceSet = price >= 0;
+
                             return Arrays.asList(AnvilGUI.ResponseAction.close());
 
                         } catch (NumberFormatException ff) {
