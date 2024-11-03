@@ -2,7 +2,7 @@ package it.escanortargaryen.roadsideshop.classes;
 
 import it.escanortargaryen.roadsideshop.InternalUtil;
 import it.escanortargaryen.roadsideshop.RoadsideShops;
-import it.escanortargaryen.roadsideshop.managers.ConfigManager;
+import it.escanortargaryen.roadsideshop.managers.Commands;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -449,8 +449,7 @@ public class Newspaper implements Listener, InventoryHolder {
         Objects.requireNonNull(humanEntity);
         Objects.requireNonNull(owner);
 
-        Bukkit.dispatchCommand(humanEntity,
-                ConfigManager.SHOPCOMMAND + " " + Bukkit.getOfflinePlayer(owner).getName());
+        Commands.openPlayerShop((Player) humanEntity, Bukkit.getOfflinePlayer(owner));
 
     }
 

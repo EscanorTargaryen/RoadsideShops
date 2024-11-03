@@ -8,6 +8,7 @@ import it.escanortargaryen.roadsideshop.classes.Newspaper;
 import it.escanortargaryen.roadsideshop.classes.Shop;
 import it.escanortargaryen.roadsideshop.classes.ViewMode;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayList;
@@ -27,25 +28,7 @@ public class Commands {
 
         new CommandAPICommand(ConfigManager.SHOPCOMMAND).withPermission("roadsideshops.shopcommand").executesPlayer((p, objects) -> {
 
-            CompletableFuture.runAsync(() -> {
-                if (!RoadsideShops.hasShop(p.getUniqueId())) {
-
-                    RoadsideShops.getShop(p);
-
-                }
-
-                Shop s = RoadsideShops.getShop(p);
-                new BukkitRunnable() {
-
-                    @Override
-                    public void run() {
-
-                        s.openInventory(p, ViewMode.SELLER);
-
-                    }
-                }.runTask(RoadsideShops.INSTANCE);
-
-            });
+            openPersonalShop(p);
 
         }).register();
 
@@ -54,46 +37,7 @@ public class Commands {
             OfflinePlayer shopOwner = (OfflinePlayer) objects.get(0);
             if (shopOwner != null) {
 
-                CompletableFuture.runAsync(() -> {
-                    if (!RoadsideShops.hasShop(shopOwner.getUniqueId())) {
-                        new BukkitRunnable() {
-
-                            @Override
-                            public void run() {
-                                p.sendMessage(InternalUtil.CONFIGMANAGER.getNoShop());
-                            }
-                        }.runTask(RoadsideShops.INSTANCE);
-
-                    } else {
-
-                        if (p.getUniqueId().equals(shopOwner.getUniqueId())) {
-
-                            Shop s = RoadsideShops.getShop(shopOwner.getUniqueId());
-                            new BukkitRunnable() {
-
-                                @Override
-                                public void run() {
-                                    s.openInventory(p, ViewMode.SELLER);
-                                }
-                            }.runTask(RoadsideShops.INSTANCE);
-
-                        } else {
-
-                            Shop s = RoadsideShops.getShop(shopOwner.getUniqueId());
-                            new BukkitRunnable() {
-
-                                @Override
-                                public void run() {
-                                    s.openInventory(p, ViewMode.BUYER);
-
-                                }
-                            }.runTask(RoadsideShops.INSTANCE);
-
-                        }
-
-                    }
-
-                });
+                openPlayerShop(p, shopOwner);
 
             }
 
@@ -104,30 +48,7 @@ public class Commands {
             OfflinePlayer shopOwner = (OfflinePlayer) objects.get(0);
             if (shopOwner != null) {
 
-                CompletableFuture.runAsync(() -> {
-                    if (!RoadsideShops.hasShop(shopOwner.getUniqueId())) {
-                        new BukkitRunnable() {
-
-                            @Override
-                            public void run() {
-                                p.sendMessage(InternalUtil.CONFIGMANAGER.getNoShop());
-                            }
-                        }.runTask(RoadsideShops.INSTANCE);
-
-                    } else {
-
-                        Shop s = RoadsideShops.getShop(shopOwner.getUniqueId());
-                        new BukkitRunnable() {
-
-                            @Override
-                            public void run() {
-                                s.openInventory(p, ViewMode.SELLER);
-                            }
-                        }.runTask(RoadsideShops.INSTANCE);
-
-                    }
-
-                });
+                openPlayerShopAsSeller(p, shopOwner);
 
             }
 
@@ -152,6 +73,98 @@ public class Commands {
 
         }).register();
 
+    }
+
+    public static void openPersonalShop(Player p) {
+        CompletableFuture.runAsync(() -> {
+            if (!RoadsideShops.hasShop(p.getUniqueId())) {
+
+                RoadsideShops.getShop(p);
+
+            }
+
+            Shop s = RoadsideShops.getShop(p);
+            new BukkitRunnable() {
+
+                @Override
+                public void run() {
+
+                    s.openInventory(p, ViewMode.SELLER);
+
+                }
+            }.runTask(RoadsideShops.INSTANCE);
+
+        });
+    }
+
+    public static void openPlayerShop(Player p, OfflinePlayer shopOwner) {
+        CompletableFuture.runAsync(() -> {
+            if (!RoadsideShops.hasShop(shopOwner.getUniqueId())) {
+                new BukkitRunnable() {
+
+                    @Override
+                    public void run() {
+                        p.sendMessage(InternalUtil.CONFIGMANAGER.getNoShop());
+                    }
+                }.runTask(RoadsideShops.INSTANCE);
+
+            } else {
+
+                if (p.getUniqueId().equals(shopOwner.getUniqueId())) {
+
+                    Shop s = RoadsideShops.getShop(shopOwner.getUniqueId());
+                    new BukkitRunnable() {
+
+                        @Override
+                        public void run() {
+                            s.openInventory(p, ViewMode.SELLER);
+                        }
+                    }.runTask(RoadsideShops.INSTANCE);
+
+                } else {
+
+                    Shop s = RoadsideShops.getShop(shopOwner.getUniqueId());
+                    new BukkitRunnable() {
+
+                        @Override
+                        public void run() {
+                            s.openInventory(p, ViewMode.BUYER);
+
+                        }
+                    }.runTask(RoadsideShops.INSTANCE);
+
+                }
+
+            }
+
+        });
+    }
+
+    public static void openPlayerShopAsSeller(Player p, OfflinePlayer shopOwner) {
+        CompletableFuture.runAsync(() -> {
+            if (!RoadsideShops.hasShop(shopOwner.getUniqueId())) {
+                new BukkitRunnable() {
+
+                    @Override
+                    public void run() {
+                        p.sendMessage(InternalUtil.CONFIGMANAGER.getNoShop());
+                    }
+                }.runTask(RoadsideShops.INSTANCE);
+
+            } else {
+
+                Shop s = RoadsideShops.getShop(shopOwner.getUniqueId());
+                new BukkitRunnable() {
+
+                    @Override
+                    public void run() {
+                        s.openInventory(p, ViewMode.SELLER);
+                    }
+                }.runTask(RoadsideShops.INSTANCE);
+
+            }
+
+        });
     }
 
 }
