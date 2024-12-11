@@ -20,10 +20,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * Class that handles the item sale setting.
@@ -186,10 +183,10 @@ public class SaleSettings implements InventoryHolder, Listener {
                             price = Double.parseDouble(stateSnapshot.getText());
                             isPriceSet = price >= 0;
 
-                            return Arrays.asList(AnvilGUI.ResponseAction.close());
+                            return List.of(AnvilGUI.ResponseAction.close());
 
                         } catch (NumberFormatException ff) {
-                            return Arrays.asList(AnvilGUI.ResponseAction.replaceInputText(InternalUtil.CONFIGMANAGER.getWrongPrice()));
+                            return List.of(AnvilGUI.ResponseAction.replaceInputText(InternalUtil.CONFIGMANAGER.getWrongPrice()));
 
                         }
 
