@@ -13,21 +13,28 @@ public class LibbyManager {
 
     private String mojangMappedArtifactId = "commandapi-paper-shade";
     private String artifactId = "commandapi-spigot-shade";
-    private String version = "11.1.0";
+    private String version = "11.2.0";
 
-    private String checksum = "E0rUSMwJKIHP5skpdscHMhq4VslVNnfcxh4QnY8N2Vw=";
-    private String checksumMappedArtifactId = "WG0DkQHBm8me54fVf5e3lVY+50qwvvOFhApxT+na+Ho=";
+    private String checksum = "Kx6c7DPWPyFkrmlEYq1hj6VeQm4BbBBMbthKI1pHLes=";
+    private String checksumMappedArtifactId = "F6KljlYn01+rt6JIKJPOKmWI++d46LgeOd8e6dw6gIM=";
 
-    public static final String MINECRAFT_VERSION = Bukkit.getBukkitVersion().split("-")[0];
+    public static final String MINECRAFT_VERSION = getMinecraftVersion();
 
-    public static final int VERSION = Integer.parseInt(MINECRAFT_VERSION.split("\\.")[1]);
+    public static final int MAJOR_VERSION;
 
-    private static final boolean IS_PAPER = classExists("io.papermc.paper.advancement.AdvancementDisplay");
+    public static final int VERSION;
 
     public static final int MINOR_VERSION;
 
+    private static final boolean IS_PAPER = classExists("io.papermc.paper.advancement.AdvancementDisplay");
+
+
     static {
         var splitted = MINECRAFT_VERSION.split("\\.");
+
+        MAJOR_VERSION = Integer.parseInt(splitted[0]);
+        VERSION = Integer.parseInt(splitted[1]);
+
         if (splitted.length > 2) {
             MINOR_VERSION = Integer.parseInt(splitted[2]);
         } else {
@@ -35,10 +42,19 @@ public class LibbyManager {
         }
     }
 
+    private static String getMinecraftVersion() {
+        try {
+            // Paper-only method
+            return (String) Bukkit.class.getDeclaredMethod("getMinecraftVersion").invoke(null);
+        } catch (ReflectiveOperationException e) {
+            return Bukkit.getBukkitVersion().split("-")[0];
+        }
+    }
+
 
     public static boolean isMojangMapped() {
         // Load the Mojang mapped CommandAPI on Paper 1.20.6+ as a workaround for https://github.com/PaperMC/Paper/issues/10713
-        return IS_PAPER && (VERSION > 20 || (VERSION == 20 && MINOR_VERSION >= 6));
+        return IS_PAPER && (MAJOR_VERSION >= 26 || VERSION > 20 || (VERSION == 20 && MINOR_VERSION >= 6));
     }
 
     public static boolean classExists(@NotNull String className) {

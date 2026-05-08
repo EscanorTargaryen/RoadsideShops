@@ -25,7 +25,7 @@
     <plugins>
       <plugin>
         <artifactId>maven-shade-plugin</artifactId>
-        <version>3.5.1</version>
+        <version>3.6.1</version>
         <executions>
           <execution>
             <phase>package</phase>
@@ -99,7 +99,7 @@
     <dependency>
       <groupId>dev.jorel</groupId>
       <artifactId>commandapi-spigot-shade</artifactId>
-      <version>11.1.0</version>
+      <version>11.2.0</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
@@ -111,7 +111,7 @@
     <dependency>
       <groupId>org.spigotmc</groupId>
       <artifactId>spigot-api</artifactId>
-      <version>1.21.11-R0.1-SNAPSHOT</version>
+      <version>26.1.2-R0.1-SNAPSHOT</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
@@ -216,10 +216,10 @@
     </snapshotRepository>
   </distributionManagement>
   <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <projectEncoding>UTF-8</projectEncoding>
     <maven.compiler.target>11</maven.compiler.target>
-    <maven.compiler.source>11</maven.compiler.source>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    <maven.compiler.source>11</maven.compiler.source>
   </properties>
 </project>
