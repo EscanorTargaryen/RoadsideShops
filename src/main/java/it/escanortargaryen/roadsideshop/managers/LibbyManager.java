@@ -13,10 +13,10 @@ public class LibbyManager {
 
     private String mojangMappedArtifactId = "commandapi-paper-shade";
     private String artifactId = "commandapi-spigot-shade";
-    private String version = "11.2.0";
+    private String version = "12.0.0";
 
-    private String checksum = "Kx6c7DPWPyFkrmlEYq1hj6VeQm4BbBBMbthKI1pHLes=";
-    private String checksumMappedArtifactId = "F6KljlYn01+rt6JIKJPOKmWI++d46LgeOd8e6dw6gIM=";
+    private String checksum = "WYJSdZPnABtIb7Jn27wwE58LTjhXh757I+ZIbGPp1q0=";
+    private String checksumMappedArtifactId = "rQLFFwTKL1NbLKw93E4y83Qsg3FMUDIYHLD1BN/NZ20=";
 
     public static final String MINECRAFT_VERSION = getMinecraftVersion();
 
